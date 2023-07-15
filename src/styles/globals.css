@@ -17,7 +17,7 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: var(--foreground-rgb);
   /* background: linear-gradient(
       to bottom,
       transparent,
@@ -47,9 +47,9 @@ body {
 }
 
 .bg-login {
-  background-image: url('/v1015-104a.jpg');
+  /* background-image: url('/v1015-104a.jpg');
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   height: 100vh;
 }
