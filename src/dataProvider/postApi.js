@@ -35,5 +35,6 @@ const loginAuth = (payload) => {
 
 export{
     loginAuth,
-    setLocalStorage
+    setLocalStorage,
+    instance
 }

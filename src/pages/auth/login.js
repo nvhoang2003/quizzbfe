@@ -15,7 +15,7 @@ const StyledContent = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     width: 480,
     flexShrink: 0,
-    padding: theme.spacing(10, 5),
+    padding: theme.spacing(8, 8),
     boxShadow: '5px 5px 5px 5px #cccccc',
     border: '1px',
     borderRadius: '10px'
@@ -28,12 +28,14 @@ const StyledRoot = styled('main')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
+  width: '100vw',
   position: 'relative'
 }));
 
 export default function login() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState({});
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -46,7 +48,8 @@ export default function login() {
     e.preventDefault();
     const responseLogin = await loginAuth({ username, password });
     const { response } = responseLogin;
-    responseLogin.data == null ?? setupLocalStorage(responseLogin.data.accessToken);
+    console.log(responseLogin);
+    setupLocalStorage(responseLogin.data.accessToken);
   };
 
   return (
@@ -62,18 +65,14 @@ export default function login() {
             noValidate
             display='flex'
             flexDirection='column'
-            fullWidth
           >
             <FormControl
-              fullWidth
               variant="outlined"
-              sx={{ mb: 1 }}
             >
               <InputLabel htmlFor="username">Username</InputLabel>
               <OutlinedInput
-                margin="normal"
+                margin="dense"
                 required
-                fullWidth
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -85,9 +84,8 @@ export default function login() {
             </FormControl>
 
             <FormControl
-              fullWidth
               variant="outlined"
-              sx={{ mt: 1 }}
+              sx={{ mt: 2 }}
             >
               <InputLabel htmlFor="password">Password</InputLabel>
               <OutlinedInput
@@ -104,9 +102,8 @@ export default function login() {
                     </IconButton>
                   </InputAdornment>
                 }
-                margin="normal"
+                margin="dense"
                 required
-                fullWidth
                 name="password"
                 label="Password"
                 id="password"
@@ -122,20 +119,23 @@ export default function login() {
             />
             <Button
               type="submit"
-              fullWidth
               variant='contained'
               size="large"
-              sx={{ mt: 1, mb: 2, backgroundColor: 'blue' }}
+              sx={{
+                mt: 1,
+                mb: 2,
+                backgroundColor: 'blue'
+              }}
             >
               Sign In
             </Button>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={6}>
                 <Link href="#" variant="body2" underline="hover">
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={6} display='flex' justifyContent='flex-end'>
                 <Link href="#" variant="body2" underline="hover">
                   Don't have an account?
                 </Link>
