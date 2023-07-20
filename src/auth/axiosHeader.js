@@ -1,7 +1,4 @@
 import axios from 'axios';
-// config
-
-// ----------------------------------------------------------------------
 
 const HOST_API_KEY = process.env.HOST_API_KEY || '';
 
@@ -12,4 +9,6 @@ axiosInstance.interceptors.response.use(
   (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
 );
 
-export default axiosInstance;
+export {
+  axiosInstance
+};

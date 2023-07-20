@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { React, useEffect, useState } from 'react';
 import { TextField, Button, FormControl, Box, FormControlLabel, Grid, Link, Typography, Checkbox, InputLabel, OutlinedInput, InputAdornment, IconButton, Stack } from '@mui/material';
-import { loginAuth } from '@/dataProvider/postApi';
+import { loginAuth } from '@/dataProvider/authApi';
 import { setupLocalStorage } from '@/auth/utils';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
@@ -33,10 +33,10 @@ const StyledRoot = styled('main')(({ theme }) => ({
 }));
 
 export default function login() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState({});
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -66,6 +66,7 @@ export default function login() {
             display='flex'
             flexDirection='column'
           >
+            {errorMessage.mainMessage && errorMessage.mainMessage != "" ? <Alert severity="error">{errorMessage.mainMessage}</Alert> : ''}
             <FormControl
               variant="outlined"
             >

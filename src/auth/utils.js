@@ -1,9 +1,9 @@
 // routes
-import { setLocalStorage } from '@/dataProvider/postApi';
+import { setLocalStorage } from "@/dataProvider/baseApi";
 //import { PATH_AUTH } from '../routes/paths';
 // utils
-//import axios from '../utils/axios';
-import axiosInstance from './axiosHeader';
+// import axios from '../utils/axios';
+import { axiosInstance } from '@/auth/axiosHeader';
 // ----------------------------------------------------------------------
 
 export const jwtDecode = (token) => {
