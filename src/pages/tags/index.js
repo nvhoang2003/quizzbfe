@@ -1,5 +1,5 @@
-import {React, useEffect, useState} from 'react'
-import { getAllTags } from '@/dataProvider/getApi'
+import {React, useEffect, useState} from 'react';
+import { getAllTags } from '@/dataProvider/tagApi';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,7 +15,7 @@ const columns = [
   { field: 'description', headerName: 'Description', width: 130 },
 ];
 
-export default function questionPage() {
+export default function ListTagPage() {
   const [tagData, setTagData] = useState([]);
   const [paging, setPaging] = useState({});
 

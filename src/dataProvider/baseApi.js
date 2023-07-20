@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const instance = axios.create({
   baseURL: `${process.env.HOST_API_KEY}api/`,
   timeout: 60000,
@@ -89,12 +91,12 @@ const deleteApi = (async (url) => {
 });
 
 export {
-  instance, 
-  getLocalStorage, 
+  instance,
+  getLocalStorage,
   clearLocalStorage,
-  setLocalStorage, 
-  getApi, 
-  postApi, 
+  setLocalStorage,
+  getApi,
+  postApi,
   putApi,
   deleteApi
 }
