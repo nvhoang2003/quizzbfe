@@ -4,6 +4,7 @@ import { loginAuth } from '@/dataProvider/authApi';
 import { setupLocalStorage } from '@/auth/utils';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
+import { useRouter } from 'next/navigation';
 
 const StyledContent = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -37,6 +38,7 @@ export default function login() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -45,11 +47,13 @@ export default function login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const responseLogin = await loginAuth({ username, password });
-    const { response } = responseLogin;
-    console.log(responseLogin);
-    setupLocalStorage(responseLogin.data.accessToken);
+      e.preventDefault();
+      const responseLogin = await loginAuth({ username, password });
+      const { response } = responseLogin;
+      console.log(responseLogin);
+      setupLocalStorage(responseLogin.data.accessToken);
+      
+      router.push('/');
   };
 
   return (
@@ -69,6 +73,7 @@ export default function login() {
             {errorMessage.mainMessage && errorMessage.mainMessage != "" ? <Alert severity="error">{errorMessage.mainMessage}</Alert> : ''}
             <FormControl
               variant="outlined"
+
             >
               <InputLabel htmlFor="username">Username</InputLabel>
               <OutlinedInput

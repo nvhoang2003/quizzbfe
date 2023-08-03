@@ -1,19 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
 import Head from 'next/head';
-import { subDays, subHours } from 'date-fns';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { TagsTable } from 'src/pages/tags/tags-table';
+import { QuizzTable } from 'src/pages/quizz/quizz-table';
 
 const Page = () => {
   return (
     <>
       <Head>
         <title>
-          Tags
+          Quizz
         </title>
       </Head>
       <Box
@@ -32,7 +29,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Tags
+                  Quizz
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -49,7 +46,7 @@ const Page = () => {
                   >
                     Import
                   </Button>
-                  <Button
+                  {/* <Button
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
@@ -58,7 +55,7 @@ const Page = () => {
                     )}
                   >
                     Export
-                  </Button>
+                  </Button> */}
                 </Stack>
               </Stack>
               <div>
@@ -75,7 +72,7 @@ const Page = () => {
               </div>
             </Stack>
 
-            <TagsTable/>
+            <QuizzTable/>
             
           </Stack>
         </Container>
