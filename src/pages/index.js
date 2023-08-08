@@ -1,118 +1,232 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Head from 'next/head';
+import { subDays, subHours } from 'date-fns';
+import { Box, Container, Unstable_Grid2 as Grid } from '@mui/material';
+import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import { OverviewBudget } from 'src/pages/home/overview/overview-budget';
+import { OverviewLatestOrders } from 'src/pages/home/overview/overview-latest-orders';
+import { OverviewLatestProducts } from 'src/pages/home/overview/overview-latest-products';
+import { OverviewSales } from 'src/pages/home/overview/overview-sales';
+import { OverviewTasksProgress } from 'src/pages/home/overview/overview-tasks-progress';
+import { OverviewTotalCustomers } from 'src/pages/home/overview/overview-total-customers';
+import { OverviewTotalProfit } from 'src/pages/home/overview/overview-total-profit';
+import { OverviewTraffic } from 'src/pages/home/overview/overview-traffic';
 
-const inter = Inter({ subsets: ['latin'] })
+const now = new Date();
 
-export default function Home() {
-  return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+const Page = () => (
+  <>
+    <Head>
+      <title>
+        Overview 
+      </title>
+    </Head>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        py: 8
+      }}
     >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <Container maxWidth="xl">
+        <Grid
+          container
+          spacing={3}
+        >
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+            <OverviewBudget
+              difference={12}
+              positive
+              sx={{ height: '100%' }}
+              value="$24k"
             />
-          </a>
-        </div>
-      </div>
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewTotalCustomers
+              difference={16}
+              positive={false}
+              sx={{ height: '100%' }}
+              value="1.6k"
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewTasksProgress
+              sx={{ height: '100%' }}
+              value={75.5}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewTotalProfit
+              sx={{ height: '100%' }}
+              value="$15k"
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            lg={8}
+          >
+            <OverviewSales
+              chartSeries={[
+                {
+                  name: 'This year',
+                  data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20]
+                },
+                {
+                  name: 'Last year',
+                  data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13]
+                }
+              ]}
+              sx={{ height: '100%' }}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            md={6}
+            lg={4}
+          >
+            <OverviewTraffic
+              chartSeries={[63, 15, 22]}
+              labels={['Desktop', 'Tablet', 'Phone']}
+              sx={{ height: '100%' }}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            md={6}
+            lg={4}
+          >
+            <OverviewLatestProducts
+              products={[
+                {
+                  id: '5ece2c077e39da27658aa8a9',
+                  image: '/assets/products/product-1.png',
+                  name: 'Healthcare Erbology',
+                  updatedAt: subHours(now, 6).getTime()
+                },
+                {
+                  id: '5ece2c0d16f70bff2cf86cd8',
+                  image: '/assets/products/product-2.png',
+                  name: 'Makeup Lancome Rouge',
+                  updatedAt: subDays(subHours(now, 8), 2).getTime()
+                },
+                {
+                  id: 'b393ce1b09c1254c3a92c827',
+                  image: '/assets/products/product-5.png',
+                  name: 'Skincare Soja CO',
+                  updatedAt: subDays(subHours(now, 1), 1).getTime()
+                },
+                {
+                  id: 'a6ede15670da63f49f752c89',
+                  image: '/assets/products/product-6.png',
+                  name: 'Makeup Lipstick',
+                  updatedAt: subDays(subHours(now, 3), 3).getTime()
+                },
+                {
+                  id: 'bcad5524fe3a2f8f8620ceda',
+                  image: '/assets/products/product-7.png',
+                  name: 'Healthcare Ritual',
+                  updatedAt: subDays(subHours(now, 5), 6).getTime()
+                }
+              ]}
+              sx={{ height: '100%' }}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            md={12}
+            lg={8}
+          >
+            <OverviewLatestOrders
+              orders={[
+                {
+                  id: 'f69f88012978187a6c12897f',
+                  ref: 'DEV1049',
+                  amount: 30.5,
+                  customer: {
+                    name: 'Ekaterina Tankova'
+                  },
+                  createdAt: 1555016400000,
+                  status: 'pending'
+                },
+                {
+                  id: '9eaa1c7dd4433f413c308ce2',
+                  ref: 'DEV1048',
+                  amount: 25.1,
+                  customer: {
+                    name: 'Cao Yu'
+                  },
+                  createdAt: 1555016400000,
+                  status: 'delivered'
+                },
+                {
+                  id: '01a5230c811bd04996ce7c13',
+                  ref: 'DEV1047',
+                  amount: 10.99,
+                  customer: {
+                    name: 'Alexa Richardson'
+                  },
+                  createdAt: 1554930000000,
+                  status: 'refunded'
+                },
+                {
+                  id: '1f4e1bd0a87cea23cdb83d18',
+                  ref: 'DEV1046',
+                  amount: 96.43,
+                  customer: {
+                    name: 'Anje Keizer'
+                  },
+                  createdAt: 1554757200000,
+                  status: 'pending'
+                },
+                {
+                  id: '9f974f239d29ede969367103',
+                  ref: 'DEV1045',
+                  amount: 32.54,
+                  customer: {
+                    name: 'Clarke Gillebert'
+                  },
+                  createdAt: 1554670800000,
+                  status: 'delivered'
+                },
+                {
+                  id: 'ffc83c1560ec2f66a1c05596',
+                  ref: 'DEV1044',
+                  amount: 16.76,
+                  customer: {
+                    name: 'Adam Denisov'
+                  },
+                  createdAt: 1554670800000,
+                  status: 'delivered'
+                }
+              ]}
+              sx={{ height: '100%' }}
+            />
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  </>
+);
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+Page.getLayout = (page) => (
+  <DashboardLayout>
+    {page}
+  </DashboardLayout>
+);
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default Page;

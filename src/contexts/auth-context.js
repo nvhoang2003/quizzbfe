@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { setupLocalStorage } from '@/auth/utils';
+import { loginAuth } from '@/dataProvider/authApi';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -130,24 +132,16 @@ export const AuthProvider = (props) => {
     });
   };
 
-  const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
-    }
-
+  const signIn = async (username, password) => {
     try {
-      window.sessionStorage.setItem('authenticated', 'true');
+      const responseLogin = await loginAuth({ username, password });
+      const { response } = responseLogin;
+      console.log(responseLogin);
+      setupLocalStorage(responseLogin.data.accessToken);
+      //window.sessionStorage.setItem('authenticated', 'true');
     } catch (err) {
       console.error(err);
     }
-
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
-
     dispatch({
       type: HANDLERS.SIGN_IN,
       payload: user
