@@ -7,6 +7,7 @@ const tagApiPath = {
   getListByCatID: tagPath + '/getListAllTagByCategoryID'
 }
 
+
 function getAllTags(params) {
   return getApi(tagApiPath.getListByCatID, params);
 }
