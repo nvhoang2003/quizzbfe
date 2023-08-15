@@ -40,7 +40,6 @@ const handlers = {
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
     const user = action.payload;
-
     return {
       ...state,
       isAuthenticated: true,
@@ -135,17 +134,23 @@ export const AuthProvider = (props) => {
   const signIn = async (username, password) => {
     try {
       const responseLogin = await loginAuth({ username, password });
-      const { response } = responseLogin;
-      console.log(responseLogin);
       setupLocalStorage(responseLogin.data.accessToken);
-      //window.sessionStorage.setItem('authenticated', 'true');
+      //window.sessionStorage.setItem('authenticated', 'true');  
+
+      const user = {
+       id: responseLogin?.data?.userId,
+        name: username,
+      };
+  
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: user
+      });
+
     } catch (err) {
       console.error(err);
     }
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
-    });
+
   };
 
   const signUp = async (email, name, password) => {

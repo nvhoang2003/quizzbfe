@@ -95,10 +95,10 @@ export const Layout = (props) => {
             >
               A professional kit that comes with ready-to-use MUI components.
             </Typography>
-            <img
+            {/* <img
               alt=""
               src="/assets/auth-illustration.svg"
-            />
+            /> */}
           </Box>
         </Grid>
       </Grid>
