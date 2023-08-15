@@ -1,154 +1,104 @@
-import { React, useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Pagination from '@mui/material/Pagination';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
+import React from 'react';
+import Head from 'next/head';
+import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
+import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
+import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
+import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { getAllCate } from '@/dataProvider/categoryApi';
-// const columns = [
-//   { field: 'id', headerName: 'ID', width: 70 },
-//   { field: 'name', headerName: 'Name', width: 80 },
-//   { field: 'description', headerName: 'Description', width: 80 },
-// ];
+import { CateTable } from './cate_table';
+import { CateSearch } from './cate_search';
+import { useRouter } from 'next/navigation';
+//import { useHistory } from 'react-router-dom';
+//import { useRouter } from 'next/navigation';
 
-export default function ListTagPage() {
-  const [Data, setData] = useState([]);
-  const [paging, setPaging] = useState({});
 
-  const [filter, setFilter] = useState({
-    pageIndex: 1,
-    pageSize: 10,
-  });
+//const history = useHistory();
 
-  const handlePageChange = (event, newPage) => {
-    setFilter({ ...filter, pageIndex: newPage });
-    fetchTags({ ...filter, pageIndex: newPage });
+
+const Page = () => {
+  const router = useRouter();
+  const handleAddClick = () =>{
+    router.push('category/new_form');
   };
-
-
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-      with: 50,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 15,//ban đầu 14
-    },
-
-  }));
-
-
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-      borderRadius: '15px',
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
-
-
-
-
-  async function fetchCate() {
-    const res = await getAllCate(filter);
-    if (res.status < 400) {
-      const transformData = res.data.data.map((cate) => {
-        return {
-          name: cate.name,
-          id: cate.id,
-          description: cate.description
-        };
-      });
-      setPaging(JSON.parse(res.headers['x-pagination']));
-      setData(transformData);
-    } else {
-      return res;
-    }
-  }
-  
-
-  useEffect(() => {
-    fetchCate();
-  }, [filter]);
-
   return (
-    <main>
-      <div className='contaner'>
-        <h1 className='title'>ListTags</h1>
-        <div className="m-5">
-          <TableContainer component={Paper} >
-            <Table sx={{ minWidth: 500 }} aria-label="customized table" >
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell >ID</StyledTableCell>
-                  <StyledTableCell >Name</StyledTableCell>
-                  <StyledTableCell >Description </StyledTableCell>
-                  <StyledTableCell >Action</StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {Data.map((item) => (
-                  <StyledTableRow key={item.id}>
-                    <StyledTableCell component="th" scope="row" > {item.id} </StyledTableCell>
-                    <StyledTableCell >{item.name}</StyledTableCell>
-                    <StyledTableCell >{item.description}</StyledTableCell>
-                    <StyledTableCell >
-
-                      <Tooltip arrow placement="left" title="Edit">
-                        <IconButton color="success" >
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                     
-                      <Tooltip arrow placement="right" title="Delete">
-                          <DeleteIcon />
-                      </Tooltip>
-
-                     
-
-                    </StyledTableCell>
-
-
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-        <div className='paginationContainer m-5'>
-          <Pagination
-            size="small"
-            count={paging?.TotalPages}
-            rowsperpage={paging?.PageSize}
-            onChange={handlePageChange}
-            color="primary"
-          />
-        </div>
-
-
-
-      </div>
-    </main>
+    <>
+      <Head>
+        <title>
+          Category
+        </title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth="xl">
+          <Stack spacing={3}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+            >
+              <Stack spacing={1}>
+                <Typography variant="h4">
+                  Category
+                </Typography>
+                <Stack
+                  alignItems="center"
+                  direction="row"
+                  spacing={1}
+                >
+                  <Button
+                    color="inherit"
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <ArrowUpOnSquareIcon />
+                      </SvgIcon>
+                    )}
+                  >
+                    Import
+                  </Button>
+                  <Button
+                    color="inherit"
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <ArrowDownOnSquareIcon />
+                      </SvgIcon>
+                    )}
+                  >
+                    Export
+                  </Button>
+                </Stack>
+              </Stack>
+              <div>
+                <Button
+                  startIcon={(
+                    <SvgIcon fontSize="small">
+                      <PlusIcon />
+                    </SvgIcon>
+                  )}
+                  variant="contained"
+                  onClick={handleAddClick}
+                >
+                  Add
+                </Button>
+              </div>
+            </Stack>
+            <CateSearch/>
+            <CateTable/>
+          </Stack>
+        </Container>
+      </Box>
+    </>
   );
 };
 
-ListTagPage.getLayout = (page) => (
+Page.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
+
+export default Page;

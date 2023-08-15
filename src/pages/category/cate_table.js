@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import { React, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -12,28 +13,112 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
+  IconButton,
+  Button,
   Typography
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { deleteCateByID, getAllCate, getCateByID } from '@/dataProvider/categoryApi';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModalEdit from 'src/components/form/category/useModel'
+import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
+import { useRouter } from 'next/navigation';
+import { useSnackbar } from 'notistack';
 
-export const CustomersTable = (props) => {
+
+export const CateTable = (props) => {
   const {
-    count = 0,
-    items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => {},
-    onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
-    page = 0,
-    rowsPerPage = 0,
     selected = []
   } = props;
 
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
+  // const selectedSome = (selected.length > 0) && (selected.length < items.length);
+  // const selectedAll = (items.length > 0) && (selected.length === items.length);
+  const [paging, setPaging] = useState({});
+  const [Data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const [Editdata, setEditdata] = useState([]);
+
+  const [filter, setFilter] = useState({
+    pageIndex: 1,
+    pageSize: 10,
+  });
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const handlePageChange = (event, newPage) => {
+    setFilter({ ...filter, pageIndex: newPage });
+    fetchTags({ ...filter, pageIndex: newPage });
+  };
+  
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+};
+
+const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+};
+
+  
+  async function fetchAll() {
+    const res = await getAllCate(filter);
+    if (res.status < 400) {
+      const transformData = res.data.data.map((cate) => {
+        return {
+          name: cate.name,
+          id: cate.id,
+          description: cate.description
+        };
+      });
+      setPaging(JSON.parse(res.headers['x-pagination']));
+      setData(transformData);
+    } else {
+      return res;
+    }
+  }
+
+  const handleSave = async() => {
+    
+    //await fetchAll();
+  };
+
+
+  const handleDeleteRow = async (id) => {
+    const response = await deleteCateByID(id);
+    if (response.status < 400) {
+      router.push('/category');
+        //await fetchCustomer();
+        enqueueSnackbar('Xóa thành công ', { variant: 'success' });
+    } else {
+        enqueueSnackbar('Đã xảy ra lỗi ', { variant: 'error' });
+    }
+
+    // if (page > 0) {
+    //     if (dataInPage.length < 2) {
+    //         setPage(page - 1);
+    //     }
+    // }
+};
+useEffect(() => {
+    fetchAll();
+  }, [filter]);
 
   return (
     <Card>
@@ -44,8 +129,8 @@ export const CustomersTable = (props) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedAll}
-                    indeterminate={selectedSome}
+                    // checked={selectedAll}
+                    // indeterminate={selectedSome}
                     onChange={(event) => {
                       if (event.target.checked) {
                         onSelectAll?.();
@@ -62,23 +147,20 @@ export const CustomersTable = (props) => {
                   Name
                 </TableCell>
                 <TableCell>
-                  Description
+                  Descriptions
                 </TableCell>
                 <TableCell>
                   Action
                 </TableCell>
-                
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, 'dd/MM/yyyy');
-
+              {Data.map((cate) => {
+                const isSelected = selected.includes(cate.id);
                 return (
                   <TableRow
                     hover
-                    key={customer.id}
+                    key={cate.id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -86,37 +168,56 @@ export const CustomersTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(cate.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(cate.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>
-                      <Stack
-                        alignItems="center"
-                        direction="row"
-                        spacing={2}
-                      >
-                        <Avatar src={customer.avatar}>
-                          {getInitials(customer.name)}
-                        </Avatar>
-                        <Typography variant="subtitle2">
-                          {customer.name}
-                        </Typography>
-                      </Stack>
+                      {cate.id}
                     </TableCell>
                     <TableCell>
-                      {customer.email}
+                      {cate.name}
                     </TableCell>
                     <TableCell>
-                      {customer.address.city}, {customer.address.state}, {customer.address.country}
+                      {cate.description}
                     </TableCell>
                     <TableCell>
-                      {customer.phone}
-                    </TableCell>
+
+                    <Box sx={{ display: 'flex', gap: '1rem' }}>
+                    <ModalEdit id={cate.id} onSave={handleSave} />
+                      <Tooltip arrow placement="right" title="Delete">
+                        <IconButton color="error" onClick={handleOpenConfirm}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                     
+                    <ConfirmDialog
+                open={openConfirm}
+                onClose={handleCloseConfirm}
+                title="Xóa"
+                content={
+                    <>
+                        Are you sure want to delete : <strong>{cate.name}</strong> ?
+                    </>
+                }
+                action={
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            handleDeleteRow(cate.id);
+                            handleCloseConfirm();
+                        }}
+                    >
+                        Delete
+                    </Button>
+                }
+            />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -124,29 +225,29 @@ export const CustomersTable = (props) => {
           </Table>
         </Box>
       </Scrollbar>
-      <TablePagination
+      {/* <TablePagination
         component="div"
-        count={count}
+        //count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
-      />
+      /> */}
     </Card>
   );
 };
 
-CustomersTable.propTypes = {
-  count: PropTypes.number,
-  items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
-};
+// TagsTable.propTypes = {
+//   count: PropTypes.number,
+//   items: PropTypes.array,
+//   onDeselectAll: PropTypes.func,
+//   onDeselectOne: PropTypes.func,
+//   onPageChange: PropTypes.func,
+//   onRowsPerPageChange: PropTypes.func,
+//   onSelectAll: PropTypes.func,
+//   onSelectOne: PropTypes.func,
+//   page: PropTypes.number,
+//   rowsPerPage: PropTypes.number,
+//   selected: PropTypes.array
+// };

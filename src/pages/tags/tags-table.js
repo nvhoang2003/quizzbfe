@@ -25,21 +25,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export const TagsTable = (props) => {
   const {
-    count = 0,
-    items = [],
-    onDeselectAll,
-    onDeselectOne,
-    onPageChange = () => {},
-    onRowsPerPageChange,
+     onDeselectAll,
+     onDeselectOne,
+    // onPageChange = () => {},
+    // onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
-    page = 0,
-    rowsPerPage = 0,
+    // page = 0,
+    // rowsPerPage = 0,
     selected = []
   } = props;
 
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
+  // const selectedSome = (selected.length > 0) && (selected.length < items.length);
+  // const selectedAll = (items.length > 0) && (selected.length === items.length);
   const [paging, setPaging] = useState({});
   const [tagData, setTagData] = useState([]);
 
@@ -53,6 +51,7 @@ export const TagsTable = (props) => {
     setFilter({ ...filter, pageIndex: newPage });
     fetchTags({ ...filter, pageIndex: newPage });
   };
+  
 
   
   async function fetchTags() {
@@ -72,6 +71,19 @@ export const TagsTable = (props) => {
     }
   }
 
+  const handleDeleteRow = async (id) => {
+    const res = await deleteTag(id);
+    if (res.status < 400) {
+        setSelected([]);
+        await fetchTags(filter);
+        enqueueSnackbar('Disable/User Activation Successful');
+    } else {
+        enqueueSnackbar('Disable/User activation failed', { variant: 'error' });
+    }
+};
+
+
+
 useEffect(() => {
     fetchTags();
   }, [filter]);
@@ -85,8 +97,8 @@ useEffect(() => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedAll}
-                    indeterminate={selectedSome}
+                    // checked={selectedAll}
+                    // indeterminate={selectedSome}
                     onChange={(event) => {
                       if (event.target.checked) {
                         onSelectAll?.();
@@ -146,7 +158,7 @@ useEffect(() => {
 
                     <Box sx={{ display: 'flex', gap: '1rem' }}>
                       <Tooltip arrow placement="left" title="Edit">
-                        <IconButton onClick={() => setEditingRow(row)}>
+                        <IconButton onClick={() => edit(row)}>
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
@@ -166,15 +178,15 @@ useEffect(() => {
           </Table>
         </Box>
       </Scrollbar>
-      <TablePagination
+      {/* <TablePagination
         component="div"
-        count={count}
+        //count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
-      />
+      /> */}
     </Card>
   );
 };
