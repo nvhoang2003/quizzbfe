@@ -99,15 +99,15 @@ const handleCloseConfirm = () => {
     //await fetchAll();
   };
 
-
-  const handleDeleteRow = async (id) => {
+  const handleDeleteRow = async(id)=>{
     const response = await deleteCateByID(id);
+    
     if (response.status < 400) {
       router.push('/category');
-        //await fetchCustomer();
-        enqueueSnackbar('Xóa thành công ', { variant: 'success' });
+        await fetchAll();
+        enqueueSnackbar(response.data.message, { variant: 'success' });
     } else {
-        enqueueSnackbar('Đã xảy ra lỗi ', { variant: 'error' });
+        enqueueSnackbar(response.response.data.title, { variant: 'error' });
     }
 
     // if (page > 0) {
@@ -115,7 +115,14 @@ const handleCloseConfirm = () => {
     //         setPage(page - 1);
     //     }
     // }
-};
+  }
+
+  const handleDeleteRows = async (cate) => {
+    console.log(cate);
+    
+  };
+
+
 useEffect(() => {
     fetchAll();
   }, [filter]);
@@ -157,6 +164,7 @@ useEffect(() => {
             <TableBody>
               {Data.map((cate) => {
                 const isSelected = selected.includes(cate.id);
+                // const id= cate.id;
                 return (
                   <TableRow
                     hover
@@ -177,6 +185,7 @@ useEffect(() => {
                     </TableCell>
                     <TableCell>
                       {cate.id}
+
                     </TableCell>
                     <TableCell>
                       {cate.name}
@@ -189,34 +198,33 @@ useEffect(() => {
                     <Box sx={{ display: 'flex', gap: '1rem' }}>
                     <ModalEdit id={cate.id} onSave={handleSave} />
                       <Tooltip arrow placement="right" title="Delete">
-                        <IconButton color="error" onClick={handleOpenConfirm}>
+                        <IconButton color="error" onClick={() => { handleOpenConfirm(), setEditdata(cate)}}>
                           <DeleteIcon />
                         </IconButton>
                       </Tooltip>
+                      <ConfirmDialog
+                        open={openConfirm}
+                        onClose={handleCloseConfirm}
+                        title="Xóa"
+                        content={
+                            <>
+                                Are you sure want to delete : <strong>{Editdata.name}</strong> ?
+                            </>
+                        }
+                        action={
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                    handleDeleteRow(Editdata.id);
+                                    handleCloseConfirm();
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        }
+                    />
                     </Box>
-                    
-                    <ConfirmDialog
-                open={openConfirm}
-                onClose={handleCloseConfirm}
-                title="Xóa"
-                content={
-                    <>
-                        Are you sure want to delete : <strong>{cate.name}</strong> ?
-                    </>
-                }
-                action={
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                            handleDeleteRow(cate.id);
-                            handleCloseConfirm();
-                        }}
-                    >
-                        Delete
-                    </Button>
-                }
-            />
                     </TableCell>
                   </TableRow>
                 );
@@ -237,17 +245,3 @@ useEffect(() => {
     </Card>
   );
 };
-
-// TagsTable.propTypes = {
-//   count: PropTypes.number,
-//   items: PropTypes.array,
-//   onDeselectAll: PropTypes.func,
-//   onDeselectOne: PropTypes.func,
-//   onPageChange: PropTypes.func,
-//   onRowsPerPageChange: PropTypes.func,
-//   onSelectAll: PropTypes.func,
-//   onSelectOne: PropTypes.func,
-//   page: PropTypes.number,
-//   rowsPerPage: PropTypes.number,
-//   selected: PropTypes.array
-// };

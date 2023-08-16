@@ -135,7 +135,7 @@ export const AuthProvider = (props) => {
     try {
       const responseLogin = await loginAuth({ username, password });
       setupLocalStorage(responseLogin.data.accessToken);
-      //window.sessionStorage.setItem('authenticated', 'true');  
+      window.sessionStorage.setItem('authenticated', 'true');  
 
       const user = {
        id: responseLogin?.data?.userId,
