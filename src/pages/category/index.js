@@ -1,35 +1,30 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { TagsTable } from './tags-table';
-import { TagsSearch } from './tags-search';
-//import { useRouter } from 'next/navigation';
+import { CateTable } from './cate_table';
+import { CateSearch } from './cate_search';
 import { useRouter } from 'next/navigation';
+//import { useHistory } from 'react-router-dom';
+//import { useRouter } from 'next/navigation';
 
 
+//const history = useHistory();
 
-// const handleAddClick = useCallback() =>{
-//   const router = useRouter();
-
-//   router.push('tags/new_form.js');
-// },[]
-// );
 
 const Page = () => {
   const router = useRouter();
   const handleAddClick = () =>{
-    router.push('tags/new_form');
+    router.push('category/new_form');
   };
-  
   return (
     <>
       <Head>
         <title>
-          Tags
+          Category
         </title>
       </Head>
       <Box
@@ -48,7 +43,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Tags
+                  Category
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -91,8 +86,8 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <TagsSearch/>
-            <TagsTable/>
+            <CateSearch/>
+            <CateTable/>
           </Stack>
         </Container>
       </Box>
