@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { setupLocalStorage } from '@/auth/utils';
 import { loginAuth } from '@/dataProvider/authApi';
@@ -83,11 +83,8 @@ export const AuthProvider = (props) => {
 
     if (isAuthenticated) {
       const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
-      };
+         name: "userI",
+       };
 
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -108,26 +105,7 @@ export const AuthProvider = (props) => {
     []
   );
 
-  const skip = () => {
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
-
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
-
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
-    });
-  };
-
+ 
   const signIn = async (username, password) => {
     try {
       const responseLogin = await loginAuth({ username, password });
@@ -153,11 +131,6 @@ export const AuthProvider = (props) => {
     }
 
   };
-
-  const signUp = async (email, name, password) => {
-    throw new Error('Sign up is not implemented');
-  };
-
   const signOut = () => {
     setupLocalStorage("");
     window.sessionStorage.setItem('authenticated', 'false');  
@@ -170,9 +143,7 @@ export const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        skip,
         signIn,
-        signUp,
         signOut
       }}
     >
