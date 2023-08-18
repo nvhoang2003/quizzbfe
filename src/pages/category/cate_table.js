@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import { React, useEffect, useState } from 'react';
+import PropTypes from "prop-types";
+import { format } from "date-fns";
+import { React, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -16,18 +16,21 @@ import {
   Tooltip,
   IconButton,
   Button,
-  Typography
-} from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar/scrollbar';
-import { getInitials } from 'src/utils/get-initials';
-import { deleteCateByID, getAllCate, getCateByID } from '@/dataProvider/categoryApi';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModalEdit from 'src/components/form/category/useModel'
-import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
-import { useRouter } from 'next/navigation';
-import { useSnackbar } from 'notistack';
-
+  Typography,
+} from "@mui/material";
+import { Scrollbar } from "src/components/scrollbar/scrollbar";
+import { getInitials } from "src/utils/get-initials";
+import {
+  deleteCateByID,
+  getAllCate,
+  getCateByID,
+} from "@/dataProvider/categoryApi";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModalEdit from "src/components/form/category/useModel";
+import ConfirmDialog from "@/components/confirm-dialog/ConfirmDialog";
+import { useRouter } from "next/navigation";
+import { useSnackbar } from "notistack";
 
 export const CateTable = (props) => {
   const {
@@ -35,7 +38,7 @@ export const CateTable = (props) => {
     onDeselectOne,
     onSelectAll,
     onSelectOne,
-    selected = []
+    selected = [],
   } = props;
 
   // const selectedSome = (selected.length > 0) && (selected.length < items.length);
@@ -59,7 +62,7 @@ export const CateTable = (props) => {
     setFilter({ ...filter, pageIndex: newPage });
     fetchTags({ ...filter, pageIndex: newPage });
   };
-  
+
   // const handleOpen = () => {
   //   setOpen(true);
   // };
@@ -70,13 +73,12 @@ export const CateTable = (props) => {
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
-};
+  };
 
-const handleCloseConfirm = () => {
+  const handleCloseConfirm = () => {
     setOpenConfirm(false);
-};
+  };
 
-  
   async function fetchAll() {
     const res = await getAllCate(filter);
     if (res.status < 400) {
@@ -84,30 +86,29 @@ const handleCloseConfirm = () => {
         return {
           name: cate.name,
           id: cate.id,
-          description: cate.description
+          description: cate.description,
         };
       });
-      setPaging(JSON.parse(res.headers['x-pagination']));
+      setPaging(JSON.parse(res.headers["x-pagination"]));
       setData(transformData);
     } else {
       return res;
     }
   }
 
-  const handleSave = async() => {
-    
+  const handleSave = async () => {
     //await fetchAll();
   };
 
-  const handleDeleteRow = async(id)=>{
+  const handleDeleteRow = async (id) => {
     const response = await deleteCateByID(id);
-    
+
     if (response.status < 400) {
-      router.push('/category');
-        await fetchAll();
-        enqueueSnackbar(response.data.message, { variant: 'success' });
+      router.push("/category");
+      await fetchAll();
+      enqueueSnackbar(response.data.message, { variant: "success" });
     } else {
-        enqueueSnackbar(response.response.data.title, { variant: 'error' });
+      enqueueSnackbar(response.response.data.title, { variant: "error" });
     }
 
     // if (page > 0) {
@@ -115,15 +116,13 @@ const handleCloseConfirm = () => {
     //         setPage(page - 1);
     //     }
     // }
-  }
+  };
 
   const handleDeleteRows = async (cate) => {
     console.log(cate);
-    
   };
 
-
-useEffect(() => {
+  useEffect(() => {
     fetchAll();
   }, [filter]);
 
@@ -147,18 +146,10 @@ useEffect(() => {
                     }}
                   />
                 </TableCell>
-                <TableCell>
-                  ID
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Descriptions
-                </TableCell>
-                <TableCell>
-                  Action
-                </TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Descriptions</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -166,11 +157,7 @@ useEffect(() => {
                 const isSelected = selected.includes(cate.id);
                 // const id= cate.id;
                 return (
-                  <TableRow
-                    hover
-                    key={cate.id}
-                    selected={isSelected}
-                  >
+                  <TableRow hover key={cate.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
@@ -183,48 +170,46 @@ useEffect(() => {
                         }}
                       />
                     </TableCell>
+                    <TableCell>{cate.id}</TableCell>
+                    <TableCell>{cate.name}</TableCell>
+                    <TableCell>{cate.description}</TableCell>
                     <TableCell>
-                      {cate.id}
-
-                    </TableCell>
-                    <TableCell>
-                      {cate.name}
-                    </TableCell>
-                    <TableCell>
-                      {cate.description}
-                    </TableCell>
-                    <TableCell>
-
-                    <Box sx={{ display: 'flex', gap: '1rem' }}>
-                    <ModalEdit id={cate.id} onSave={handleSave} />
-                      <Tooltip arrow placement="right" title="Delete">
-                        <IconButton color="error" onClick={() => { handleOpenConfirm(), setEditdata(cate)}}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <ConfirmDialog
-                        open={openConfirm}
-                        onClose={handleCloseConfirm}
-                        title="Xóa"
-                        content={
+                      <Box sx={{ display: "flex", gap: "1rem" }}>
+                        <ModalEdit id={cate.id} onSave={handleSave} />
+                        <Tooltip arrow placement="right" title="Delete">
+                          <IconButton
+                            color="error"
+                            onClick={() => {
+                              handleOpenConfirm(), setEditdata(cate);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <ConfirmDialog
+                          open={openConfirm}
+                          onClose={handleCloseConfirm}
+                          title="Xóa"
+                          content={
                             <>
-                                Are you sure want to delete : <strong>{Editdata.name}</strong> ?
+                              Are you sure want to delete :{" "}
+                              <strong>{Editdata.name}</strong> ?
                             </>
-                        }
-                        action={
+                          }
+                          action={
                             <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() => {
-                                    handleDeleteRow(Editdata.id);
-                                    handleCloseConfirm();
-                                }}
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                handleDeleteRow(Editdata.id);
+                                handleCloseConfirm();
+                              }}
                             >
-                                Delete
+                              Delete
                             </Button>
-                        }
-                    />
-                    </Box>
+                          }
+                        />
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );

@@ -15,9 +15,6 @@ const initialState = {
   user: null
 };
 
-
-
-
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
     const user = action.payload;
@@ -134,19 +131,23 @@ export const AuthProvider = (props) => {
   const signIn = async (username, password) => {
     try {
       const responseLogin = await loginAuth({ username, password });
-      setupLocalStorage(responseLogin.data.accessToken);
-      window.sessionStorage.setItem('authenticated', 'true');  
 
-      const user = {
-       id: responseLogin?.data?.userId,
-        name: username,
-      };
+      if (responseLogin.status < 400) {
+        setupLocalStorage(responseLogin.data.accessToken);
+        window.sessionStorage.setItem('authenticated', 'true');  
   
-      dispatch({
-        type: HANDLERS.SIGN_IN,
-        payload: user
-      });
+        const user = {
+         id: responseLogin?.data?.userId,
+          name: username,
+        };
 
+        dispatch({
+          type: HANDLERS.SIGN_IN,
+          payload: user
+        });
+      }
+       
+      return responseLogin;
     } catch (err) {
       console.error(err);
     }
@@ -158,6 +159,8 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
+    setupLocalStorage("");
+    window.sessionStorage.setItem('authenticated', 'false');  
     dispatch({
       type: HANDLERS.SIGN_OUT
     });
