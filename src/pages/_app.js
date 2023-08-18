@@ -9,6 +9,8 @@ import { useNProgress } from 'src/hooks/use-nprogress';
 import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import '@/styles/globals.css'
 import { SnackbarProvider } from 'notistack';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -28,7 +30,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-         QuizzBank
+          QuizzBank
         </title>
         <meta
           name="viewport"
@@ -47,12 +49,12 @@ const App = (props) => {
               }}
             >
               <AuthConsumer>
-              {
-                (auth) => auth.isLoading
-                  ? <SplashScreen />
-                  : getLayout(<Component {...pageProps} />)
-              }
-            </AuthConsumer>
+                {
+                  (auth) => auth.isLoading
+                    ? <SplashScreen />
+                    : getLayout(<Component {...pageProps} />)
+                }
+              </AuthConsumer>
             </SnackbarProvider>
           </ThemeProvider>
         </AuthProvider>

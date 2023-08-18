@@ -53,7 +53,7 @@ export const Layout = withAuthGuard((props) => {
         open={openNav}
       />
       <LayoutRoot>
-        <LayoutContainer>
+        <LayoutContainer className='p-3'>
           {children}
         </LayoutContainer>
       </LayoutRoot>

@@ -27,6 +27,26 @@ body {
     rgb(var(--background-start-rgb)); */
 }
 
+.right-item {
+  /* position: absolute; */
+  /* display: flex; */
+  right: 0;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
+.center-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .title {
   text-align: center;
   font-weight: bold;
@@ -53,4 +73,8 @@ body {
   background-position: center;
   background-repeat: no-repeat; */
   height: 100vh;
+}
+
+.width-100 {
+  width: 100%;
 }

@@ -15,8 +15,6 @@ const initialState = {
   user: null
 };
 
-
-
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
     const user = action.payload;
@@ -85,8 +83,11 @@ export const AuthProvider = (props) => {
 
     if (isAuthenticated) {
       const user = {
-         name: "userI",
-       };
+        id: '5e86809283e28b96d2d38537',
+        avatar: '/assets/avatars/avatar-anika-visser.png',
+        name: 'Anika Visser',
+        email: 'anika.visser@devias.io'
+      };
 
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -107,23 +108,41 @@ export const AuthProvider = (props) => {
     []
   );
 
- 
+  const skip = () => {
+    try {
+      window.sessionStorage.setItem('authenticated', 'true');
+    } catch (err) {
+      console.error(err);
+    }
+
+    const user = {
+      id: '5e86809283e28b96d2d38537',
+      avatar: '/assets/avatars/avatar-anika-visser.png',
+      name: 'Anika Visser',
+      email: 'anika.visser@devias.io'
+    };
+
+    dispatch({
+      type: HANDLERS.SIGN_IN,
+      payload: user
+    });
+  };
+
   const signIn = async (username, password) => {
     try {
       const responseLogin = await loginAuth({ username, password });
       setupLocalStorage(responseLogin.data.accessToken);
-      window.sessionStorage.setItem('authenticated', 'true');  
+      window.sessionStorage.setItem('authenticated', 'true');
 
       const user = {
-       id: responseLogin?.data?.userId,
+        id: responseLogin?.data?.userId,
         name: username,
       };
 
-      
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: user
-      });zzzz
+      });
 
     } catch (err) {
       console.error(err);
