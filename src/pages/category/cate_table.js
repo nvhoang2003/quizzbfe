@@ -82,15 +82,15 @@ import { useSnackbar } from 'notistack';
     push(`category/edit/` + row.id);
   };
 
-  const handleDeleteRow = async(id)=>{
+  const handleDeleteRow = async (id) => {
     const response = await deleteCateByID(id);
-    
+
     if (response.status < 400) {
       push('/category');
         await fetchAll();
         enqueueSnackbar(response.data.message, { variant: 'success' });
     } else {
-        enqueueSnackbar(response.response.data.title, { variant: 'error' });
+      enqueueSnackbar(response.response.data.title, { variant: "error" });
     }
 
     // if (page > 0) {

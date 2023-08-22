@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useAuthContext } from 'src/contexts/auth-context';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -29,6 +30,7 @@ export const AuthGuard = (props) => {
 
       if (!isAuthenticated) {
         console.log('Not authenticated, redirecting');
+        enqueueSnackbar("Chưa đăng nhập", {variant: 'error'});
         router
           .replace({
             pathname: '/auth/login',

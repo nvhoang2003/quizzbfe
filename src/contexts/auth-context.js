@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef, useState } fr
 import PropTypes from 'prop-types';
 import { setupLocalStorage } from '@/auth/utils';
 import { loginAuth } from '@/dataProvider/authApi';
+import snackbarUtils from '@/utils/snackbar-utils';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -14,9 +15,6 @@ const initialState = {
   isLoading: true,
   user: null
 };
-
-
-
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
     const user = action.payload;
@@ -123,14 +121,31 @@ export const AuthProvider = (props) => {
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: user
-      });zzzz
+      });
+      if (responseLogin.status < 400) {
+        setupLocalStorage(responseLogin.data.accessToken);
+        window.sessionStorage.setItem('authenticated', 'true');  
+        snackbarUtils.success('Đăng nhập thành công');
+        const user = {
+         id: responseLogin?.data?.userId,
+          name: username,
+        };
 
+        dispatch({
+          type: HANDLERS.SIGN_IN,
+          payload: user
+        });
+      }
+       
+      return responseLogin;
     } catch (err) {
       console.error(err);
     }
 
   };
   const signOut = () => {
+    setupLocalStorage("");
+    window.sessionStorage.setItem('authenticated', 'false');  
     dispatch({
       type: HANDLERS.SIGN_OUT
     });

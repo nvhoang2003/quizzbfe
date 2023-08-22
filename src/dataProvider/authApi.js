@@ -7,8 +7,8 @@ const authApiPath = {
   loginPath: authPath + '/login'
 }
 
-const loginAuth = (payload) => {
-  return postApi(authApiPath.loginPath, payload);
+const loginAuth = async (payload) => {
+  return await postApi(authApiPath.loginPath, payload);
 };
 
 export {
