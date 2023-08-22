@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef, useState } fr
 import PropTypes from 'prop-types';
 import { setupLocalStorage } from '@/auth/utils';
 import { loginAuth } from '@/dataProvider/authApi';
+import snackbarUtils from '@/utils/snackbar-utils';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -113,7 +114,7 @@ export const AuthProvider = (props) => {
       if (responseLogin.status < 400) {
         setupLocalStorage(responseLogin.data.accessToken);
         window.sessionStorage.setItem('authenticated', 'true');  
-  
+        snackbarUtils.success('Đăng nhập thành công');
         const user = {
          id: responseLogin?.data?.userId,
           name: username,

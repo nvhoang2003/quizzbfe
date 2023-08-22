@@ -10,6 +10,7 @@ import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { SnackbarProvider } from 'notistack';
+import { SnackbarUtilsConfigurator } from '@/utils/snackbar-utils';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -46,6 +47,7 @@ const App = (props) => {
                 horizontal: 'right',
               }}
             >
+              <SnackbarUtilsConfigurator />
               <AuthConsumer>
               {
                 (auth) => auth.isLoading

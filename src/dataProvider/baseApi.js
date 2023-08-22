@@ -1,14 +1,19 @@
 import axios from "axios";
+import snackbarUtils from '@/utils/snackbar-utils';
 
 const axiosError = (response) => {
   const axiosDisplayError = ["ERR_NETWORK"];
   const axiosNonDisplayError = ["ERR_BAD_RESPONSE"];
 
   if (!!axiosNonDisplayError.includes(response.code)) {
+    snackbarUtils.error('Hệ thống bị lỗi!');
     console.log("Hệ thống bị lỗi!");
+    return true;
   }
 
   if (!!axiosDisplayError.includes(response.code)) {
+    console.log("ERR_NETWORK");
+    snackbarUtils.error('ERR_NETWORK');
     return true;
   }
 

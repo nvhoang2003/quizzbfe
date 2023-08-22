@@ -42,9 +42,9 @@ const Page = () => {
       try {
         const response = await auth.signIn(values.username, values.password);
 
-        if (axiosError(response)) {
-          enqueueSnackbar(response.message, {variant: 'error'});
-        }
+        // if (axiosError(response)) {
+        //   enqueueSnackbar(response.message, {variant: 'error'});
+        // }
 
         if (response.status < 400) {
           router.push("/");
