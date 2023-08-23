@@ -17,6 +17,12 @@ const axiosError = (response) => {
     return true;
   }
 
+  if(response.response.status == 403){
+   window.location.href="/";
+    snackbarUtils.error('Không có quyền');
+    return true;
+  }
+
   return false;
 };
 
@@ -50,6 +56,7 @@ const getApi = async (url, params) => {
   }
 
   const token = getLocalStorage("access_token");
+
   try {
     const res = await instance.get(url, {
       headers: {
@@ -59,7 +66,9 @@ const getApi = async (url, params) => {
     });
     return res;
   } catch (err) {
-    return err;
+    console.log(err);
+    axiosError(err);
+    return err; 
   }
 };
 
@@ -78,11 +87,11 @@ const postApi = async (url, payload, file) => {
         "Access-Control-Allow-Origin": "*",
       },
     });
+
+    
     return res;
   } catch (err) {
-    if (axiosError(err)) {
-    }
-
+    axiosError(err);
     return err;
   }
 };
@@ -95,8 +104,10 @@ const putApi = async (url, payload) => {
         Authorization: token ? `Bearer ${token}` : "no-author",
       },
     });
+
     return res;
   } catch (err) {
+    axiosError(err);
     return err;
   }
 };
@@ -110,8 +121,10 @@ const deleteApi = async (url) => {
         Authorization: token ? `Bearer ${token}` : "no-author",
       },
     });
+
     return res;
   } catch (err) {
+    axiosError(err);
     return err;
   }
 };

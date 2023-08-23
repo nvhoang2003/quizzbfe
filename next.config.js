@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     // HOST
     HOST_API_KEY: 'https://localhost:7117/',
