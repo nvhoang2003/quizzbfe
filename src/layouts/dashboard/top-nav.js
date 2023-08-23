@@ -58,6 +58,13 @@ export const TopNav = (props) => {
             direction="row"
             spacing={2}
           >
+            {!lgUp && (
+              <IconButton onClick={onNavOpen}>
+                <SvgIcon fontSize="small">
+                  <Bars3Icon />
+                </SvgIcon>
+              </IconButton>
+            )}
            
           </Stack>
           <Stack
