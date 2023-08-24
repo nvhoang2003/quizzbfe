@@ -81,7 +81,6 @@ export const TopNav = (props) => {
                 height: 40,
                 width: 40
               }}
-              src="/src/img/madaotosu4.jpg"
             />
           </Stack>
         </Stack>

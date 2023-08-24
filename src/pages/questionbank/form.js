@@ -116,9 +116,9 @@ export default function Form({ isEdit = false, currentLevel }) {
       ...updatedInputs[index],
       fraction: event.target.value
     };
-    console.log(updatedInputs.fraction);
+    // console.log(updatedInputs.fraction);
     setInputs(updatedInputs);
-    console.log(inputs);
+    // console.log(inputs);
   };
 
   const handleAddInput = () => {
