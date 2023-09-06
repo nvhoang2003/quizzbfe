@@ -27,7 +27,7 @@ body {
     rgb(var(--background-start-rgb)); */
 }
 
-.title {
+/* .title {
   text-align: center;
   font-weight: bold;
   font-size: x-large;
@@ -45,7 +45,7 @@ body {
   align-items: center;
   margin: 25px auto;
   padding: 15px auto;
-}
+} */
 
 .bg-login {
   /* background-image: url('/v1015-104a.jpg');
@@ -53,4 +53,10 @@ body {
   background-position: center;
   background-repeat: no-repeat; */
   height: 100vh;
+}
+
+/* breadcrumbs */
+.breadcrumbs {
+  max-width: 1200px;
+  padding-left: 50px;
 }

@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
 import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
+import BreadCrumbs from '@/components/bread-crumbs/BreadCrumbs';
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -24,7 +25,7 @@ const LayoutContainer = styled('div')({
 });
 
 export const Layout = withAuthGuard((props) => {
-  const { children } = props;
+  const { children, showBreadCrumbs } = props;
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
 
@@ -54,6 +55,7 @@ export const Layout = withAuthGuard((props) => {
       />
       <LayoutRoot>
         <LayoutContainer>
+          {showBreadCrumbs != false && <BreadCrumbs />}
           {children}
         </LayoutContainer>
       </LayoutRoot>

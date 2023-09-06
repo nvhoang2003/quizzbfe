@@ -11,6 +11,7 @@ import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from '@/utils/snackbar-utils';
+import '@/styles/globals.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -29,7 +30,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-         QuizzBank
+          QuizzBank
         </title>
         <meta
           name="viewport"
@@ -49,12 +50,12 @@ const App = (props) => {
             >
               <SnackbarUtilsConfigurator />
               <AuthConsumer>
-              {
-                (auth) => auth.isLoading
-                  ? <SplashScreen />
-                  : getLayout(<Component {...pageProps} />)
-              }
-            </AuthConsumer>
+                {
+                  (auth) => auth.isLoading
+                    ? <SplashScreen />
+                    : getLayout(<Component {...pageProps} />)
+                }
+              </AuthConsumer>
             </SnackbarProvider>
           </ThemeProvider>
         </AuthProvider>
