@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
-import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
 import BreadCrumbs from '@/components/bread-crumbs/BreadCrumbs';
+import { Stack } from '@mui/material';
 
-const SIDE_NAV_WIDTH = 280;
+const SIDE_NAV_WIDTH = 10;
 
 const LayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -26,36 +26,22 @@ const LayoutContainer = styled('div')({
 
 export const Layout = withAuthGuard((props) => {
   const { children, showBreadCrumbs } = props;
-  const pathname = usePathname();
-  const [openNav, setOpenNav] = useState(false);
-
-  const handlePathnameChange = useCallback(
-    () => {
-      if (openNav) {
-        setOpenNav(false);
-      }
-    },
-    [openNav]
-  );
-
-  useEffect(
-    () => {
-      handlePathnameChange();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pathname]
-  );
 
   return (
     <>
-      <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav
-        onClose={() => setOpenNav(false)}
-        open={openNav}
-      />
+      <TopNav />
       <LayoutRoot>
         <LayoutContainer>
-          {showBreadCrumbs != false && <BreadCrumbs />}
+          {showBreadCrumbs != false &&
+
+            <Stack  sx={{
+              py: 2
+            }}>
+              <BreadCrumbs />
+            </Stack>
+
+
+          }
           {children}
         </LayoutContainer>
       </LayoutRoot>
