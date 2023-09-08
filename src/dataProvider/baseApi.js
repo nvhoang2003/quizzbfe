@@ -1,12 +1,15 @@
 import axios from "axios";
-import snackbarUtils from '@/utils/snackbar-utils';
+import snackbarUtils from "@/utils/snackbar-utils";
 
 const axiosError = (response) => {
+  const apiStatusError = {
+    403: "Không có quyền",
+  };
   const axiosDisplayError = {
-    "ERR_NETWORK": "Lỗi kết nối"
+    ERR_NETWORK: "Lỗi kết nối",
   };
   const axiosNonDisplayError = {
-    "ERR_BAD_RESPONSE": "Lỗi hệ thống"
+    ERR_BAD_RESPONSE: "Lỗi hệ thống",
   };
 
   if (axiosNonDisplayError[response.code]) {
@@ -17,6 +20,12 @@ const axiosError = (response) => {
   if (axiosDisplayError[response.code]) {
     console.log(axiosDisplayError[response.code]);
     snackbarUtils.error(axiosDisplayError[response.code]);
+    return true;
+  }
+
+  if (response.response.status == 403) {
+    window.location.href = "/";
+    snackbarUtils.error(apiStatusError[response.response.status]);
     return true;
   }
 
@@ -53,6 +62,7 @@ const getApi = async (url, params) => {
   }
 
   const token = getLocalStorage("access_token");
+
   try {
     const res = await instance.get(url, {
       headers: {
@@ -82,6 +92,7 @@ const postApi = async (url, payload, file) => {
         "Access-Control-Allow-Origin": "*",
       },
     });
+
     return res;
   } catch (err) {
     axiosError(err);
@@ -97,6 +108,7 @@ const putApi = async (url, payload) => {
         Authorization: token ? `Bearer ${token}` : "no-author",
       },
     });
+
     return res;
   } catch (err) {
     axiosError(err);
@@ -113,6 +125,7 @@ const deleteApi = async (url) => {
         Authorization: token ? `Bearer ${token}` : "no-author",
       },
     });
+
     return res;
   } catch (err) {
     axiosError(err);

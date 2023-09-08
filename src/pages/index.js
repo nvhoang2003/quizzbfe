@@ -13,11 +13,11 @@ import { OverviewTraffic } from 'src/pages/home/overview/overview-traffic';
 
 const now = new Date();
 
-const Page = () => (
+const HomePage = () => (
   <>
     <Head>
       <title>
-        Overview 
+        Overview
       </title>
     </Head>
     <Box
@@ -138,7 +138,7 @@ const Page = () => (
                 },
                 {
                   id: 'bcad5524fe3a2f8f8620ceda',
-                 // image: '/assets/products/product-7.png',
+                  // image: '/assets/products/product-7.png',
                   name: 'Healthcare Ritual',
                   updatedAt: subDays(subHours(now, 5), 6).getTime()
                 }
@@ -223,10 +223,10 @@ const Page = () => (
   </>
 );
 
-Page.getLayout = (page) => (
-  <DashboardLayout>
+HomePage.getLayout = (page) => (
+  <DashboardLayout showBreadCrumbs={false}>
     {page}
   </DashboardLayout>
 );
 
-export default Page;
+export default HomePage;

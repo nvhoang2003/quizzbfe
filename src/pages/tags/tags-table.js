@@ -52,9 +52,7 @@ export const TagsTable = (props) => {
     fetchTags({ ...filter, pageIndex: newPage });
   };
   
-
-  
-  async function fetchTags() {
+  async function fetchTags () {
     const res = await getAllTags(filter);
     if (res.status < 400) {
       const transformData = res.data.data.map((tag) => {
@@ -66,8 +64,6 @@ export const TagsTable = (props) => {
       });
       setPaging(JSON.parse(res.headers['x-pagination']));
       setTagData(transformData);
-    } else {
-      return res;
     }
   }
 
@@ -75,16 +71,14 @@ export const TagsTable = (props) => {
     const res = await deleteTag(id);
     if (res.status < 400) {
         setSelected([]);
-        await fetchTags(filter);
+        //await fetchTags(filter);
         enqueueSnackbar('Disable/User Activation Successful');
     } else {
         enqueueSnackbar('Disable/User activation failed', { variant: 'error' });
     }
-};
+  };
 
-
-
-useEffect(() => {
+  useEffect(() => {
     fetchTags();
   }, [filter]);
 

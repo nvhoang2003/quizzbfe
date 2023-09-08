@@ -12,6 +12,7 @@ import 'simplebar-react/dist/simplebar.min.css';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from '@/utils/snackbar-utils';
 import SnackbarCloseButton from '@/components/snackbar/close-button';
+import '@/styles/globals.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -30,7 +31,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-         QuizzBank
+          QuizzBank
         </title>
         <meta
           name="viewport"
