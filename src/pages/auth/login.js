@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,22 +9,27 @@ import {
   Box,
   Button,
   FormHelperText,
+  IconButton,
+  InputAdornment,
   Link,
   Stack,
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
   colors,
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from "notistack";
 import { axiosError } from "src/dataProvider/baseApi";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+  const [showPassword, setShowPassword] = React.useState(false);
   const [message, setMessage] = useState("");
   const [method, setMethod] = useState("login");
   const { enqueueSnackbar } = useSnackbar();
@@ -42,10 +47,6 @@ const Page = () => {
       try {
         const response = await auth.signIn(values.username, values.password);
 
-        // if (axiosError(response)) {
-        //   enqueueSnackbar(response.message, {variant: 'error'});
-        // }
-
         if (response.status < 400) {
           router.push("/");
         } else {
@@ -58,6 +59,12 @@ const Page = () => {
       }
     },
   });
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleMethodChange = useCallback((event, value) => {
     setMethod(value);
@@ -153,7 +160,22 @@ const Page = () => {
                     name="password"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    type="password"
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title={showPassword ? "Hide" : "Show"} placement="right" arrow>
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}
                     value={formik.values.password}
                   />
                 </Stack>
@@ -168,8 +190,9 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
+                  disabled={formik.isValidating || formik.isSubmitting}
                 >
-                  Continue
+                  {formik.isSubmitting ? "Keep Going..." : "Continue"}
                 </Button>
               </form>
             )}

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AuthConsumer, AuthProvider } from 'src/contexts/auth-context';
 import { useNProgress } from 'src/hooks/use-nprogress';
@@ -11,6 +11,7 @@ import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from '@/utils/snackbar-utils';
+import SnackbarCloseButton from '@/components/snackbar/close-button';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -46,15 +47,16 @@ const App = (props) => {
                 vertical: 'top',
                 horizontal: 'right',
               }}
+              action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey} />}
             >
               <SnackbarUtilsConfigurator />
               <AuthConsumer>
-              {
-                (auth) => auth.isLoading
-                  ? <SplashScreen />
-                  : getLayout(<Component {...pageProps} />)
-              }
-            </AuthConsumer>
+                {
+                  (auth) => auth.isLoading
+                    ? <SplashScreen />
+                    : getLayout(<Component {...pageProps} />)
+                }
+              </AuthConsumer>
             </SnackbarProvider>
           </ThemeProvider>
         </AuthProvider>

@@ -2,18 +2,21 @@ import axios from "axios";
 import snackbarUtils from '@/utils/snackbar-utils';
 
 const axiosError = (response) => {
-  const axiosDisplayError = ["ERR_NETWORK"];
-  const axiosNonDisplayError = ["ERR_BAD_RESPONSE"];
+  const axiosDisplayError = {
+    "ERR_NETWORK": "Lỗi kết nối"
+  };
+  const axiosNonDisplayError = {
+    "ERR_BAD_RESPONSE": "Lỗi hệ thống"
+  };
 
-  if (!!axiosNonDisplayError.includes(response.code)) {
-    snackbarUtils.error('Hệ thống bị lỗi!');
-    console.log("Hệ thống bị lỗi!");
+  if (axiosNonDisplayError[response.code]) {
+    console.log(axiosNonDisplayError[response.code]);
     return true;
   }
 
-  if (!!axiosDisplayError.includes(response.code)) {
-    console.log("ERR_NETWORK");
-    snackbarUtils.error('ERR_NETWORK');
+  if (axiosDisplayError[response.code]) {
+    console.log(axiosDisplayError[response.code]);
+    snackbarUtils.error(axiosDisplayError[response.code]);
     return true;
   }
 
@@ -59,6 +62,7 @@ const getApi = async (url, params) => {
     });
     return res;
   } catch (err) {
+    axiosError(err);
     return err;
   }
 };
@@ -80,9 +84,7 @@ const postApi = async (url, payload, file) => {
     });
     return res;
   } catch (err) {
-    if (axiosError(err)) {
-    }
-
+    axiosError(err);
     return err;
   }
 };
@@ -97,6 +99,7 @@ const putApi = async (url, payload) => {
     });
     return res;
   } catch (err) {
+    axiosError(err);
     return err;
   }
 };
@@ -112,6 +115,7 @@ const deleteApi = async (url) => {
     });
     return res;
   } catch (err) {
+    axiosError(err);
     return err;
   }
 };
