@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -33,6 +33,9 @@ const Page = () => {
   const [message, setMessage] = useState("");
   const [method, setMethod] = useState("login");
   const { enqueueSnackbar } = useSnackbar();
+  const searchParams = useSearchParams();
+  const continueUrl = searchParams.get("continueUrl");
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -40,22 +43,24 @@ const Page = () => {
       submit: null,
     },
     validationSchema: Yup.object({
-      username: Yup.string().max(255).required("User Name is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      username: Yup.string().max(255).required("Tên tài khoản chưa được nhập"),
+      password: Yup.string().max(255).required("Mật khẩu chưa được nhập"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         const response = await auth.signIn(values.username, values.password);
 
         if (response.status < 400) {
-          router.push("/");
+          if (continueUrl && continueUrl != null && continueUrl != "") {
+            router.push(continueUrl);
+          } else {
+            router.push("/");
+          }
         } else {
           setMessage(response.response?.data?.title);
         }
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        console.log(err);
       }
     },
   });
@@ -78,7 +83,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Login</title>
+        <title>Đăng nhập</title>
       </Head>
       <Box
         sx={{
@@ -99,16 +104,16 @@ const Page = () => {
         >
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Login</Typography>
+              <Typography variant="h4">Đăng Nhập</Typography>
               <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
+                Chưa có tài khoản ?
                 <Link
                   component={NextLink}
                   href="/auth/register"
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Register
+                  Đăng ký
                 </Link>
               </Typography>
             </Stack>
@@ -141,7 +146,7 @@ const Page = () => {
                     helperText={
                       formik.touched.username && formik.errors.username
                     }
-                    label="User Name"
+                    label="Tên tài khoản"
                     name="username"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -156,7 +161,7 @@ const Page = () => {
                     helperText={
                       formik.touched.password && formik.errors.password
                     }
-                    label="Password"
+                    label="Mật khẩu"
                     name="password"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -164,13 +169,21 @@ const Page = () => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Tooltip title={showPassword ? "Hide" : "Show"} placement="right" arrow>
+                          <Tooltip
+                            title={showPassword ? "Đang ẩn" : "Đang hiện"}
+                            placement="right"
+                            arrow
+                          >
                             <IconButton
                               aria-label="toggle password visibility"
                               onClick={handleClickShowPassword}
                               onMouseDown={handleMouseDownPassword}
                             >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
                             </IconButton>
                           </Tooltip>
                         </InputAdornment>
@@ -192,7 +205,7 @@ const Page = () => {
                   variant="contained"
                   disabled={formik.isValidating || formik.isSubmitting}
                 >
-                  {formik.isSubmitting ? "Keep Going..." : "Continue"}
+                  {formik.isSubmitting ? "Đăng nhập..." : "Đăng nhập"}
                 </Button>
               </form>
             )}
