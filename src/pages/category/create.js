@@ -1,26 +1,24 @@
 import PropTypes from 'prop-types';
-import { Card, Divider, Grid} from '@mui/material';
+import { Card, Divider, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import Form from './form';
 
 // ----------------------------------------------------------------------
 
 NewForm.propTypes = {
-    isEdit: PropTypes.bool,
-    currentLevel: PropTypes.object,
+  isEdit: PropTypes.bool,
+  currentLevel: PropTypes.object,
 };
 
 export default function NewForm() {
 
-    return (
-        <Grid container spacing={3}>
-            <Grid item xs={12} >
-                <Card sx={{ p: 3 }}>
-                    <Form />
-                </Card>
-            </Grid>
-        </Grid>
-    );
+  return ( 
+      <Grid item xs={12} >
+        <Card sx={{ p: 3 }}>
+          <Form />
+        </Card>
+      </Grid>
+  );
 }
 
 NewForm.getLayout = (page) => (
