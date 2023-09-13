@@ -64,7 +64,7 @@ const QuestionBankTable = ({ questionData }) => {
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'questionstype', headerName: 'Questions Type', width: 200 },
     { field: 'authorName', headerName: 'Author Name', width: 150 },
-    { field: 'tags', headerName: 'Tag', width: 150 },
+    { field: 'tags', headerName: 'Tags', width: 150 },
     { field: 'categoryName', headerName: 'Category', width: 150 },
     {
       field: 'actions',
@@ -120,8 +120,8 @@ const QuestionBankTable = ({ questionData }) => {
   }
 
 
-  async function fetchAll(data) {//filter
-    const res = await getAllQuestionbank(data);
+  async function fetchAll() {//filter
+    const res = await getAllQuestionbank();
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
         return {
@@ -146,6 +146,7 @@ const QuestionBankTable = ({ questionData }) => {
   useEffect(() => {
     if (questionData && questionData.length > 0) {
       setData(questionData);
+      console.log(questionData);
     } else {
       fetchAll(data);
     }

@@ -120,7 +120,7 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
 
 
   async function fetchAllQuestion(data) {//filter
-    // console.log(data);
+    //console.log(data);
     const res = await getAllQuestionbank(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
@@ -130,7 +130,7 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
           name: qb.name,
           questionstype: qb.questionstype,
           authorName: qb.authorName,
-          tags: qb.tags[0] ? qb.tags[0].name : "",
+          tags: qb.tags[0].name ? qb.tags[0].name : "",
           categoryName: qb.categoryName,
         };
       });
@@ -161,7 +161,7 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
       };
       fetchAllQuestion(Data);
       handleSearchSubmit(newData);
-      // console.log(newData);
+
     } catch (error) {
       snackbarUtils.error(error);
     }
@@ -301,10 +301,3 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
   );
 };
 export default Search;
-
-// Search.getLayout = (page) => (
-//   <DashboardLayout>
-//     {page}
-//   </DashboardLayout>
-// );
-

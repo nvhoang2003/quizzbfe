@@ -122,15 +122,15 @@ const Page = () => {
                         <Typography textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
                           Chọn loại câu hỏi bạn muốn tạo mới
                         </Typography>
-                        <Grid container >
+                        {/* <Grid container spacing={2}> */}
                           {links.map((link, index) => (
-                            <Grid xs={index % 2 === 0 ? 8 : 4} key={index} md={4} spacing={2}>
+                            <Grid item xs={6} key={index} md={4}>
                               <Button href={link.href}>
                                 <Item>{link.label}</Item>
                               </Button>
                             </Grid>
                           ))}
-                        </Grid>
+                        {/* </Grid> */}
                       </Box>
                     </DialogContent>
                   </Dialog>
