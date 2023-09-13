@@ -15,7 +15,12 @@ function getAllTags(params) {
 function deleteTag(id){
   return deleteApi(tagApiPath.deleteTag);
 }
+//Tags/getListAllTagByCategoryID?categoryID=
+function getTagByCategory(id){
+  return getApi(`Tags/getListAllTagByCategoryID?categoryID=${id}`);
+}
 export {
   getAllTags,
-  deleteTag
+  deleteTag,
+  getTagByCategory
 }

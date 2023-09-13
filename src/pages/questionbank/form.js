@@ -116,9 +116,9 @@ export default function Form({ isEdit = false, currentLevel }) {
       ...updatedInputs[index],
       fraction: event.target.value
     };
-    console.log(updatedInputs.fraction);
+    // console.log(updatedInputs.fraction);
     setInputs(updatedInputs);
-    console.log(inputs);
+    // console.log(inputs);
   };
 
   const handleAddInput = () => {
@@ -208,7 +208,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         <Grid container spacing={3}>
           <Grid item xs={12} >
             <Card sx={{ p: 5 }}>
-              <Typography variant="h4" sx={{ color: 'text.disabled', mb: 3 }}>
+              <Typography textAlign='center' variant="h4" sx={{ color: 'text.disabled', mb: 3 }}>
                 {!isEdit ? 'Tạo mới QuestionBank' : 'Cập nhật'}
               </Typography>
               <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
@@ -243,6 +243,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '1rem', fontWeight: 400, width: '200px' }}>Category</span>
                       <RHFSelect name="categoryId" placeholder="Category" onChange={handlerCategoryChange}>
+                      <option value="">-- Select Tag --</option>
                         {!_.isEmpty(cate) &&
                           cate.map((option) => (
                             <option key={option.id} value={option.id}>
