@@ -88,7 +88,7 @@ const postApi = async (url, payload, file) => {
       },
     });
 
-    console.log(payload);
+    // console.log(payload);
     return res;
   } catch (err) {
     axiosError(err);

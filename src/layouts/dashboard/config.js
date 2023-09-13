@@ -67,13 +67,5 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Question Bank',
-    path: '/questionbank',
-    icon: (
-      <SvgIcon fontSize="small">
-         <CogIcon />
-      </SvgIcon>
-    )
-  },
+ 
 ];

@@ -19,6 +19,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import RHFRadioGroup from '@/components/form/RHFRadioGroup';
 import RHFSwitch from '@/components/form/RHFSwitch';
 import { getTagByCategory } from '@/dataProvider/tagApi';
+import RHFSelect from '@/components/form/RHFSelect';
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -255,7 +256,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   //allquestiontype
   async function createNew(data) {
     try {
-      console.log(data);
+      // console.log(data);
       const res = await create(
         {
           name: data.name,
@@ -368,7 +369,7 @@ export default function Form({ isEdit = false, currentLevel }) {
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '1rem', fontWeight: 400, width: '200px' }}>Category</span>
-                      {/* <RHFSelect name="categoryId" placeholder="Category" onChange={handleCateChange}>
+                      <RHFSelect name="categoryId" placeholder="Category" onChange={handleCateChange}>
                         <option value="">-- Select Category --</option>
                         {!_.isEmpty(category) &&
                           category.map((option) => (
@@ -376,7 +377,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                               {option.name}
                             </option>
                           ))}
-                      </RHFSelect> */}
+                      </RHFSelect>
                     </div>
 
 
