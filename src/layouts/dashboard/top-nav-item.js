@@ -30,7 +30,6 @@ export const TopNavItem = (props) => {
           pr: '14px',
           py: '6px',
           textAlign: 'center',
-          width: '150px',
           ...(active && {
             backgroundColor: 'rgba(255, 255, 255, 0.04)'
           }),
