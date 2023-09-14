@@ -37,7 +37,6 @@ import {
 } from "@/components/table";
 import QuizTableRows from "@/sections/@dashboard/list/quiz/QuizTableRows";
 import { getAllQuiz } from "@/dataProvider/quizApi";
-import TableResponsiveCustom from "@/components/table/TableResponsiveCustom";
 import TableBodyCustom from "@/components/table/TableBodyCustom";
 
 const TABLE_HEAD = [

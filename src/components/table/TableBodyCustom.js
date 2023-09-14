@@ -1,10 +1,10 @@
+import { TableBody } from '@mui/material';
 import PropTypes from 'prop-types';
-const { TableBody } = require("@mui/material");
-const { default: TableEmptyRows } = require("./TableEmptyRows");
-const { emptyRows } = require("./utils");
-const { default: TableNoData } = require("./TableNoData");
+import TableEmptyRows from './TableEmptyRows';
+import TableNoData from './TableNoData';
+import { emptyRows } from './utils';
 
-TableResponsiveCustom.propTypes = {
+TableBodyCustom.propTypes = {
   compomentRows: PropTypes.node
 }
 
