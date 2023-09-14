@@ -64,7 +64,7 @@ export default function TablePaginationCustom({
           }}
         >
           {rowsPerPageOptions.map((item, index) => (
-            <MenuItem value={item}>{item}</MenuItem>
+            <MenuItem key={item} value={item}>{item}</MenuItem>
           ))}
         </Select>
       </Box>

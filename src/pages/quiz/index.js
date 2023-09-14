@@ -37,6 +37,7 @@ import {
 } from "@/components/table";
 import QuizTableRows from "@/sections/@dashboard/list/quiz/QuizTableRows";
 import { getAllQuiz } from "@/dataProvider/quizApi";
+import TableResponsiveCustom from "@/components/table/TableResponsiveCustom";
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "left" },
@@ -169,7 +170,7 @@ const Page = (props) => {
               justifyContent="space-between"
               spacing={4}
               sx={{
-                px: 1
+                px: 1,
               }}
             >
               <Stack spacing={1}>
@@ -217,49 +218,33 @@ const Page = (props) => {
                 />
               }
             />
-            <TableContainer sx={{ position: "relative", overflow: "unset" }}>
-              <Scrollbar>
-                <Table
-                  size={dense ? "small" : "medium"}
-                  sx={{ minWidth: "100%" }}
-                >
-                  <TableHeadCustom
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={listQuiz.length}
-                    numSelected={selected.length}
-                  />
-                  <TableBody>
-                    {listQuiz?.map((item, index) => (
-                      <QuizTableRows
-                        key={item.id}
-                        row={item}
-                        seleted={selected.includes(item.id)}
-                        onSelectRow={() => onSelectRow(item.id)}
-                        onDeleteRow={() => handleDeleteRow(item.id)}
-                        index={index}
-                      />
-                    ))}
-                    <TableEmptyRows
-                      height={denseHeight}
-                      emptyRows={emptyRows(page, rowsPerPage, listQuiz.length)}
-                    />
-
-                    <TableNoData
-                      isNotFound={isNotFound}
-                      message="Chưa có đề nào. Hãy tạo mới!"
-                    />
-                  </TableBody>
-                </Table>
-              </Scrollbar>
-              <TablePaginationCustom
-                paging={paging}
-                onChangeRowsPerPage={handleRowsPerPageChange}
-                onChangePage={handlePageChange}
-                rowsPerPageOptions={[10, 25, 50]}
-              />
-            </TableContainer>
+            <TableResponsiveCustom
+              dense={dense}
+              denseHeight={denseHeight}
+              order={order}
+              orderBy={orderBy}
+              tableHead={TABLE_HEAD}
+              listItem={listQuiz}
+              selected={selected}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              compomentRows={listQuiz?.map((item, index) => (
+                <QuizTableRows
+                  key={item.id}
+                  row={item}
+                  seleted={selected.includes(item.id)}
+                  onSelectRow={() => onSelectRow(item.id)}
+                  onDeleteRow={() => handleDeleteRow(item.id)}
+                  index={index}
+                />
+              ))}
+              isNotFound={isNotFound}
+              notFoundMessage={"Chưa có đề nào. Hãy tạo mới!"}
+              paging={paging}
+              onChangeRowsPerPage={handleRowsPerPageChange}
+              onChangePage={handlePageChange}
+              rowsPerPageOptions={[10, 25, 50]}
+            />
           </Stack>
         </Container>
       </Box>

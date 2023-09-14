@@ -1,36 +1,50 @@
 import axios from "axios";
 import snackbarUtils from "@/utils/snackbar-utils";
 
-const axiosError = (response) => {
-  const apiStatusError = {
-    403: "Không có quyền",
-  };
-  const axiosDisplayError = {
-    ERR_NETWORK: "Lỗi kết nối",
-  };
-  const axiosNonDisplayError = {
-    ERR_BAD_RESPONSE: "Lỗi hệ thống",
-  };
+const axiosDisplayError = {
+  ERR_NETWORK: "Lỗi kết nối",
+};
+const axiosNonDisplayError = {
+  ERR_BAD_RESPONSE: "Lỗi hệ thống",
+};
+const apiStatusError = {
+  403: {
+    message: "Không có quyền",
+    returnUrl: "/",
+  },
+  401: {
+    message: "Hết hạn token",
+    returnUrl: "/auth/login",
+  },
+};
 
+const axiosError = (response) => {
   if (axiosNonDisplayError[response.code]) {
     console.log(axiosNonDisplayError[response.code]);
-    return true;
   }
 
   if (axiosDisplayError[response.code]) {
     console.log(axiosDisplayError[response.code]);
     snackbarUtils.error(axiosDisplayError[response.code]);
-    return true;
   }
+};
 
-  if (response.response.status == 403) {
-    window.location.href = "/";
-    snackbarUtils.error(apiStatusError[response.response.status]);
+const apiError = (response) => {
+  if (apiStatusError[response.response.status]) {
+    window.location.href = apiStatusError[response.response.status].returnUrl;
+    snackbarUtils.error(apiStatusError[response.response.status].message);
     return true;
   }
 
   return false;
 };
+
+const catchError = (err) => {
+  axiosError(err);
+  apiError(err);
+
+  return false;
+}
 
 const instance = axios.create({
   baseURL: `${process.env.HOST_API_KEY}api/`,
@@ -72,7 +86,7 @@ const getApi = async (url, params) => {
     });
     return res;
   } catch (err) {
-    axiosError(err);
+    catchError(err);
     return err;
   }
 };
@@ -95,7 +109,7 @@ const postApi = async (url, payload, file) => {
 
     return res;
   } catch (err) {
-    axiosError(err);
+    catchError(err);
     return err;
   }
 };
@@ -111,7 +125,7 @@ const putApi = async (url, payload) => {
 
     return res;
   } catch (err) {
-    axiosError(err);
+    catchError(err);
     return err;
   }
 };
@@ -128,7 +142,7 @@ const deleteApi = async (url) => {
 
     return res;
   } catch (err) {
-    axiosError(err);
+    catchError(err);
     return err;
   }
 };
