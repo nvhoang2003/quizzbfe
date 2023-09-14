@@ -41,7 +41,7 @@ export default function TableHeadCustom({
 }) {
   return (
     <TableHead sx={sx}>
-      <TableRow>
+      <TableRow sx={{bgcolor: "#ffffff"}}>
         {onSelectAllRows && (
           <TableCell padding="checkbox">
 

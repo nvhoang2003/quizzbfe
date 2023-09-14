@@ -8,15 +8,16 @@ import EmptyContent from '../empty-content';
 
 TableNoData.propTypes = {
   isNotFound: PropTypes.bool,
+  message: PropTypes.string
 };
 
-export default function TableNoData({ isNotFound }) {
+export default function TableNoData({ isNotFound, message }) {
   return (
     <TableRow>
       {isNotFound ? (
         <TableCell colSpan={12}>
           <EmptyContent
-            title="Không có dữ liệu"
+            title={message}
             sx={{
               '& span.MuiBox-root': { height: 160 },
             }}
