@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+
+import { useState } from 'react'; import PropTypes from 'prop-types';
 import BellIcon from '@heroicons/react/24/solid/BellIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import Bars3Icon from '@heroicons/react/24/solid/Bars3Icon';
@@ -11,86 +12,177 @@ import {
   Stack,
   SvgIcon,
   Tooltip,
-  useMediaQuery
+  useMediaQuery,
+  AppBar,
+  MenuItem,
+  Container,
+  Toolbar,
+  Typography,
+  Menu,
+  Button
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { usePopover } from 'src/hooks/use-popover';
 import { AccountPopover } from './account-popover';
+import AdbIcon from '@mui/icons-material/Adb';
+import MenuIcon from '@mui/icons-material/Menu';
+import { items } from './config';
+import { SideNavItem } from './side-nav-item';
+import { TopNavItem } from './top-nav-item';
+import { usePathname } from 'next/navigation';
 
-const SIDE_NAV_WIDTH = 280;
-const TOP_NAV_HEIGHT = 64;
-
-export const TopNav = (props) => {
-  const { onNavOpen } = props;
+export const TopNav = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const accountPopover = usePopover();
+  const pathname = usePathname();
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
 
   return (
     <>
-      <Box
-        component="header"
-        sx={{
-          backdropFilter: 'blur(6px)',
-          backgroundColor: (theme) => alpha(theme.palette.background.default, 0.8),
-          position: 'sticky',
-          left: {
-            lg: `${SIDE_NAV_WIDTH}px`
-          },
-          top: 0,
-          width: {
-            lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`
-          },
-          zIndex: (theme) => theme.zIndex.appBar
-        }}
-      >
-        <Stack
-          alignItems="center"
-          direction="row"
-          justifyContent="space-between"
-          spacing={2}
-          sx={{
-            minHeight: TOP_NAV_HEIGHT,
-            px: 2
-          }}
-        >
-          <Stack
-            alignItems="center"
-            direction="row"
-            spacing={2}
-          >
-            {!lgUp && (
-              <IconButton onClick={onNavOpen}>
-                <SvgIcon fontSize="small">
-                  <Bars3Icon />
-                </SvgIcon>
-              </IconButton>
-            )}
-           
-          </Stack>
-          <Stack
-            alignItems="center"
-            direction="row"
-            spacing={2}
-          >
-           
-            <Avatar
-              onClick={accountPopover.handleOpen}
-              ref={accountPopover.anchorRef}
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                cursor: 'pointer',
-                height: 40,
-                width: 40
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
-              src="/src/img/madaotosu4.jpg"
-            />
-          </Stack>
-        </Stack>
-      </Box>
-      <AccountPopover
-        anchorEl={accountPopover.anchorRef.current}
-        open={accountPopover.open}
-        onClose={accountPopover.handleClose}
-      />
+            >
+              LOGO
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              {!lgUp && (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {items.map((item) => {
+                  const active = item.path ? (pathname === item.path) : false;
+
+                  return (
+                    <TopNavItem
+                      active={active}
+                      disabled={item.disabled}
+                      external={item.external}
+                      icon={item.icon}
+                      key={item.title}
+                      path={item.path}
+                      title={item.title}
+                    />
+                  );
+                })}
+              </Menu>
+            </Box>
+            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              LOGO
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {items.map((item) => {
+                const active = item.path ? (pathname === item.path) : false;
+
+                return (
+                  <TopNavItem
+                    active={active}
+                    disabled={item.disabled}
+                    external={item.external}
+                    // icon={item.icon}
+                    key={item.title}
+                    path={item.path}
+                    title={item.title}
+                  />
+                );
+              })}
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Stack
+                alignItems="center"
+                direction="row"
+                spacing={2}
+              >
+
+                <Avatar
+                  onClick={accountPopover.handleOpen}
+                  ref={accountPopover.anchorRef}
+                  sx={{
+                    cursor: 'pointer',
+                    height: 40,
+                    width: 40
+                  }}
+                />
+              </Stack>
+              <AccountPopover
+                anchorEl={accountPopover.anchorRef.current}
+                open={accountPopover.open}
+                onClose={accountPopover.handleClose}
+              />
+
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
     </>
   );
 };

@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
-import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
 import BreadCrumbs from '@/components/bread-crumbs/BreadCrumbs';
+import React from 'react';
 
-const SIDE_NAV_WIDTH = 280;
+const SIDE_NAV_WIDTH = 10;
 
 const LayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -26,6 +26,13 @@ const LayoutContainer = styled('div')({
 
 export const Layout = withAuthGuard((props) => {
   const { children, showBreadCrumbs } = props;
+
+  const [lastPath, setLastPath] = useState("");
+
+  const setNewLastPath = (childData) => {
+    setLastPath(childData)
+  };
+
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
 
@@ -48,15 +55,15 @@ export const Layout = withAuthGuard((props) => {
 
   return (
     <>
-      <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav
-        onClose={() => setOpenNav(false)}
-        open={openNav}
-      />
+      <TopNav />
       <LayoutRoot>
         <LayoutContainer>
-          {showBreadCrumbs != false && <BreadCrumbs />}
-          {children}
+          {showBreadCrumbs != false && <BreadCrumbs lastPath={lastPath} />}
+          {React.Children.map(children, (child) => {
+            return React.cloneElement(child, {
+              changeLastPath: setNewLastPath // Truyền dữ liệu xuống children thông qua props
+            });
+          })}
         </LayoutContainer>
       </LayoutRoot>
     </>

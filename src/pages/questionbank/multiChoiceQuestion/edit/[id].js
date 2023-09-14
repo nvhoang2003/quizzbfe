@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import { Card, Grid, Box } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { getCateByID } from '@/dataProvider/categoryApi';
 import { React, useEffect, useState } from 'react';
-import Form from './form';
-import Head from 'next/head';
+import Form from '../form';
 import { useRouter } from 'next/router';
+import { getQuestionByID } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -20,41 +19,47 @@ export default function Edit() {
     query: { id }
   } = useRouter()
 
-  async function fetchCateByID() {
-    const res = await getCateByID(id);
+  async function fetchQuestionByID() {
+    const res = await getQuestionByID(id);
+    console.log(res.data.data);
     if (res.status < 400) {
-      const cate = res.data.data;
+      const q = res.data.data;
       const transformData = {
-        name: cate.name,
-        id: cate.id,
-        description: cate.description
+        id: q.id,
+        name: q.name,
+        generalfeedback:q.generalfeedback,
+        content: q.content,
+        defaultMark: q.defaultMark,
+        categoryId : q.categoryId,
+        tagId: q.tags,
+
+
       };
       setEditData(transformData);
-
+      
     } else {
       return res;
     }
   };
 
+
   useEffect(() => {
     if (id) {
-      fetchCateByID(id);
+      fetchQuestionByID(id);
     }
   }, [id]);
 
   return (
-    <>
-      <Head>
-        Edit Category
-      </Head>
-      <Box container spacing={3}>
+    <div>
+      <Grid container spacing={3}>
         <Grid item xs={12} >
           <Card sx={{ p: 3 }}>
             <Form isEdit={true} currentLevel={editData} />
           </Card>
         </Grid>
-      </Box>
-    </>
+      </Grid>
+    </div>
+
   );
 }
 
