@@ -72,21 +72,7 @@ const Page = (props) => {
 
   const router = useRouter();
 
-  const [listQuiz, setListQuiz] = useState([
-    {
-      id: 0,
-      name: "",
-      description: "",
-      timeOpen: new Date(),
-      timeClose: new Date(),
-      timeLitmit: "",
-      pointToPass: 0.0,
-      maxPoint: 0.0,
-      isPublic: 0,
-      createDate: new Date(),
-      updateDate: new Date(),
-    },
-  ]);
+  const [listQuiz, setListQuiz] = useState([]);
   const denseHeight = dense ? 52 : 72;
 
   const [paging, setPaging] = useState({});
