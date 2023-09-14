@@ -56,16 +56,19 @@ export default function TablePaginationCustom({
           onChange={onChangeRowsPerPage}
           variant="standard"
           size="small"
-          sx={{ minWidth: "50px", alignItems: "center", justifyContent: 'center', textAlign: "center"}}
+          sx={{
+            minWidth: "50px",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
         >
           {rowsPerPageOptions.map((item, index) => (
-            <MenuItem value={item} >{item}</MenuItem>
+            <MenuItem value={item}>{item}</MenuItem>
           ))}
         </Select>
       </Box>
-      <Typography>
-        {}
-      </Typography>
+      <Typography>{}</Typography>
       <Pagination
         size="small"
         count={paging?.TotalPages}
