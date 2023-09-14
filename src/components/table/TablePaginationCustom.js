@@ -30,7 +30,6 @@ export default function TablePaginationCustom({
   sx,
   ...other
 }) {
-  console.log(paging);
   return (
     <Box
       p={2}
