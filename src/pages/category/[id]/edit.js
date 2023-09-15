@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Card, Grid, Box } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { getCateByID } from '@/dataProvider/categoryApi';
-import { React, useEffect, useState, useCallback } from 'react';
+import { React, useEffect, useState } from 'react';
 import Form from '../form';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -20,6 +20,10 @@ export default function Edit(props) {
     query: { id }
   } = useRouter();
 
+  async function setBreadCrumbs(value){
+    props.changeBreadCrumbsStatus(value);
+  }
+
   async function fetchCateByID() {
     const res = await getCateByID(id);
     if (res.status < 400) {
@@ -30,7 +34,8 @@ export default function Edit(props) {
         description: cate.description
       };
       setEditData(transformData);
-      props.changeLastPath(cate.name)
+      props.changeLastPath(cate.name);
+      props.changeBreadCrumbsStatus(true);
     } else {
       return res;
     }
@@ -43,23 +48,30 @@ export default function Edit(props) {
   }, [id]);
 
   return (
-      <>
-        <Head>
-          Edit Category
-        </Head>
-        <Box container spacing={3}>
-          <Grid item xs={12} >
-            <Card sx={{ p: 3 }}>
-              <Form isEdit={true} currentLevel={editData} />
-            </Card>
-          </Grid>
-        </Box>
-      </>
+    <>
+      <Head>
+        Edit Category
+      </Head>
+      <Box container spacing={3}>
+        <Grid item xs={12} >
+          <Card sx={{ p: 3 }}>
+            <Form isEdit={true} currentLevel={editData} />
+          </Card>
+        </Grid>
+      </Box>
+    </>
   )
 }
 
+Edit.getInitialProps = () => {
+  // Khởi tạo và trả về giá trị cho biến myVariable
+  const myVariable = 'Hello World';
+  console.log("Adu getInitProps o component con")
+  return { myVariable };
+};
+
 Edit.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout >
     {page}
   </DashboardLayout>
 );
