@@ -77,7 +77,7 @@ console.log("aaa");
               alignItems: "center",
             }}
           >
-            <Tooltip title="Show">
+            <Tooltip title="Show" placement="right">
               <IconButton color="info" onClick={onShowRow}>
                 <Visibility />
               </IconButton>
