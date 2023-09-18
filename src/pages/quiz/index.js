@@ -5,19 +5,11 @@ import {
   Box,
   Button,
   Container,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Pagination,
-  Select,
   Stack,
   SvgIcon,
   Table,
-  TableBody,
   TableContainer,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
@@ -27,12 +19,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import TableSearch from "@/components/table/searchTable";
 import {
-  TableEmptyRows,
   TableHeadCustom,
-  TableNoData,
   TablePaginationCustom,
-  emptyRows,
-  getComparator,
   useTable,
 } from "@/components/table";
 import QuizTableRows from "@/sections/@dashboard/list/quiz/QuizTableRows";
@@ -45,13 +33,14 @@ const TABLE_HEAD = [
   { id: "timeOpen", label: "Thời Gian Mở Đề", align: "center" },
   { id: "timeClose", label: "Thời Gian Đóng Đề", align: "center" },
   { id: "timeLimit", label: "Giới Hạn Thời Gian", align: "left" },
-  { id: "passPoint", label: "Điểm Đạt", align: "center" },
+  { id: "passPoint", label: "Điểm Đạt", align: "left" },
   { id: "isPublic", label: "Công Khai", align: "left" },
   { id: "description", label: "Mô Tả", align: "left" },
   { id: "action", label: "Thao Tác", align: "left" },
 ];
 
-const Page = (props) => {
+const QuizList = (props) => {
+  props.changeBreadCrumbsStatus(true);
   const {
     dense,
     page,
@@ -80,7 +69,6 @@ const Page = (props) => {
     pageIndex: 1,
     pageSize: 10,
   });
-  const isNotFound = listQuiz.length == 0;
 
   const handleDeleteRow = async (selected) => {
     // const response = await deleteCustomer(selected);
@@ -231,7 +219,13 @@ const Page = (props) => {
                     numSelected={selected.length}
                   />
                   <TableBodyCustom
-                    compomentRows={listQuiz?.map((item, index) => (
+                    dense={dense}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    listItem={listQuiz}
+                    notFoundMessage={"Chưa có đề nào. Hãy tạo mới!"}
+                  >
+                    {listQuiz?.map((item, index) => (
                       <QuizTableRows
                         key={item.id}
                         row={item}
@@ -241,12 +235,7 @@ const Page = (props) => {
                         index={index}
                       />
                     ))}
-                    dense={dense}
-                    page={page}
-                    rowsPerPage={rowsPerPage}
-                    listItem={listQuiz}
-                    notFoundMessage={"Chưa có đề nào. Hãy tạo mới!"}
-                  />
+                  </TableBodyCustom>
                 </Table>
               </Scrollbar>
               <TablePaginationCustom
@@ -263,6 +252,6 @@ const Page = (props) => {
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+QuizList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Page;
+export default QuizList;

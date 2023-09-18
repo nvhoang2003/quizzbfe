@@ -4,13 +4,23 @@ import {
   Box,
   Button,
   IconButton,
+  Stack,
   TableCell,
   TableRow,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Delete, DeleteOutline, ModeEdit, ModeEditOutline, Visibility } from "@mui/icons-material";
+import {
+  Delete,
+  DeleteOutline,
+  Error,
+  ModeEdit,
+  ModeEditOutline,
+  Visibility,
+} from "@mui/icons-material";
 import ConfirmDialog from "@/components/confirm-dialog";
+import { formatedNullDateTime, formatedNullString } from "@/utils/formatter";
+import CustomTooltip from "@/components/tooltip/CustomTooltip";
 
 //----------------------------------------------------------------------------
 
@@ -36,12 +46,13 @@ export default function QuizTableRows({
     description,
     timeOpen,
     timeClose,
-    timeLitmit,
+    timeLimit,
     pointToPass,
     maxPoint,
     isPublic,
     createDate,
     updateDate,
+    isValid,
   } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -58,19 +69,69 @@ export default function QuizTableRows({
     <React.Fragment>
       <TableRow hover selected={selected}>
         <TableCell align="left">{index + 1}</TableCell>
-        <TableCell align="left">{name}</TableCell>
-        <TableCell align="left">{new Date(timeOpen).toLocaleString()}</TableCell>
-        <TableCell align="left">{new Date(timeClose).toLocaleString()}</TableCell>
-        <TableCell align="left">{timeLitmit}</TableCell>
-        <TableCell align="left">
-          {pointToPass}/{maxPoint}
+        <TableCell align="left">{formatedNullString(name)}</TableCell>
+        <TableCell align="center">
+          <Stack
+            display="flex"
+            flexWrap="wrap"
+            direction="row"
+            gap={1}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography>{formatedNullDateTime(timeOpen).time}</Typography>
+            <Typography>{formatedNullDateTime(timeOpen).date}</Typography>
+          </Stack>
+        </TableCell>
+        <TableCell align="center">
+          <Stack
+            display="flex"
+            flexWrap="wrap"
+            direction="row"
+            gap={1}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography>{formatedNullDateTime(timeClose).time}</Typography>
+            <Typography>{formatedNullDateTime(timeClose).date}</Typography>
+          </Stack>
+        </TableCell>
+        <TableCell align="left">{timeLimit}</TableCell>
+        <TableCell align="center">
+          <Stack
+            display="flex"
+            direction="row"
+            gap={1}
+            alignItems="center"
+            justifyContent="left"
+          >
+            <Typography>
+              {pointToPass}/{maxPoint}
+            </Typography>
+            {!isValid && (
+              <CustomTooltip
+                title="Điểm đạt cao hơn điểm tối đa"
+                arrow
+                customTooltipStyle={{
+                  backgroundColor: "#E45858"
+                }}
+                customTooltipArrowStyle={{
+                  color: "#E45858"
+                }}
+              >
+                <IconButton color="error" size="small">
+                  <Error fontSize="small" />
+                </IconButton>
+              </CustomTooltip>
+            )}
+          </Stack>
         </TableCell>
         <TableCell align="left">
-          <Typography color={isPublic == 0 ? "error" : "primary"}>
+          <Typography color={isPublic == 0 ? "#E45858" : "#2FAE03"}>
             {isPublic == 0 ? "Không" : "Có"}
-          </Typography>  
-          </TableCell>
-        <TableCell align="left">{description}</TableCell>
+          </Typography>
+        </TableCell>
+        <TableCell align="left">{formatedNullString(description)}</TableCell>
         <TableCell align="left">
           <Box
             sx={{

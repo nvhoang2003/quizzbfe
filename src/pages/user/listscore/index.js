@@ -1,21 +1,31 @@
-import React from 'react';
-import { Layout as DashboardLayout } from '@/layouts/dashboard/layout';
-import Head from 'next/head';
-import { Box, Stack, Container } from '@mui/material';
+import React, { useState } from "react";
+import { Layout as DashboardLayout } from "@/layouts/dashboard/layout";
+import Head from "next/head";
+import { Box, Stack, Container, Typography } from "@mui/material";
+import ScoreTable from "@/sections/@dashboard/list/score/ScoreTable";
 
-const list_score = () => {
+const ListScore = (props) => {
+  props.changeBreadCrumbsStatus(true);
+  const [filter, setFilter] = useState({
+    pageIndex: 1,
+    pageSize: 10,
+    quizId: null,
+    courseId: null
+  });
+
+  const [listScore, setListScore] = useState([]);
   return (
     <>
       <Head>
-        <title>
-          DANH SÁCH KẾT QUẢ THI
-        </title>
+        <title>Danh sách kết quả thi</title>
       </Head>
-      <Box component="main"
+      <Box
+        component="main"
         sx={{
           flexGrow: 1,
-          py: 8
-        }}>
+          py: 2,
+        }}
+      >
         <Container maxWidth="xl">
           <Stack spacing={3}>
             <Stack
@@ -28,18 +38,22 @@ const list_score = () => {
                 px: 1,
               }}
             >
+              <Stack spacing={1}>
+                <Typography variant="h4">
+                  <Box sx={{ textTransform: "uppercase" }}>
+                    Danh sách kết quả thi
+                  </Box>
+                </Typography>
+              </Stack>
             </Stack>
           </Stack>
+          <ScoreTable filter={filter} setFilter={setFilter} listScore={listScore} setListScore={setListScore} />
         </Container>
       </Box>
     </>
-  )
+  );
 };
 
-list_score.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
+ListScore.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default list_score;
+export default ListScore;

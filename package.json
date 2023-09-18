@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.14.0",
     "@mui/lab": "^5.0.0-alpha.139",
     "@mui/material": "^5.14.0",
+    "@mui/styles": "^5.14.9",
     "@mui/x-data-grid": "^6.9.2",
     "@mui/x-date-pickers": "^6.11.0",
     "autoprefixer": "10.4.14",

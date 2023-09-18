@@ -6,7 +6,7 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 import QuestionBankTable from './questionbank_table';
-import Search from '@/components/search/search_questionBank';
+import SearchQuestionBank from '@/components/search/search_questionBank';
 
 const links = [
   { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/new' },
@@ -49,8 +49,6 @@ const Page = () => {
   const handleSubmit = (data) => {
     setQuestionData(data);
   };
-
-
 
   const handleAddClick = () => {
     router.push('questionbank/new');
@@ -141,8 +139,7 @@ const Page = () => {
               </Stack>
             </Stack>
 
-
-            <Search handleSearchSubmit={handleSubmit}/>
+            <SearchQuestionBank handleSearchSubmit={handleSubmit}/>
             <QuestionBankTable questionData={questionData}/>
           </Stack>
         </Container>
