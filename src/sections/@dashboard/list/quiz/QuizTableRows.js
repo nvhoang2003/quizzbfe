@@ -111,12 +111,8 @@ export default function QuizTableRows({
             {!isValid && (
               <CustomTooltip
                 title="Điểm đạt cao hơn điểm tối đa"
-                arrow
                 customTooltipStyle={{
                   backgroundColor: "#E45858"
-                }}
-                customTooltipArrowStyle={{
-                  color: "#E45858"
                 }}
               >
                 <IconButton color="error" size="small">
@@ -139,17 +135,17 @@ export default function QuizTableRows({
               alignItems: "center",
             }}
           >
-            <Tooltip title="Show">
+            <Tooltip title="Show" placement="right">
               <IconButton color="info">
                 <Visibility />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Edit">
+            <Tooltip title="Edit" placement="right">
               <IconButton color="success">
                 <ModeEdit />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Delete">
+            <Tooltip title="Delete" placement="right">
               <IconButton color="error" onClick={handleOpenConfirm}>
                 <Delete />
               </IconButton>
