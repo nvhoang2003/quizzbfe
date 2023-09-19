@@ -33,7 +33,7 @@ const apiError = (response) => {
     },
   };
 
-  if (apiStatusError[response.response.status]) {
+  if (apiStatusError[response.response?.status]) {
     apiStatusError[response.response.status].action;
     snackbarUtils.error(apiStatusError[response.response.status].message);
     window.location.href = apiStatusError[response.response.status].returnUrl;

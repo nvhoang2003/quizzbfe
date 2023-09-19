@@ -46,7 +46,7 @@ export default function ScoreTableRows({
     status,
     questionReults,
   } = row;
-console.log("aaa");
+  
   return (
     <React.Fragment>
       <TableRow hover selected={selected}>
