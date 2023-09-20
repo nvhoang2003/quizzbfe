@@ -19,7 +19,7 @@ import { format } from 'date-fns';
 import snackbarUtils from '@/utils/snackbar-utils';
 //--------------------------------------------------
 
-const Search = ({ handleSearchSubmit, currentLevel }) => {
+const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
   const [newData, setNewData] = useState([]);
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
@@ -301,4 +301,4 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
     </Container>
   );
 };
-export default Search;
+export default SearchQuestionBank;

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useAuthContext } from 'src/contexts/auth-context';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { usePathname, useSearchParams } from 'next/navigation'
 
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -10,6 +11,8 @@ export const AuthGuard = (props) => {
   const { isAuthenticated } = useAuthContext();
   const ignore = useRef(false);
   const [checked, setChecked] = useState(false);
+  const searchParams = useSearchParams();
+  const continueUrl = searchParams.get('continueUrl');
 
   // Only do authentication check on component mount.
   // This flow allows you to manually redirect the user after sign-out, otherwise this will be

@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -9,25 +9,33 @@ import {
   Box,
   Button,
   FormHelperText,
+  IconButton,
+  InputAdornment,
   Link,
   Stack,
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
   colors,
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from "notistack";
 import { axiosError } from "src/dataProvider/baseApi";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+  const [showPassword, setShowPassword] = React.useState(false);
   const [message, setMessage] = useState("");
   const [method, setMethod] = useState("login");
   const { enqueueSnackbar } = useSnackbar();
+  const searchParams = useSearchParams();
+  const continueUrl = searchParams.get("continueUrl");
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -35,29 +43,33 @@ const Page = () => {
       submit: null,
     },
     validationSchema: Yup.object({
-      username: Yup.string().max(255).required("User Name is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      username: Yup.string().max(255).required("Tên tài khoản chưa được nhập"),
+      password: Yup.string().max(255).required("Mật khẩu chưa được nhập"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         const response = await auth.signIn(values.username, values.password);
 
-        // if (axiosError(response)) {
-        //   enqueueSnackbar(response.message, {variant: 'error'});
-        // }
-
         if (response.status < 400) {
-          router.push("/");
+          if (continueUrl && continueUrl != null && continueUrl != "") {
+            router.push(continueUrl);
+          } else {
+            router.push("/");
+          }
         } else {
           setMessage(response.response?.data?.title);
         }
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        console.log(err);
       }
     },
   });
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleMethodChange = useCallback((event, value) => {
     setMethod(value);
@@ -71,7 +83,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Login</title>
+        <title>Đăng nhập</title>
       </Head>
       <Box
         sx={{
@@ -92,16 +104,16 @@ const Page = () => {
         >
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Login</Typography>
+              <Typography variant="h4">Đăng Nhập</Typography>
               <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
+                Chưa có tài khoản ?
                 <Link
                   component={NextLink}
                   href="/auth/register"
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Register
+                  Đăng ký
                 </Link>
               </Typography>
             </Stack>
@@ -134,7 +146,7 @@ const Page = () => {
                     helperText={
                       formik.touched.username && formik.errors.username
                     }
-                    label="User Name"
+                    label="Tên tài khoản"
                     name="username"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -149,11 +161,34 @@ const Page = () => {
                     helperText={
                       formik.touched.password && formik.errors.password
                     }
-                    label="Password"
+                    label="Mật khẩu"
                     name="password"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    type="password"
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip
+                            title={showPassword ? "Đang ẩn" : "Đang hiện"}
+                            placement="right"
+                            arrow
+                          >
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}
                     value={formik.values.password}
                   />
                 </Stack>
@@ -168,8 +203,9 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
+                  disabled={formik.isValidating || formik.isSubmitting}
                 >
-                  Continue
+                  {formik.isSubmitting ? "Đăng nhập..." : "Đăng nhập"}
                 </Button>
               </form>
             )}
