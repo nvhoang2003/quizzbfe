@@ -7,25 +7,10 @@ import {
   Container,
   Stack,
   SvgIcon,
-  Table,
-  TableContainer,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/navigation";
-import { Scrollbar } from "@/components/scrollbar/scrollbar";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import TableSearch from "@/components/table/searchTable";
-import {
-  TableHeadCustom,
-  TablePaginationCustom,
-  useTable,
-} from "@/components/table";
-import QuizTableRows from "@/sections/@dashboard/list/quiz/QuizTableRows";
-import { getAllQuiz } from "@/dataProvider/quizApi";
-import TableBodyCustom from "@/components/table/TableBodyCustom";
 import QuizTable from "@/sections/@dashboard/list/quiz/QuizTable";
 
 const QuizList = (props) => {
@@ -37,28 +22,6 @@ const QuizList = (props) => {
   const [filter, setFilter] = useState({
     pageIndex: 1,
     pageSize: 10,
-  });
-
-  const formikSearch = useFormik({
-    initialValues: {
-      quizzName: "",
-      timeOpen: "",
-      timeClose: "",
-      isPublic: 0,
-      submit: null,
-    },
-    validationSchema: Yup.object({}),
-    onSubmit: async (values, helpers) => {
-      try {
-        const response = await auth.signIn(values.username, values.password);
-
-        if (response.status < 400) {
-        } else {
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
   });
 
   const switchToAddPage = () => {
@@ -111,29 +74,7 @@ const QuizList = (props) => {
                 </Button>
               </Stack>
             </Stack>
-
-            <TableSearch
-              formikSearch={formikSearch}
-              fields={
-                <TextField
-                  error={
-                    !!(
-                      formikSearch.touched.quizzName &&
-                      formikSearch.errors.quizzName
-                    )
-                  }
-                  helperText={
-                    formikSearch.touched.quizzName &&
-                    formikSearch.errors.quizzName
-                  }
-                  onBlur={formikSearch.handleBlur}
-                  onChange={formikSearch.handleChange}
-                  value={formikSearch.values.quizzName}
-                  label="Tên Đề"
-                  name="quizzName"
-                />
-              }
-            />
+            
             <QuizTable filter={filter} setFilter={setFilter} listQuiz={listQuiz} setListQuiz={setListQuiz} />
           </Stack>
         </Container>

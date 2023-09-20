@@ -29,15 +29,8 @@ import { getAllCourse } from "@/dataProvider/courseApi";
 import { RotateLeft, Search } from "@mui/icons-material";
 import { TablePaginationCustom } from "../table";
 
-export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
-  const { filter, setFilter, listScore, setListScore } = prop;
-
-  const [pagingQuiz, setPagingQuiz] = useState({});
-  const [filterQuiz, setFilterQuiz] = useState({
-    pageIndex: 1,
-    pageSize: 1000,
-  });
-  const [listQuiz, setListQuiz] = useState([]);
+export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
+  const { filter, setListQuiz } = prop;
 
   const [pagingCourse, setPagingCourse] = useState({});
   const [filterCourse, setFilterCourse] = useState({
@@ -48,7 +41,6 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
 
   const defaultValues = useMemo(
     () => ({
-      quizId: filter?.quizId || 0,
       courseId: filter?.courseId || 0,
     }),
     [filter]
@@ -70,46 +62,18 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
   const [reRender, setReRender] = useState([]);
 
   useEffect(() => {
-    fetchListScoreForPepleDoQuiz();
+    fetchListQuiz();
   }, []);
 
-  const fetchListScoreForPepleDoQuiz = async (filter) => {
-    const res = await getListResponseForPeopleDoQuiz(filter);
-
-    if (res.status < 400) {
-      setListScore(res.data.data);
-    } else {
-      console.log(res.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchListQuiz();
-  }, [filterQuiz]);
-
   const fetchListQuiz = async () => {
-    const res = await getAllQuiz();
+    const res = await getAllQuiz(filter);
 
     if (res.status < 400) {
-      setPagingQuiz(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
     } else {
       console.log(res.message);
     }
   };
-  const handlePageQuizChange = useCallback(
-    (event, pageIndex) => {
-      setFilterQuiz({ ...filterQuiz, pageIndex: pageIndex });
-    },
-    [filterQuiz]
-  );
-
-  const handleRowsPerPageQuizChange = useCallback(
-    (event) => {
-      setFilterQuiz({ ...filterQuiz, pageSize: event.target.value });
-    },
-    [filterQuiz]
-  );
 
   useEffect(() => {
     fetchListCourse();
@@ -148,12 +112,12 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
   );
 
   const onSubmit = async (data) => {
-    await fetchListScoreForPepleDoQuiz(data);
+    await fetchListQuiz(data);
   };
 
   const onReset = async () => {
     reset(defaultValues);
-    await fetchListScoreForPepleDoQuiz(defaultValues);
+    await fetchListQuiz(defaultValues);
   }
 
   return (
@@ -177,30 +141,6 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
               gap: 1,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "250px",
-              }}
-            >
-              <RHFSelect
-                label="Quiz"
-                name="quizId"
-                placeholder="Quiz"
-                onChange={handlerSelectChange}
-              >
-                <option value="">---Quiz---</option>
-                {!_.isEmpty(listQuiz) &&
-                  listQuiz.map((option, index) => (
-                    <option key={option.name} value={option.id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
-            </div>
-
             <div
               style={{
                 display: "flex",

@@ -3,6 +3,7 @@ import { Layout as DashboardLayout } from "@/layouts/dashboard/layout";
 import Head from "next/head";
 import { Box, Stack, Container, Typography } from "@mui/material";
 import ScoreTable from "@/sections/@dashboard/list/score/ScoreTable";
+import SearchQuizResults from "@/components/search/SearchQuizResults";
 
 const ListScore = (props) => {
   props.changeBreadCrumbsStatus(true);
@@ -47,6 +48,7 @@ const ListScore = (props) => {
               </Stack>
             </Stack>
           </Stack>
+          <SearchQuizResults filter={filter} setFilter={setFilter} listScore={listScore} setListScore={setListScore} />
           <ScoreTable filter={filter} setFilter={setFilter} listScore={listScore} setListScore={setListScore} />
         </Container>
       </Box>

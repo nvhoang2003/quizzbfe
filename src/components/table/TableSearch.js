@@ -1,13 +1,12 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { Button, Stack, SvgIcon, TextField } from "@mui/material";
 import FormProvider from "@/components/form/FormProvider";
 import { RotateLeft, Search } from "@mui/icons-material";
-import { useFormik } from "formik";
 
 export default function TableSearch(props) {
-  const {formikSearch, fields} = props;
-  
+  const { formikSearch, fields } = props;
+
   return (
     <Stack sx={{ bgcolor: "#f2f4f7", p: 1 }}>
       <FormProvider onSubmit={formikSearch.handleSubmit}>
@@ -36,7 +35,7 @@ export default function TableSearch(props) {
             flexWrap="wrap"
             direction="row"
             alignItems="center"
-            justifyContent="center"
+            justifyContent="flex-end"
             sx={{
               px: 3,
               gap: 1,
