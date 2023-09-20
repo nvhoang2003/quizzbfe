@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import Form from '../form';
 import { useRouter } from 'next/router';
-import { getQuestionByID } from '@/dataProvider/questionbankApi';
+import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -13,30 +13,46 @@ Edit.propTypes = {
   currentLevel: PropTypes.object,
 };
 
-export default function Edit() {
+export default function Edit(props) {
   const [editData, setEditData] = useState({});
   const {
     query: { id }
   } = useRouter()
 
-  async function fetchQuestionByID() {
-    const res = await getQuestionByID(id);
-    console.log(res.data.data);
+  async function fetchQuestionByID(id) {
+    const res = await getQuestionBankByID(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
         id: q.id,
         name: q.name,
-        generalfeedback:q.generalfeedback,
+        generalfeedback: q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
-        categoryId : q.categoryId,
-        tagId: q.tags,
-
-
+        categoryId: q.categoryId,
+        tagId: [],
+        answers: []
       };
-      setEditData(transformData);
+
+      q.tags?.forEach(element => {
+        transformData.tagId.push(element.id);
+      });
+
+      q.answers?.forEach(element => {
+        transformData.answers.push({
+          id: element.id,
+          answer: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId
+        });
+      });
       
+      console.log(q);
+
+      setEditData(transformData);
+      props.changeLastPath(transformData.name)
     } else {
       return res;
     }
@@ -51,15 +67,10 @@ export default function Edit() {
 
   return (
     <div>
-      <Grid container spacing={3}>
-        <Grid item xs={12} >
-          <Card sx={{ p: 3 }}>
-            <Form isEdit={true} currentLevel={editData} />
-          </Card>
-        </Grid>
-      </Grid>
+      <Card sx={{ p: 3 }}>
+        <Form isEdit={true} currentLevel={editData} />
+      </Card>
     </div>
-
   );
 }
 

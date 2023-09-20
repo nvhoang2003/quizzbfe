@@ -34,7 +34,7 @@ const QuestionBankTable = ({ questionData }) => {
 
 
   const [filter, setFilter] = useState({
-    pageIndex: 0,
+    pageIndex: 3,
     pageSize: 20,
   });
   
@@ -103,7 +103,7 @@ const QuestionBankTable = ({ questionData }) => {
   };
 
   const handleEditClick = (row) => {
-    push(`category/` + row.id);
+    push(`/questionbank/multiChoiceQuestion/` + row.id +`/edit`);
   };
 
   const handleDeleteRow = async (id) => {
@@ -146,7 +146,8 @@ const QuestionBankTable = ({ questionData }) => {
   useEffect(() => {
     if (questionData && questionData.length > 0) {
       setData(questionData);
-      console.log(questionData);
+      // console.log(questionData);
+      // console.log(data);
     } else {
       fetchAll(data);
     }

@@ -7,18 +7,17 @@ const axiosError = (response) => {
 
   if (!!axiosNonDisplayError.includes(response.code)) {
     snackbarUtils.error('Hệ thống bị lỗi!');
-    console.log("Hệ thống bị lỗi!");
+    // console.log("Hệ thống bị lỗi!");
     return true;
   }
 
   if (!!axiosDisplayError.includes(response.code)) {
-    console.log("ERR_NETWORK");
+    // console.log("ERR_NETWORK");
     snackbarUtils.error('ERR_NETWORK');
     return true;
   }
-
-  if(response.response.status == 403){
-   window.location.href="/";
+  if (response.response.status == 403) {
+    window.location.href = "/";
     snackbarUtils.error('Không có quyền');
     return true;
   }
@@ -68,7 +67,7 @@ const getApi = async (url, params) => {
   } catch (err) {
     console.log(err);
     axiosError(err);
-    return err; 
+    return err;
   }
 };
 
@@ -98,15 +97,23 @@ const postApi = async (url, payload, file) => {
 
 const putApi = async (url, payload) => {
   const token = getLocalStorage("access_token");
+
   try {
     const res = await instance.put(`/${url}`, payload, {
       headers: {
         Authorization: token ? `Bearer ${token}` : "no-author",
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Headers":
+          "Content-Type,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Date,X-Api-Version,X-File-Name",
+        "Access-Control-Allow-Methods": "PUT",
+        "Access-Control-Allow-Origin": "*",
       },
     });
+    
 
     return res;
   } catch (err) {
+    console.log(payload);
     axiosError(err);
     return err;
   }
