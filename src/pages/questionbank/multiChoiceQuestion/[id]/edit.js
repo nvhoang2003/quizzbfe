@@ -49,7 +49,7 @@ export default function Edit(props) {
         });
       });
       
-      console.log(q);
+      // console.log(q);
 
       setEditData(transformData);
       props.changeLastPath(transformData.name)
