@@ -13,13 +13,13 @@ NewForm.propTypes = {
 export default function NewForm() {
 
     return (
-        <Grid container spacing={3}>
-            <Grid item xs={12} >
+        // <Grid container spacing={3}>
+        //     <Grid item xs={12} >
                 <Card sx={{ p: 3 }}>
                     <Form />
                 </Card>
-            </Grid>
-        </Grid>
+        //     </Grid>
+        // </Grid>
     );
 }
 
