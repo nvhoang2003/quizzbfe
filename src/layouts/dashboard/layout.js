@@ -25,12 +25,17 @@ const LayoutContainer = styled('div')({
 });
 
 export const Layout = withAuthGuard((props) => {
-  const { children, showBreadCrumbs } = props;
+  const { children } = props;
 
   const [lastPath, setLastPath] = useState("");
 
   const setNewLastPath = (childData) => {
     setLastPath(childData)
+  };
+  const [showBreadCrumbs, setShowBreadCrumbs] = useState(false);
+
+  const functionShowBreadCrumbs = (childData) => {
+    setShowBreadCrumbs(childData)
   };
 
   const pathname = usePathname();
@@ -61,7 +66,8 @@ export const Layout = withAuthGuard((props) => {
           {showBreadCrumbs != false && <BreadCrumbs lastPath={lastPath} />}
           {React.Children.map(children, (child) => {
             return React.cloneElement(child, {
-              changeLastPath: setNewLastPath // Truyền dữ liệu xuống children thông qua props
+              changeLastPath: setNewLastPath,
+              changeBreadCrumbsStatus: functionShowBreadCrumbs // Truyền dữ liệu xuống children thông qua props
             });
           })}
         </LayoutContainer>

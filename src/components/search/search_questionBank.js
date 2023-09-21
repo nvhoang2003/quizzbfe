@@ -19,7 +19,7 @@ import { format } from 'date-fns';
 import snackbarUtils from '@/utils/snackbar-utils';
 //--------------------------------------------------
 
-const Search = ({ handleSearchSubmit, currentLevel }) => {
+const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
   const [newData, setNewData] = useState([]);
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
@@ -124,13 +124,14 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
     const res = await getAllQuestionbank(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
+        
         return {
           id: qb.id,
           num: index + 1,
           name: qb.name,
           questionstype: qb.questionstype,
           authorName: qb.authorName,
-          tags: qb.tags[0].name ? qb.tags[0].name : "",
+          tags: qb.tags[0] ? qb.tags[0].name : "",
           categoryName: qb.categoryName,
         };
       });
@@ -300,4 +301,4 @@ const Search = ({ handleSearchSubmit, currentLevel }) => {
     </Container>
   );
 };
-export default Search;
+export default SearchQuestionBank;

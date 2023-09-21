@@ -7,16 +7,6 @@ const axiosDisplayError = {
 const axiosNonDisplayError = {
   ERR_BAD_RESPONSE: "Lỗi hệ thống",
 };
-const apiStatusError = {
-  403: {
-    message: "Không có quyền",
-    returnUrl: "/",
-  },
-  401: {
-    message: "Hết hạn token",
-    returnUrl: "/auth/login",
-  },
-};
 
 const axiosError = (response) => {
   if (axiosNonDisplayError[response.code]) {
@@ -30,9 +20,23 @@ const axiosError = (response) => {
 };
 
 const apiError = (response) => {
-  if (apiStatusError[response.response.status]) {
-    window.location.href = apiStatusError[response.response.status].returnUrl;
+  const apiStatusError = {
+    403: {
+      action: () => {},
+      message: "Không có quyền",
+      returnUrl: "/",
+    },
+    401: {
+      action: window.sessionStorage.setItem("authenticated", "false"),
+      message: "Hết hạn token",
+      returnUrl: "/auth/login",
+    },
+  };
+
+  if (apiStatusError[response.response?.status]) {
+    apiStatusError[response.response.status].action;
     snackbarUtils.error(apiStatusError[response.response.status].message);
+    window.location.href = apiStatusError[response.response.status].returnUrl;
     return true;
   }
 
@@ -44,7 +48,7 @@ const catchError = (err) => {
   apiError(err);
 
   return false;
-}
+};
 
 const instance = axios.create({
   baseURL: `${process.env.HOST_API_KEY}api/`,

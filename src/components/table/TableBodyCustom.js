@@ -4,16 +4,12 @@ import TableEmptyRows from './TableEmptyRows';
 import TableNoData from './TableNoData';
 import { emptyRows } from './utils';
 
-TableBodyCustom.propTypes = {
-  compomentRows: PropTypes.node
-}
-
-export default function TableBodyCustom ({page, rowsPerPage, dense, listItem, compomentRows, notFoundMessage }) {
+export default function TableBodyCustom ({page, rowsPerPage, dense, listItem, children, notFoundMessage }) {
   const denseHeight = dense ? 52 : 72;
   const isNotFound = listItem == null || listItem.length == 0;
   return (
     <TableBody>
-      {compomentRows}
+      {children}
       <TableEmptyRows
         height={denseHeight}
         emptyRows={emptyRows(page, rowsPerPage, listItem.length)}

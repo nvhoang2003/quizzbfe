@@ -28,7 +28,7 @@ export default function NextBreadcrumbs(props) {
     >
       <Stack
         sx={{
-          p: 2,
+          py: 2,
           bgcolor: "#f2f4f7",
         }}
       >
