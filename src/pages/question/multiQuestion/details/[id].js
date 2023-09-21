@@ -2,57 +2,49 @@ import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
-import Form from '../form';
 import { useRouter } from 'next/router';
-import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
+import { getMultiById } from '@/dataProvider/questionApi';
+import Form from '../form_question';
 
 // ----------------------------------------------------------------------
 
-Edit.propTypes = {
+Details.propTypes = {
   isEdit: PropTypes.bool,
   currentLevel: PropTypes.object,
 };
 
-export default function Edit(props) {
+export default function Details() {
   const [editData, setEditData] = useState({});
   const {
     query: { id }
   } = useRouter()
 
-  async function fetchQuestionByID(id) {
-    const res = await getQuestionBankByID(id);
+  async function fetchQuestionByID() {
+    const res = await getMultiById(id);
     if (res.status < 400) {
       const q = res.data.data;
+      console.log(q);
       const transformData = {
         id: q.id,
         name: q.name,
-        generalfeedback: q.generalfeedback,
+        generalfeedback:q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
-        categoryId: q.categoryId,
-        tagId: [],
-        answers: []
+        author : q.author,
+        answers:[],
+        questionsType: q.questionstype,
       };
-
-      q.tags?.forEach(element => {
-        transformData.tagId.push(element.id);
-      });
 
       q.answers?.forEach(element => {
         transformData.answers.push({
           id: element.id,
-          answer: element.content,
-          feedback: element.feedback,
+          content: element.content,
           fraction: element.fraction,
-          quizBankId: element.quizBankId,
           questionId: element.questionId
         });
       });
-      
-      // console.log(q);
 
       setEditData(transformData);
-      props.changeLastPath(transformData.name)
     } else {
       return res;
     }
@@ -67,14 +59,19 @@ export default function Edit(props) {
 
   return (
     <div>
-      <Card sx={{ p: 3 }}>
-        <Form isEdit={true} currentLevel={editData} />
-      </Card>
+      <Grid container spacing={3}>
+        <Grid item xs={12} >
+          <Card sx={{ p: 3 }}>
+            <Form isEdit={false} currentLevel={editData} />
+          </Card>
+        </Grid>
+      </Grid>
     </div>
+
   );
 }
 
-Edit.getLayout = (page) => (
+Details.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>

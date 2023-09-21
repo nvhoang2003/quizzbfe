@@ -41,17 +41,17 @@ export const items = [
     )
   },
   {
-    title: 'Câu hỏi',
-    path: '/category',
+    title: 'Ngân hàng câu hỏi',
+    path: '/questionbank',
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+         <CogIcon />
       </SvgIcon>
     )
   },
   {
-    title: 'Ngân hàng câu hỏi',
-    path: '/questionbank',
+    title: 'Câu hỏi',
+    path: '/question',
     icon: (
       <SvgIcon fontSize="small">
          <CogIcon />
