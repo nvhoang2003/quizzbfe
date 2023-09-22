@@ -11,6 +11,11 @@ function getAllQuiz(params) {
   return getApi(quizApiPath.getListQuizz, params);
 }
 
+function getQuizForTestID(id){
+  return getApi(quizPath + `/getQuizForTest/ ${id}`);
+}
+
 export {
-  getAllQuiz
+  getAllQuiz,
+  getQuizForTestID
 }
