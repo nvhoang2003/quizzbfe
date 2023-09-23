@@ -1,18 +1,17 @@
 import { DoQuizLayout } from '@/layouts/testquiz/DoQuizLayout';
 import Head from 'next/head';
 import { Layout as DashboardLayout } from '@/layouts/dashboard/layout';
-import { Box, Stack, Container, Typography, Grid, Button } from '@mui/material';
+import { Box, Stack, Container, Typography, Grid, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import PaginationQuestion from '@/components/list-question/PaginationQuestion';
 import MultiChoiceQuestion from '@/components/question-information/MultiChoiceQuestion';
 import OneChoiceQuestion from '@/components/question-information/OneChoiceQuestion';
 import { React, useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getQuizForTestID } from '@/dataProvider/quizApi';
-import Countdown from 'react-countdown';
 import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
-// import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
-// Random component
-
+import ConfirmDialogQuestion from '@/components/confirm-dialog/ConfirmDialogQuestion';
+import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
+//-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
 // Renderer callback with condition
@@ -27,13 +26,31 @@ const Completionist = () => <span>You are good to go!</span>;
 // };
 
 const TestQuiz = (props) => {
+  const {
+    query: { id }
+  } = useRouter();
+
   const [data, setData] = useState({});
+  const router = useRouter();
   const [curent, setCurrent] = useState(1);
   const [startValue, setStartValue] = useState(1);
   const [endValue, setEndValue] = useState();
   const [sumValue, setSumValue] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState({});
 
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleSubmitConfirm = (id) => {
+    router.push(`/ortherpage/` + id);
+  }
   const setNewCurrentValue = (newValue) => {
     setCurrent(parseInt(newValue));
   };
@@ -44,10 +61,6 @@ const TestQuiz = (props) => {
     }, 0);
     return totalRightAnswers > 1;
   }
-
-  const {
-    query: { id }
-  } = useRouter();
 
   async function fetchQuizByID() {
     const res = await getQuizForTestID(id);
@@ -89,7 +102,7 @@ const TestQuiz = (props) => {
     if (id) {
       fetchQuizByID(id);
     }
-  }, [id]);
+  }, [id, sumValue]);
 
   return (
     <>
@@ -115,11 +128,7 @@ const TestQuiz = (props) => {
               className='right-item'
             >
               <Typography variant='h4'>
-                {/* <Countdown
-                  date={Date.now() + 5000}
-                  // renderer={renderer}
-                /> */}
-                <CountdownTimer initialTime={5000} />
+                <CountdownTimer initialTime={10} question={curent} sum={sumValue} />
               </Typography>
             </Stack>
             <Stack
@@ -136,7 +145,31 @@ const TestQuiz = (props) => {
               sx={{ width: 1 }}
             >
               {isMultiRightAnswer(currentQuestion) ? <MultiChoiceQuestion question={currentQuestion} numberQuestion={curent} /> : <OneChoiceQuestion question={currentQuestion} numberQuestion={curent} />}
-              <Button variant="contained">Submit</Button>
+              <Button variant="contained"
+                onClick={handleOpenConfirm} >
+                Submit
+              </Button>
+              <ConfirmDialog
+                open={openConfirm}
+                onClose={handleCloseConfirm}
+                title=""
+                content={
+                  <>
+                    Bạn đã làm được {curent} / {sumValue} , bạn có chắc là muốn nộp bài không ?
+                  </>
+                }
+                action={
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => {
+                      handleSubmitConfirm(id);
+                    }}
+                  >
+                    Submit
+                  </Button>
+                }
+              />
             </Stack>
           </Stack>
         </Container>

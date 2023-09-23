@@ -27,7 +27,7 @@ export default function Edit() {
       const transformData = {
         id: q.id,
         name: q.name,
-        generalfeedback:q.generalfeedback,
+        generalfeedback: q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
         categoryId : q.categoryId,
@@ -59,7 +59,6 @@ export default function Edit() {
         </Grid>
       </Grid>
     </div>
-
   );
 }
 

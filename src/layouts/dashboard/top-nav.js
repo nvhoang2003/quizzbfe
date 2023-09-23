@@ -141,7 +141,6 @@ export const TopNav = () => {
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {items.map((item) => {
                 const active = item.path ? (pathname === item.path) : false;
-
                 return (
                   <TopNavItem
                     active={active}
