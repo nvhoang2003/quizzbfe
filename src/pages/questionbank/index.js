@@ -5,8 +5,8 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Dialog, DialogTitle
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
-import QuestionBankTable from './questionbank_table';
 import SearchQuestionBank from '@/components/search/search_questionBank';
+import QuestionBankTable from '@/sections/@dashboard/list/questionbank/QuestionBankTable';
 
 const links = [
   { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },

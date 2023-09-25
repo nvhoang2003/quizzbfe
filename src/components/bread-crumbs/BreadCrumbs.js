@@ -2,13 +2,15 @@ import { capitalizeFirstLetter } from "@/utils/formatter";
 import { Container, Stack, Typography } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 
 var PATH_NAME = ["edit", "create"];
 
 export default function NextBreadcrumbs(props) {
   const router = useRouter();
-  const pathnames = router.asPath.split("/").filter((path) => path !== "");
+  const pathReal = router.asPath;
+  const pathnames = pathReal.split("/").filter((path) => path !== "");
   const lastPath = PATH_NAME.includes(pathnames[pathnames.length - 1])
     ? pathnames.pop()
     : "List";
@@ -32,10 +34,13 @@ export default function NextBreadcrumbs(props) {
           bgcolor: "#f2f4f7",
         }}
       >
-        <Breadcrumbs className="breadcrumbs" sx={{
-          m:0,
-          p:0
-        }}>
+        <Breadcrumbs
+          className="breadcrumbs"
+          sx={{
+            m: 0,
+            p: 0,
+          }}
+        >
           <Link
             href="/"
             sx={{
@@ -51,15 +56,30 @@ export default function NextBreadcrumbs(props) {
             </svg>
           </Link>
 
-          {pathnames.map((path, index) => (
-            <Link
-              href={`/${pathnames.slice(0, index + 1).join("/")}`}
-              key={index}
-              sx={{ fontWeight: "bold", color: "text.primary" }}
-            >
-              {capitalizeFirstLetter(path)}
-            </Link>
-          ))}
+          {pathnames.map((path, index) => {
+            const hrefLink = `/${pathnames.slice(0, index + 1).join("/")}`;
+
+            if (hrefLink === pathReal) {
+              return (
+                <Typography
+                  key={index}
+                  sx={{ fontWeight: "bold", color: "text.primary" }}
+                >
+                  {capitalizeFirstLetter(path)}
+                </Typography>
+              );
+            }
+            return (
+              <Link
+                href={hrefLink}
+                key={index}
+                underline="hover"
+                sx={{ fontWeight: "bold", color: "text.primary" }}
+              >
+                {capitalizeFirstLetter(path)}
+              </Link>
+            );
+          })}
 
           <Typography sx={{ fontWeight: "bold", color: "text.primary" }}>
             {capitalizeFirstLetter(newLastPath ? newLastPath : lastPath)}
