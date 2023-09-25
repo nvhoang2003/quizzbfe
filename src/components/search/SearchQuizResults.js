@@ -28,6 +28,7 @@ import { getAllQuiz } from "@/dataProvider/quizApi";
 import { getAllCourse } from "@/dataProvider/courseApi";
 import { RotateLeft, Search } from "@mui/icons-material";
 import { TablePaginationCustom } from "../table";
+import { Scrollbar } from "../scrollbar/scrollbar";
 
 export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
   const { filter, setFilter, listScore, setListScore } = prop;
@@ -68,10 +69,6 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
     formState: { isValidating, isSubmitting },
   } = methods;
   const [reRender, setReRender] = useState([]);
-
-  useEffect(() => {
-    fetchListScoreForPepleDoQuiz();
-  }, []);
 
   const fetchListScoreForPepleDoQuiz = async (filter) => {
     const res = await getListResponseForPeopleDoQuiz(filter);
@@ -154,91 +151,92 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
   const onReset = async () => {
     reset(defaultValues);
     await fetchListScoreForPepleDoQuiz(defaultValues);
-  }
+  };
 
   return (
-    <Stack sx={{ bgcolor: "#f2f4f7", py: 2, my: 2 }}>
+    <Stack sx={{ bgcolor: "#f2f4f7", p: 1, my: 2 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack
           display="flex"
-          direction="column"
+          direction="row"
+          flexWrap="wrap"
           sx={{
             px: 1,
             gap: 1,
           }}
         >
-          <Stack
-            display="flex"
-            flexWrap="wrap"
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-start"
-            sx={{
-              gap: 1,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "250px",
-              }}
-            >
-              <RHFSelect
-                label="Quiz"
-                name="quizId"
-                placeholder="Quiz"
-                onChange={handlerSelectChange}
+          <Stack overflow="clip" width={"100%"}>
+            <Scrollbar>
+              <Stack
+                display="flex"
+                flexWrap="wrap"
+                direction="row"
+                sx={{
+                  gap: 1,
+                  my: "auto",
+                }}
               >
-                <option value="">---Quiz---</option>
-                {!_.isEmpty(listQuiz) &&
-                  listQuiz.map((option, index) => (
-                    <option key={option.name} value={option.id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
-            </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "250px",
+                  }}
+                >
+                  <RHFSelect
+                    label="Quiz"
+                    name="quizId"
+                    placeholder="Quiz"
+                    onChange={handlerSelectChange}
+                  >
+                    <option value="">---Quiz---</option>
+                    {!_.isEmpty(listQuiz) &&
+                      listQuiz.map((option, index) => (
+                        <option key={option.name} value={option.id}>
+                          {option.name}
+                        </option>
+                      ))}
+                  </RHFSelect>
+                </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "250px",
-              }}
-            >
-              <RHFSelect
-                label="Course"
-                name="courseId"
-                placeholder="Course"
-                onChange={handlerSelectChange}
-              >
-                <option value="">---Course---</option>
-                {!_.isEmpty(listCourse) &&
-                  listCourse.map((option, index) => (
-                    <option key={index} value={option.id}>
-                      {option.fullName}
-                    </option>
-                  ))}
-              </RHFSelect>
-            </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "250px",
+                  }}
+                >
+                  <RHFSelect
+                    label="Course"
+                    name="courseId"
+                    placeholder="Course"
+                    onChange={handlerSelectChange}
+                  >
+                    <option value="">---Course---</option>
+                    {!_.isEmpty(listCourse) &&
+                      listCourse.map((option, index) => (
+                        <option key={index} value={option.id}>
+                          {option.fullName}
+                        </option>
+                      ))}
+                  </RHFSelect>
+                </div>
+              </Stack>
+            </Scrollbar>
           </Stack>
-
           <Stack
             display="flex"
             flexWrap="wrap"
             direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
             sx={{
-              px: 3,
+              px: 2,
               gap: 1,
+              ml: "auto",
             }}
           >
-            <Button
-              size="small"
+            <LoadingButton
               color="primary"
               startIcon={
                 <SvgIcon fontSize="small">
@@ -250,9 +248,8 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
               disabled={isValidating || isSubmitting}
             >
               Tìm kiếm
-            </Button>
+            </LoadingButton>
             <Button
-              size="small"
               color="error"
               startIcon={
                 <SvgIcon fontSize="small">

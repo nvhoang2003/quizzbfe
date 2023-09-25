@@ -123,8 +123,8 @@ export default function QuizTableRows({
           </Stack>
         </TableCell>
         <TableCell align="left">
-          <Typography color={isPublic == 0 ? "#E45858" : "#2FAE03"}>
-            {isPublic == 0 ? "Không" : "Có"}
+          <Typography color={!isPublic ? "#E45858" : "#2FAE03"}>
+            {!isPublic ? "Không" : "Có"}
           </Typography>
         </TableCell>
         <TableCell align="left">{formatedNullString(description)}</TableCell>
@@ -161,7 +161,10 @@ export default function QuizTableRows({
             </Typography>
           }
           action={
-            <Button variant="contained" color="error" onClick={onDeleteRow}>
+            <Button variant="contained" color="error" onClick={() => {
+              onDeleteRow();
+              handleCloseConfirm();
+            }}>
               Xóa
             </Button>
           }

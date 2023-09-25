@@ -27,7 +27,9 @@ const apiError = (response) => {
       returnUrl: "/",
     },
     401: {
-      action: window.sessionStorage.setItem("authenticated", "false"),
+      action: () => {
+        window.sessionStorage.setItem("authenticated", "false")
+      },
       message: "Hết hạn token",
       returnUrl: "/auth/login",
     },

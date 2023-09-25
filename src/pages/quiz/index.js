@@ -12,10 +12,10 @@ import {
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/navigation";
 import QuizTable from "@/sections/@dashboard/list/quiz/QuizTable";
+import SearchQuiz from "@/components/search/SearchQuiz";
 
 const QuizList = (props) => {
   props.changeBreadCrumbsStatus(true);
-
   const router = useRouter();
 
   const [listQuiz, setListQuiz] = useState([]);
@@ -25,7 +25,7 @@ const QuizList = (props) => {
   });
 
   const switchToAddPage = () => {
-    router.push("quiz/new_form");
+    router.push("/quiz/create");
   };
 
   return (
@@ -46,20 +46,22 @@ const QuizList = (props) => {
               display="flex"
               flexWrap="wrap"
               direction="row"
-              justifyContent="space-between"
-              spacing={4}
               sx={{
                 px: 1,
               }}
             >
-              <Stack spacing={1}>
+              <Stack spacing={1} mr={1}>
                 <Typography variant="h4">
                   <Box sx={{ textTransform: "uppercase" }}>
                     Danh sách đề thi
                   </Box>
                 </Typography>
               </Stack>
-              <Stack>
+              <Stack
+                sx={{
+                  ml: "auto",
+                }}
+              >
                 <Button
                   color="primary"
                   startIcon={
@@ -74,8 +76,13 @@ const QuizList = (props) => {
                 </Button>
               </Stack>
             </Stack>
-            
-            <QuizTable filter={filter} setFilter={setFilter} listQuiz={listQuiz} setListQuiz={setListQuiz} />
+            <SearchQuiz filter={filter} setListQuiz={setListQuiz} />
+            <QuizTable
+              filter={filter}
+              setFilter={setFilter}
+              listQuiz={listQuiz}
+              setListQuiz={setListQuiz}
+            />
           </Stack>
         </Container>
       </Box>

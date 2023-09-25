@@ -103,10 +103,11 @@ export default function Form({ isEdit = false, currentLevel }) {
       tagId: currentLevel?.tagId || "",
       answer: currentLevel?.answers || [],
       questionstype: "MultiChoice",
-      isPublic: currentLevel?.isPublic || 0,
+      isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
     [currentLevel]
   );
+  console.log(currentLevel);
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -290,7 +291,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
-      isPublic: data.isPublic,
+      isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
       authorId: 2,
       defaultMark: data.defaultMark,
@@ -337,7 +338,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
-      isPublic: data.isPublic,
+      isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
       authorId: 2,
       defaultMark: data.defaultMark,
@@ -645,7 +646,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                         width: 1,
                         justifyContent: "space-between",
                       }}
-                      value={!!defaultValues.isPublic}
+                      checked={defaultValues.isPublic}
                       onClick={(event) => {
                         event.target.value = !event.target.value;
                       }}
@@ -660,7 +661,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   reset(defaultValues);
                 }}
               >
-                xóa
+                Xóa
               </Button>
             </Stack>
           </Stack>

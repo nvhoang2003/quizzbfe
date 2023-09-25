@@ -25,6 +25,7 @@ import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import { useSnackbar } from "notistack";
 import { axiosError } from "src/dataProvider/baseApi";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 
 const Page = () => {
   const router = useRouter();
@@ -197,16 +198,17 @@ const Page = () => {
                     {formik.errors.submit}
                   </Typography>
                 )}
-                <Button
+                <LoadingButton
                   fullWidth
                   size="large"
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
-                  disabled={formik.isValidating || formik.isSubmitting}
+                  loadingIndicator="Đang đăng nhập..."
+                  loading={formik.isValidating || formik.isSubmitting}
                 >
-                  {formik.isSubmitting ? "Đăng nhập..." : "Đăng nhập"}
-                </Button>
+                  Đăng nhập
+                </LoadingButton>
               </form>
             )}
           </div>
