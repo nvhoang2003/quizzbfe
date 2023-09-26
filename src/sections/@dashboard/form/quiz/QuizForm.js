@@ -8,17 +8,25 @@ import { Scrollbar } from "@/components/scrollbar/scrollbar";
 import RHFTextField from "@/components/form/RHFTextField";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import FormProvider from "@/components/form/FormProvider";
+import PropTypes from "prop-types";
 import {
   Box,
   Button,
   Container,
   Stack,
   SvgIcon,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import RHFNumberInput from "@/components/form/RHFNumberInput";
+
+QuizForm.propTypes = {
+  isEdit: PropTypes.bool,
+  currentLevel: PropTypes.object,
+};
 
 export default function QuizForm({ isEdit = false, currentLevel }) {
   const router = useRouter();
@@ -31,34 +39,25 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
   };
 
   const validationSchema = Yup.object().shape({
-    quizName: Yup.string().trim().required("Tên không được để trống"),
+    quizName: Yup.string().trim().required("Tên đề thi không được để trống"),
     timeOpen: Yup.date().required("Giờ mở đề không được để trống"),
-    timeClose: Yup.date()
-      .required("Giờ đóng đề không được để trống")
-      .when("timeOpen", (timeOpen, schema) => {
-        if (timeOpen) {
-          console.log(dayjs(timeOpen));
-          // return Yup.date()
-          //   .min(timeOpen, "Giờ đóng đề phải sau giờ mở đề")
-          //   .typeError("End Date is required");
-        }
-      }),
+    timeClose: Yup.date().required("Giờ đóng đề không được để trống"),
     timeLimit: Yup.number()
-      .min(1, "Giới hạn thời gian phải lớn hơn hoặc bằng 1")
-      .required("Giới hạn thời gian không được để trống"),
+      .required("Giới hạn thời gian không được để trống")
+      .min(0.1, "Giới hạn thời gian phải lớn hơn hoặc bằng 0,1"),
     pointToPass: Yup.number()
-      .min(1, "Điểm đạt phải lớn hơn hoặc bằng 1")
-      .required("Điểm đạt không được để trống"),
+      .required("Điểm đạt không được để trống")
+      .min(0.1, "Điểm đạt phải lớn hơn hoặc bằng 0,1"),
   });
 
   const defaultValues = useMemo(
     () => ({
-      quizName: currentLevel?.quizName || "",
+      name: currentLevel?.name || "",
       timeOpen: currentLevel?.timeOpen ? dayjs(currentLevel.timeOpen) : "",
       timeClose: currentLevel?.timeClose ? dayjs(currentLevel.timeClose) : "",
       timeLimit: currentLevel?.timeLimit || 0,
       pointToPass: currentLevel?.pointToPass || 0,
-      isPublic: currentLevel?.isPublic || false,
+      isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
     [currentLevel]
   );
@@ -74,141 +73,138 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isValidating, isSubmitting },
   } = methods;
 
   const fetchUpdate = async (data) => {};
 
   const createNew = async (data) => {};
 
-  const onSubmit = async (data) => {
-    if (!isEdit) {
-      createNew(data);
-    } else {
-      fetchUpdate(data);
-    }
-    switchToAddQuestionPage();
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
-    <Stack
-      sx={{
-        position: "relative",
-        overflow: "unset",
-        bgcolor: "#f2f4f7",
-      }}
-    >
-      <Scrollbar>
-        <Stack sx={{ px: 3, py: 2, minWidth: "270px" }}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Stack
-              display="flex"
-              flexWrap="wrap"
-              direction="column"
-              justifyContent="space-between"
-              spacing={4}
-              sx={{
-                px: 1,
-              }}
+    <Stack sx={{ px: 3, py: 2, minWidth: "270px" }}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Stack
+          display="flex"
+          flexWrap="wrap"
+          direction="column"
+          justifyContent="space-between"
+          spacing={4}
+          sx={{
+            px: 1,
+          }}
+        >
+          <Stack>
+            <Typography
+              variant="subtitle1"
+              fontWeight="700"
+              sx={{ opacity: 0.7 }}
             >
-              <Stack>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="700"
-                  sx={{ opacity: 0.7 }}
-                >
-                  Thông tin đề thi
-                </Typography>
-              </Stack>
-              <Container maxWidth="xl">
-                <Stack
-                  display="flex"
-                  flexWrap="wrap"
-                  direction="column"
-                  gap={2}
-                >
-                  <RHFTextField
-                    name="quizName"
-                    label="Tên đề thi"
-                    id="quizName"
-                  />
-                  <DateTimePicker
-                    name="timeOpen"
-                    id="timeOpen"
-                    label="Giờ mở đề thi"
-                    sx={{
-                      width: "100%",
-                    }}
-                  />
-                  <DateTimePicker
-                    name="timeClose"
-                    id="timeClose"
-                    label="Giờ đóng đề thi"
-                    sx={{
-                      width: "100%",
-                    }}
-                  />
-                  <RHFSwitch
-                    name="isPublic"
-                    label={
-                      <Typography sx={{ fontWeight: 500 }}>
-                        Công khai
-                      </Typography>
-                    }
-                    labelPlacement="start"
-                    sx={{
-                      mx: 1,
-                      width: 1,
-                      justifyContent: "start",
-                    }}
-                    onClick={(event) => {
-                      event.target.value = !event.target.value;
+              Thông tin đề thi
+            </Typography>
+          </Stack>
+          <Container maxWidth="xl">
+            <Stack display="flex" flexWrap="wrap" direction="column" gap={2}>
+              <RHFTextField name="name" id="name" label="Tên đề thi" />
+              <DateTimePicker
+                name="timeOpen"
+                id="timeOpen"
+                label="Giờ mở đề thi"
+                sx={{
+                  width: "100%",
+                }}
+              />
+              <DateTimePicker
+                name="timeClose"
+                id="timeClose"
+                label="Giờ đóng đề thi"
+                sx={{
+                  width: "100%",
+                }}
+              />
+              <RHFNumberInput
+                name="timeLimit"
+                id="timeLimit"
+                label="Giới hạn thời gian (giờ)"
+                inputProps={{
+                  step: "0.1",
+                  min: 0,
+                }}
+              />
+              <Tooltip title="ex: 5đ" placement="top-start">
+                <Stack width={1}>
+                  <RHFNumberInput
+                    name="pointToPass"
+                    id="pointToPass"
+                    label="Điểm đạt"
+                    inputProps={{
+                      step: "0.1",
+                      min: 0,
                     }}
                   />
                 </Stack>
-              </Container>
-            </Stack>
-            <Stack
-              display="flex"
-              flexWrap="wrap"
-              direction="row"
-              alignItems="center"
-              justifyContent="flex-end"
-              sx={{
-                px: 2,
-                gap: 1,
-              }}
-            >
-              <Button
-                color="inherit"
-                startIcon={
-                  <SvgIcon>
-                    <Close />
-                  </SvgIcon>
+              </Tooltip>
+              <RHFSwitch
+                name="isPublic"
+                label={
+                  <Typography sx={{ fontWeight: 500 }}>Công khai</Typography>
                 }
-                onClick={() => {
-                  switchToIndexPage();
+                labelPlacement="start"
+                sx={{
+                  mx: 1,
+                  width: 1,
+                  justifyContent: "start",
                 }}
-                variant="text"
-              >
-                Hủy
-              </Button>
-              <LoadingButton
-                color="primary"
-                startIcon={
-                  <SvgIcon>
-                    <KeyboardDoubleArrowRight />
-                  </SvgIcon>
-                }
-                variant="contained"
-                type="submit"
-              >
-                Tiếp tục
-              </LoadingButton>
+                onClick={(event) => {
+                  event.target.value = !event.target.value;
+                }}
+              />
             </Stack>
-          </FormProvider>
+          </Container>
         </Stack>
-      </Scrollbar>
+        <Stack
+          display="flex"
+          flexWrap="wrap"
+          direction="row"
+          alignItems="center"
+          justifyContent="flex-end"
+          sx={{
+            px: 2,
+            gap: 1,
+          }}
+        >
+          <Button
+            color="inherit"
+            startIcon={
+              <SvgIcon>
+                <Close />
+              </SvgIcon>
+            }
+            onClick={() => {
+              switchToIndexPage();
+            }}
+            variant="text"
+          >
+            Hủy
+          </Button>
+          <LoadingButton
+            color="primary"
+            startIcon={
+              <SvgIcon>
+                <KeyboardDoubleArrowRight />
+              </SvgIcon>
+            }
+            variant="contained"
+            type="submit"
+            loading={isValidating || isSubmitting}
+          >
+            Tiếp tục
+          </LoadingButton>
+        </Stack>
+      </FormProvider>
     </Stack>
   );
 }

@@ -7,6 +7,13 @@ import Head from "next/head";
 import QuizForm from "@/sections/@dashboard/form/quiz/QuizForm";
 
 const QuizCreate = (props) => {
+  const showBreadCrumbs = (status) => {
+    props.changeBreadCrumbsStatus(status);
+  };
+  useEffect(() => {
+    showBreadCrumbs(true);
+  }, []);
+
   return (
     <>
       <Head>

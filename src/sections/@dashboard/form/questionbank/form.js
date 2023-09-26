@@ -46,7 +46,6 @@ export default function Form({ isEdit = false, currentLevel }) {
   const [cate, setCate] = useState([]);
   const [categoryId, setCategoryId] = useState();
   const [category, setCategory] = useState([]);
-  const [ispublic, setIsPublic] = useState([]);
   const [tags, setTags] = useState([]);
   const [reRender, setReRender] = useState([]);
   const [fraction, setFraction] = useState([
@@ -107,7 +106,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     }),
     [currentLevel]
   );
-  console.log(currentLevel);
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),

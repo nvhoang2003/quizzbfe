@@ -83,7 +83,7 @@ export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
             gap: 1,
           }}
         >
-          <Stack overflow="clip" width={"100%"}>
+          <Stack overflow="unset" width={"100%"}>
             <Scrollbar>
               <Stack
                 display="flex"

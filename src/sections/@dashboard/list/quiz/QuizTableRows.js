@@ -38,6 +38,7 @@ export default function QuizTableRows({
   row,
   selected,
   onSelectRow,
+  onUpdateRow,
   onDeleteRow,
   index,
 }) {
@@ -141,7 +142,7 @@ export default function QuizTableRows({
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit" placement="right">
-              <IconButton color="success">
+              <IconButton color="success" onClick={onUpdateRow}>
                 <ModeEdit />
               </IconButton>
             </Tooltip>

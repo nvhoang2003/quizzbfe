@@ -17,7 +17,7 @@ function getAllQuiz(params) {
 }
 
 function getQuizById(quizId) {
-  return getApi(quizApiPath.getListQuizz + `/${quizId}`, {});
+  return getApi(quizApiPath.getQuizById + `/${quizId}`, {});
 }
 
 function deleteQuizById(quizId) {

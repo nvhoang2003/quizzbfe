@@ -15,7 +15,6 @@ import QuizTable from "@/sections/@dashboard/list/quiz/QuizTable";
 import SearchQuiz from "@/components/search/SearchQuiz";
 
 const QuizList = (props) => {
-  props.changeBreadCrumbsStatus(true);
   const router = useRouter();
 
   const [listQuiz, setListQuiz] = useState([]);
@@ -27,6 +26,13 @@ const QuizList = (props) => {
   const switchToAddPage = () => {
     router.push("/quiz/create");
   };
+
+  const showBreadCrumbs = (status) => {
+    props.changeBreadCrumbsStatus(status);
+  };
+  useEffect(() => {
+    showBreadCrumbs(true);
+  }, []);
 
   return (
     <>
