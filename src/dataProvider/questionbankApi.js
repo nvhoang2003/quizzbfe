@@ -25,15 +25,15 @@ function getQuestionBankByID(id){
 //   return putApi(catePath +`/updateCategories/${id}`,cate);
 // }
 
-// function deleteCateByID(id){
-//   return deleteApi(catePath + `/deleteCategory/${id}`);
-// }
+function deleteById(id){
+  return deleteApi(qbPath + `/DeleteMultipeChoiceQuestionBank/${id}`);
+}
 
 export {
     getAllQuestionbank,
 //   getCateByID,
 //   updateCateByID,
-//   deleteCateByID,
+  deleteById,
   create,
   getQuestionType,
   getQuestionBankByID
