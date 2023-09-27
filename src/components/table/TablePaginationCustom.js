@@ -38,6 +38,7 @@ export default function TablePaginationCustom({
         justifyContent: "flex-end",
         alignItems: "center",
         bgcolor: "#f2f4f7",
+        gap: 2,
         ...sx,
       }}
     >
@@ -68,13 +69,14 @@ export default function TablePaginationCustom({
           ))}
         </Select>
       </Box>
-      <Typography>{}</Typography>
       <Pagination
         size="small"
         count={paging?.TotalPages}
         rowsperpage={paging?.PageSize}
         onChange={onChangePage}
         color="primary"
+        showFirstButton 
+        showLastButton
       />
     </Box>
   );

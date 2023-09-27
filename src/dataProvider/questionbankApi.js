@@ -17,7 +17,7 @@ function getQuestionType(){
   return getApi(`GetFixData/getListQuestionBank`);
 }
 
-function getQuestionByID(id){
+function getQuestionBankByID(id){
   return getApi(qbPath + `/GetMultipeQuestionBankById/ ${id}`);
 }
 
@@ -36,5 +36,5 @@ export {
 //   deleteCateByID,
   create,
   getQuestionType,
-  getQuestionByID
+  getQuestionBankByID
 }

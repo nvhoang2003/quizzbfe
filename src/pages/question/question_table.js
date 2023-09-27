@@ -2,7 +2,7 @@ import {
   DataGrid,
   GridActionsCellItem,
 } from '@mui/x-data-grid';
-import { React, useEffect, useState,useCallback } from 'react';
+import { React, useEffect, useState, useCallback } from 'react';
 import {
   Box,
   Tooltip,
@@ -10,7 +10,7 @@ import {
   Button,
   Pagination,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/navigation';
 import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
@@ -18,6 +18,7 @@ import { useSnackbar } from 'notistack';
 import { getAllQuestionbank } from '@/dataProvider/multipchoiceApi';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { CheckBox } from '@mui/icons-material';
+import { deleteMultiById, getAllQuestion } from '@/dataProvider/questionApi';
 
 //---------------------------------------------------------
 
@@ -25,8 +26,8 @@ import { CheckBox } from '@mui/icons-material';
 
 
 
-const QuestionBankTable = ({ questionData }) => {
- 
+const QuestionTable = ({ questionData }) => {
+
   const { push } = useRouter();
 
   const [data, setData] = useState([]);
@@ -34,11 +35,9 @@ const QuestionBankTable = ({ questionData }) => {
 
 
   const [filter, setFilter] = useState({
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 20,
   });
-  
-
 
   const handlePageChange = (event, newPage) => {
     setFilter((prevFilter) => ({ ...prevFilter, pageIndex: newPage }));
@@ -51,10 +50,6 @@ const QuestionBankTable = ({ questionData }) => {
   };
 
   const [paging, setPaging] = useState({});
-
-
-
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -62,10 +57,9 @@ const QuestionBankTable = ({ questionData }) => {
     { field: 'id' },
     { field: 'num', headerName: '#', width: 20 },
     { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'questionstype', headerName: 'Questions Type', width: 200 },
+    { field: 'questionsType', headerName: 'Questions Type', width: 200 },
     { field: 'authorName', headerName: 'Author Name', width: 150 },
-    { field: 'tags', headerName: 'Tags', width: 150 },
-    { field: 'categoryName', headerName: 'Category', width: 150 },
+    { field: 'defaultMark', headerName: 'Default Mark', width: 150 },
     {
       field: 'actions',
       type: 'actions',
@@ -76,10 +70,10 @@ const QuestionBankTable = ({ questionData }) => {
         return [
           <GridActionsCellItem
             icon={
-              <EditIcon />
+              <VisibilityIcon />
             }
-            label="Edit"
-            onClick={() => { handleEditClick(params.row) }}
+            label="Details"
+            onClick={() => { handleDetailsClick(params.row) }}
             color="success"
             size='25px'
           />,
@@ -102,15 +96,19 @@ const QuestionBankTable = ({ questionData }) => {
     setOpenConfirm(false);
   };
 
-  const handleEditClick = (row) => {
-    push(`category/` + row.id);
+  const handleDetailsClick = (row) => {
+    push(`/question/multiQuestion/details/` + row.id);
   };
 
   const handleDeleteRow = async (id) => {
-    const response = await deleteCateByID(id);
+    const response = await deleteMultiById(id);
+
+
 
     if (response.status < 400) {
-      push('/category');
+
+      
+      push('/question');
       await fetchAll();
       enqueueSnackbar(response.data.message, { variant: 'success' });
     } else {
@@ -120,18 +118,17 @@ const QuestionBankTable = ({ questionData }) => {
   }
 
 
-  async function fetchAll() {//filter
-    const res = await getAllQuestionbank();
+  async function fetchAll() {
+    const res = await getAllQuestion();
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
         return {
           id: qb.id,
           num: index + 1,
           name: qb.name,
-          questionstype: qb.questionstype,
+          questionsType: qb.questionsType,
           authorName: qb.authorName,
-          tags: qb.tags[0] ? qb.tags[0].name : "",
-          categoryName: qb.categoryName,
+          defaultMark: qb.defaultMark,
         };
       });
       setPaging(JSON.parse(res.headers['x-pagination']));
@@ -141,17 +138,16 @@ const QuestionBankTable = ({ questionData }) => {
     }
   }
 
-  
-  
+
+
   useEffect(() => {
     if (questionData && questionData.length > 0) {
       setData(questionData);
-      console.log(questionData);
     } else {
       fetchAll(data);
     }
-   
-  }, [filter,questionData]);
+
+  }, [filter, questionData]);
 
 
   return (
@@ -160,8 +156,6 @@ const QuestionBankTable = ({ questionData }) => {
       <DataGrid
         rows={data}
         columns={columns}
-        checkboxSelection
-        disableRowSelectionOnClick
         initialState={{
           columns: {
             ...columns.initialState?.columns,
@@ -169,19 +163,40 @@ const QuestionBankTable = ({ questionData }) => {
               id: false,
             },
           },
-
         }}
-
         sx={{
           m: 4,
           p: 2,
           fontSize: '16px'
         }}
       />
-      
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Xóa"
+        content={
+          <>
+            Bạn xác định muốn xóa câu hỏi tên là  : <strong>{ editData.name }</strong> ?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRow(editData.id);
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
+
     </Box>
   );
 
 }
 
-export default QuestionBankTable;
+export default QuestionTable;

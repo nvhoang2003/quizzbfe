@@ -27,7 +27,9 @@ const apiError = (response) => {
       returnUrl: "/",
     },
     401: {
-      action: window.sessionStorage.setItem("authenticated", "false"),
+      action: () => {
+        window.sessionStorage.setItem("authenticated", "false")
+      },
       message: "Hết hạn token",
       returnUrl: "/auth/login",
     },
@@ -51,7 +53,7 @@ const catchError = (err) => {
 };
 
 const instance = axios.create({
-  baseURL: `${process.env.LOCAL_API_KEY}api/`,
+  baseURL: `${process.env.HOST_API_KEY}api/`,
   timeout: 600000,
 });
 

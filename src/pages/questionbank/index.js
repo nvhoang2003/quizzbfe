@@ -5,11 +5,11 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Dialog, DialogTitle
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
-import QuestionBankTable from './questionbank_table';
 import SearchQuestionBank from '@/components/search/search_questionBank';
+import QuestionBankTable from '@/sections/@dashboard/list/questionbank/QuestionBankTable';
 
 const links = [
-  { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/new' },
+  { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },
   { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
   { label: 'DragAndDrop', href: '/link4' },
@@ -116,11 +116,11 @@ const Page = () => {
                     <DialogTitle id="responsive-dialog-title">
                     </DialogTitle>
                     <DialogContent>
-                      <Box container sx={{ flexGrow: 3 }}>
-                        <Typography textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
+                    <Grid container >
+                        <Typography content='center' textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
                           Chọn loại câu hỏi bạn muốn tạo mới
                         </Typography>
-                        {/* <Grid container spacing={2}> */}
+                        <Grid container spacing={2}>
                           {links.map((link, index) => (
                             <Grid item xs={6} key={index} md={4}>
                               <Button href={link.href}>
@@ -128,8 +128,8 @@ const Page = () => {
                               </Button>
                             </Grid>
                           ))}
-                        {/* </Grid> */}
-                      </Box>
+                        </Grid>
+                      </Grid>
                     </DialogContent>
                   </Dialog>
 

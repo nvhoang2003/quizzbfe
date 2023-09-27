@@ -9,7 +9,8 @@ import { Table, TableContainer } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import QuizTableRows from "./QuizTableRows";
-import { getAllQuiz } from "@/dataProvider/quizApi";
+import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
+import { enqueueSnackbar } from "notistack";
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "left" },
@@ -63,14 +64,15 @@ export default function QuizTable(prop) {
   );
 
   const handleDeleteRow = async (selected) => {
-    // const response = await deleteCustomer(selected);
-    // if (response.status < 400) {
-    //   setSelected([]);
-    //   await fetchCustomer();
-    //   enqueueSnackbar("Action successfuly", { variant: "success" });
-    // } else {
-    //   enqueueSnackbar("Action error", { variant: "error" });
-    // }
+    const response = await deleteQuizById(selected);
+    console.log(response);
+    if (response.status < 400) {
+      setSelected([]);
+      await fetchQuiz();
+      enqueueSnackbar(response?.data?.message, { variant: "success" });
+    } else {
+      enqueueSnackbar("Action error", { variant: "error" });
+    }
   };
 
   useEffect(() => {

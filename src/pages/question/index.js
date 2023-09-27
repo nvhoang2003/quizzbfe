@@ -81,6 +81,20 @@ const Page = () => {
                 </Typography>
               </Stack>
               <Stack direction="row" spacing={2}>
+              {/* <Stack direction="row" spacing={2}>
+                <Stack>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <PlusIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    onClick={handleAddClick}
+                  >
+                    Add Question
+                  </Button>
+                </Stack>
                 <Stack>
                   <Button
                     startIcon={(
@@ -104,6 +118,7 @@ const Page = () => {
                     </DialogTitle>
                     <DialogContent>
                       <Grid container >
+                    <Grid container >
                         <Typography content='center' textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
                           Chọn loại câu hỏi bạn muốn tạo mới
                         </Typography>
@@ -123,6 +138,7 @@ const Page = () => {
                 </Stack>
 
 
+              </Stack> */}
               </Stack>
             </Stack>
 

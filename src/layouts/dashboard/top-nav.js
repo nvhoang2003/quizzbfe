@@ -1,9 +1,9 @@
-
-import { useState } from 'react'; import PropTypes from 'prop-types';
-import BellIcon from '@heroicons/react/24/solid/BellIcon';
-import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
-import Bars3Icon from '@heroicons/react/24/solid/Bars3Icon';
-import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import BellIcon from "@heroicons/react/24/solid/BellIcon";
+import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
+import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import {
   Avatar,
   Badge,
@@ -19,20 +19,20 @@ import {
   Toolbar,
   Typography,
   Menu,
-  Button
-} from '@mui/material';
-import { alpha } from '@mui/material/styles';
-import { usePopover } from 'src/hooks/use-popover';
-import { AccountPopover } from './account-popover';
-import AdbIcon from '@mui/icons-material/Adb';
-import MenuIcon from '@mui/icons-material/Menu';
-import { items } from './config';
-import { SideNavItem } from './side-nav-item';
-import { TopNavItem } from './top-nav-item';
-import { usePathname } from 'next/navigation';
+  Button,
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import { usePopover } from "src/hooks/use-popover";
+import { AccountPopover } from "./account-popover";
+import AdbIcon from "@mui/icons-material/Adb";
+import MenuIcon from "@mui/icons-material/Menu";
+import { items } from "./config";
+import { SideNavItem } from "./side-nav-item";
+import { TopNavItem } from "./top-nav-item";
+import { usePathname } from "next/navigation";
 
 export const TopNav = () => {
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const accountPopover = usePopover();
   const pathname = usePathname();
 
@@ -46,13 +46,18 @@ export const TopNav = () => {
     setAnchorElNav(null);
   };
 
-
   return (
     <>
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        color="inherit"
+        sx={{
+          backgroundColor: "rgba(255,255,255, 0.8)",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -60,18 +65,18 @@ export const TopNav = () => {
               href="/"
               sx={{
                 mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 800,
+                letterSpacing: ".3rem",
+                color: "black",
+                textDecoration: "none",
               }}
             >
               LOGO
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               {!lgUp && (
                 <IconButton
                   size="large"
@@ -88,22 +93,22 @@ export const TopNav = () => {
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
+                  vertical: "bottom",
+                  horizontal: "left",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
+                  vertical: "top",
+                  horizontal: "left",
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
                 sx={{
-                  display: { xs: 'block', md: 'none' },
+                  display: { xs: "block", md: "none" },
                 }}
               >
                 {items.map((item) => {
-                  const active = item.path ? (pathname === item.path) : false;
+                  const active = item.path ? pathname === item.path : false;
 
                   return (
                     <TopNavItem
@@ -119,7 +124,7 @@ export const TopNav = () => {
                 })}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -127,18 +132,18 @@ export const TopNav = () => {
               href="/"
               sx={{
                 mr: 2,
-                display: { xs: 'flex', md: 'none' },
+                display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                fontFamily: "monospace",
+                fontWeight: 800,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
               LOGO
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {items.map((item) => {
                 const active = item.path ? (pathname === item.path) : false;
                 return (
@@ -156,19 +161,14 @@ export const TopNav = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Stack
-                alignItems="center"
-                direction="row"
-                spacing={2}
-              >
-
+              <Stack alignItems="center" direction="row" spacing={2}>
                 <Avatar
                   onClick={accountPopover.handleOpen}
                   ref={accountPopover.anchorRef}
                   sx={{
-                    cursor: 'pointer',
+                    cursor: "pointer",
                     height: 40,
-                    width: 40
+                    width: 40,
                   }}
                 />
               </Stack>
@@ -177,7 +177,6 @@ export const TopNav = () => {
                 open={accountPopover.open}
                 onClose={accountPopover.handleClose}
               />
-
             </Box>
           </Toolbar>
         </Container>
@@ -187,5 +186,5 @@ export const TopNav = () => {
 };
 
 TopNav.propTypes = {
-  onNavOpen: PropTypes.func
+  onNavOpen: PropTypes.func,
 };

@@ -4,7 +4,12 @@ const quizPath = "Quizz";
 
 const quizApiPath = {
   quizPath: quizPath,
-  getListQuizz: quizPath + "/getListAllQuizz"
+  getListQuizz: quizPath + "/getListAllQuizz",
+  getQuizById: quizPath + "/getQuizById",
+  addQuiz: quizPath + "/CreateNewQuizz",
+  editQuiz: quizPath + "/updateQuiz",
+  addQuestion: quizPath + "/AddQuestion",
+  deleteQuizById: quizPath + "/deleteQuiz"
 }
 
 function getAllQuiz(params) {
@@ -19,8 +24,18 @@ function submitQuiz(id, params){
   return postApi(`Score/SubmitQuizz/${id}`, params);
 }
 
+function getQuizById(quizId) {
+  return getApi(quizApiPath.getListQuizz + `/${quizId}`, {});
+}
+
+function deleteQuizById(quizId) {
+  return deleteApi(quizApiPath.deleteQuizById + `/${quizId}`, {});
+}
+
 export {
   getAllQuiz,
   getQuizForTestID,
   submitQuiz,
+  getQuizById,
+  deleteQuizById,
 }

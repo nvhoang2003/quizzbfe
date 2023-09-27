@@ -17,14 +17,14 @@ import { getAllQuestionbank, getQuestionType } from '@/dataProvider/questionbank
 import { Icon } from '@iconify/react';
 import { format } from 'date-fns';
 import snackbarUtils from '@/utils/snackbar-utils';
+import { getAllQuestion } from '@/dataProvider/questionApi';
 //--------------------------------------------------
 
-const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
+const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
   const [newData, setNewData] = useState([]);
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
   const [type, setType] = useState([]);
-  const [categoryId, setCategoryId] = useState(0);
   const [reRender, setReRender] = useState([]);
 
   const validationSchema = Yup.object().shape({
@@ -34,9 +34,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
   const defaultValues = useMemo(
     () => ({
       name: currentLevel?.name || '',
-      tags: currentLevel?.tags || '',
       authorName: currentLevel?.authorName || '',
-      categoryId: currentLevel?.categoryId || '',
       questiontype: currentLevel?.questiontype || '',
       startDate: currentLevel?.startDate || null,
       endDate: currentLevel?.endDate || null
@@ -65,40 +63,10 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
 
   }, [currentLevel]);
 
-
-  const handlerCategoryChange = (event, index) => {
-    setCategoryId(parseInt(event.target.value));
-    setValue(event.target.name, event.target.value);
-    setReRender({ [event.target.name]: event.target.value });
-  };
-
-
   const handlerTypeChange = (event, index) => {
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
   };
-
-  //allcate
-
-  async function fetchAll() {
-    const res = await getAllCate();
-    if (res.status < 400) {
-      const transformData = res.data.data.map((cate, index) => {
-        return {
-          id: cate.id,
-          num: index + 1,
-          name: cate.name,
-          description: cate.description
-        };
-      });
-      setCate(transformData);
-    } else {
-      return res;
-    }
-  }
-  useEffect(() => {
-    fetchAll()
-  }, []);
 
   async function fetchAllQuestionType() {
     const res = await getQuestionType();
@@ -121,18 +89,20 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
 
   async function fetchAllQuestion(data) {//filter
     //console.log(data);
-    const res = await getAllQuestionbank(data);
+    const res = await getAllQuestion(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
+
+
+
         
         return {
           id: qb.id,
           num: index + 1,
           name: qb.name,
-          questionstype: qb.questionstype,
+          questionsType: qb.questionsType,
           authorName: qb.authorName,
-          tags: qb.tags[0] ? qb.tags[0].name : "",
-          categoryName: qb.categoryName,
+          defaultMark: qb.defaultMark
         };
       });
       setNewData(transformData);
@@ -181,41 +151,21 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                       name="name"
                       label="Tên câu hỏi"
                       id="name"
-                      sx={{ width: '250px' }}
-                    />
-
-                    <RHFTextField
-                      name="tags"
-                      label="Tags"
-                      id="tags"
-                      sx={{ width: '250px' }}
+                      sx={{ width: '200px' }}
                     />
 
                     <RHFTextField
                       name="authorName"
                       label="Tên tác giả"
                       id="authorName"
-                      sx={{ width: '250px' }}
+                      sx={{ width: '200px' }}
                     />
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '200px' }}>
                       <RHFSelect name="questiontype" placeholder="Ques" onChange={handlerTypeChange}>
                         <option value="">QuestionType</option>
                         {!_.isEmpty(type) &&
                           type.map((option) => (
-                            <option key={option.name} value={option.id}>
-                              {option.name}
-                            </option>
-                          ))}
-                      </RHFSelect>
-                    </div>
-                  </Stack>
-                  <Stack direction="row" spacing={2} sx={{ width: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
-                      <RHFSelect name="categoryId" placeholder="Category" onChange={handlerCategoryChange}>
-                        <option value="">Category</option>
-                        {!_.isEmpty(cate) &&
-                          cate.map((option) => (
                             <option key={option.name} value={option.id}>
                               {option.name}
                             </option>
@@ -290,15 +240,11 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                 </Stack>
               </Stack >
               <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
-
-
             </Card>
           </Grid>
         </Grid>
-
-
       </FormProvider>
     </Container>
   );
 };
-export default SearchQuestionBank;
+export default SearchQuestion;

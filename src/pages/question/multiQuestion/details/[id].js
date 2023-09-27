@@ -2,26 +2,25 @@ import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
-import Form from '../form';
 import { useRouter } from 'next/router';
-import { getQuestionByID } from '@/dataProvider/questionbankApi';
+import { getMultiById } from '@/dataProvider/questionApi';
+import Form from '../form_question';
 
 // ----------------------------------------------------------------------
 
-Edit.propTypes = {
+Details.propTypes = {
   isEdit: PropTypes.bool,
   currentLevel: PropTypes.object,
 };
 
-export default function Edit() {
+export default function Details() {
   const [editData, setEditData] = useState({});
   const {
     query: { id }
   } = useRouter()
 
   async function fetchQuestionByID() {
-    const res = await getQuestionByID(id);
-    console.log(res.data.data);
+    const res = await getMultiById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -30,13 +29,21 @@ export default function Edit() {
         generalfeedback: q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
-        categoryId : q.categoryId,
-        tagId: q.tags,
-
-
+        author : q.author,
+        answers:[],
+        questionsType: q.questionstype,
       };
+
+      q.answers?.forEach(element => {
+        transformData.answers.push({
+          id: element.id,
+          content: element.content,
+          fraction: element.fraction,
+          questionId: element.questionId
+        });
+      });
+
       setEditData(transformData);
-      
     } else {
       return res;
     }
@@ -54,7 +61,7 @@ export default function Edit() {
       <Grid container spacing={3}>
         <Grid item xs={12} >
           <Card sx={{ p: 3 }}>
-            <Form isEdit={true} currentLevel={editData} />
+            <Form isEdit={false} currentLevel={editData} />
           </Card>
         </Grid>
       </Grid>
@@ -62,7 +69,7 @@ export default function Edit() {
   );
 }
 
-Edit.getLayout = (page) => (
+Details.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>

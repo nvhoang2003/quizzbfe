@@ -23,7 +23,6 @@ export const TopNavItem = (props) => {
       <ButtonBase
         sx={{
           alignItems: 'center',
-          borderRadius: 1,
           display: 'flex',
           justifyContent: 'flex-start',
           pl: '20px',
@@ -31,7 +30,8 @@ export const TopNavItem = (props) => {
           py: '6px',
           textAlign: 'center',
           ...(active && {
-            backgroundColor: '#4F52C1'
+            borderBottom: 3,
+            borderColor: "primary.main"
           }),
           '&:hover': {
             backgroundColor: '#686AC3'
@@ -59,7 +59,6 @@ export const TopNavItem = (props) => {
         <Box
           component="span"
           sx={{
-            color: 'neutral.400',
             flexGrow: 1,
             fontFamily: (theme) => theme.typography.fontFamily,
             fontSize: 15,
@@ -67,7 +66,8 @@ export const TopNavItem = (props) => {
             lineHeight: '26px',
             whiteSpace: 'nowrap',
             ...(active && {
-              color: 'common.white'
+              color: 'common.black',
+              fontWeight: 700,
             }),
             ...(disabled && {
               color: 'neutral.500'

@@ -181,36 +181,47 @@ export default function Form({ isEdit = false, currentLevel }) {
                       name="name"
                       label="Name"
                       id="name"
-                      inputprops={{ readOnly: !isEdit }}
+                      InputProps={{
+                        readOnly: !isEdit,
+                      }}
                     />
 
                     <RHFTextField
                       name="content"
                       label="Content"
                       id="content"
-                      inputprops={{ readOnly: !isEdit }}
+                      InputProps={{
+                        readOnly: !isEdit,
+                      }}
                     />
 
                     <RHFTextField
                       name="generalfeedback"
                       label="General Feedback"
                       id="generalfeedback"
-                      inputprops={{ readOnly: !isEdit }}
+                      InputProps={{
+                        readOnly: !isEdit,
+                      }}
                     />
 
                     <RHFTextField
                       name="defaultMark"
                       label="Default Mark"
                       id="defaultMark"
-                      inputprops={{ readOnly: !isEdit }}
+                      InputProps={{
+                        readOnly: !isEdit,
+                      }}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <RHFTextField
                         name="questionstype"
                         label="Question Type"
                         id="questionstype"
+                        // value="MultiChoice"
                         // onChange={(e) => setValue(e.target.value)}
-                        inputprops={{ readOnly: !isEdit }}
+                        InputProps={{
+                          readOnly: true,
+                        }}
                       />
                     </div>
 
@@ -225,6 +236,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             justifyContent: 'flex-start',
                             flexDirection: 'row',
                             alignItems: 'stretch'
+                            
                           }}>
 
                             <Box
@@ -240,7 +252,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                                 id={`answer[${index}]`}
                                 value={answerChooses.answer}
                                 onChange={(event) => handleInputAnswerChange(index, event)}
-                                inputprops={{ readOnly: !isEdit }}
+                                InputProps={{
+                                  readOnly: !isEdit,
+                                }}
                               />
                               <RHFTextField
                                 name={`feedbank[${index}]`}
@@ -248,7 +262,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                                 id={`feedbank[${index}]`}
                                 value={answerChooses.feedback}
                                 onChange={(event) => handleFeedbackChange(index, event)}
-                                inputprops={{ readOnly: !isEdit }}
+                                InputProps={{
+                                  readOnly: !isEdit,
+                                }}
                               />
                               <RHFSelect
                                 name={`fraction[${index}]`}
@@ -262,40 +278,43 @@ export default function Form({ isEdit = false, currentLevel }) {
                                   fraction.map((option) => (
                                     <option key={option} value={option}>{option}</option>
                                   ))
-                                }
+                                  }
                               </RHFSelect>
+
                             </Box>
+
                             {index === answerChoose.length - 1 && (
                               <Tooltip arrow placement="left" title="Add">
-                                <span>
-                                  <IconButton variant="contained" color="success" disabled={!isEdit} onClick={handleAddInputAnswer}>
-                                    <AddCircleIcon />
-                                  </IconButton>
-                                </span>
+                                <IconButton variant="contained" color="success" disabled={!isEdit} onClick={handleAddInputAnswer}>
+                                  <AddCircleIcon />
+                                </IconButton>
                               </Tooltip>
                             )}
                             {index !== 0 && (
                               <Tooltip arrow placement="right" title="Remove">
-                                <span>
-                                  <IconButton variant="contained" color="error" disabled={!isEdit} onClick={() => handleRemoveInputAnswer(index)}>
-                                    <RemoveCircleOutlineIcon />
-                                  </IconButton>
-                                </span>
+                                <IconButton variant="contained" color="error" disabled={!isEdit} onClick={() => handleRemoveInputAnswer(index)}>
+                                  <RemoveCircleOutlineIcon />
+                                </IconButton>
                               </Tooltip>
+
                             )}
                           </div>
                         ))}
                       </Stack>
+
+
                     </Stack>
                     <Stack sx={{ ml: 1.5 }}>
+
                       <RHFSwitch
                         name="public"
                         label="Tài liệu công khai/ riêng tư"
                         labelPlacement="start"
                         sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
-                        disabled={!isEdit}
+                        inputProps={{ readOnly: true }}
                       />
                     </Stack>
+
                   </Stack>
                   <Button
                     size="small"
@@ -303,7 +322,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                     onClick={() => {
                       reset(defaultValues);
                     }}
-                    inputprops={{ readOnly: !isEdit }}
+                    disabled={!isEdit}
+                  //startIcon={<Iconify icon="eva:trash-2-outline" />}
                   >
                     xóa
                   </Button>
@@ -318,6 +338,8 @@ export default function Form({ isEdit = false, currentLevel }) {
             </Card>
           </Grid>
         </Grid>
+
+
       </FormProvider>
     </Container>
   );
