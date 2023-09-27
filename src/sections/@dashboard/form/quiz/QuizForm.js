@@ -3,10 +3,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { Scrollbar } from "@/components/scrollbar/scrollbar";
 import RHFTextField from "@/components/form/RHFTextField";
-import { DateTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import FormProvider from "@/components/form/FormProvider";
 import PropTypes from "prop-types";
 import {
@@ -22,6 +22,7 @@ import { LoadingButton } from "@mui/lab";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
 import RHFNumberInput from "@/components/form/RHFNumberInput";
+import RHFDateTimePicker from "@/components/form/RHFDateTimePicker";
 
 QuizForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -38,6 +39,20 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
     router.push("/quiz/add_question");
   };
 
+  const defaultValues = useMemo(
+    () => ({
+      name: currentLevel?.name || "",
+      timeOpen: null,
+      timeClose: null,
+      // timeOpen: currentLevel?.timeOpen ? dayjs(currentLevel.timeOpen) : null,
+      // timeClose: currentLevel?.timeClose ? dayjs(currentLevel.timeClose) : null,
+      timeLimit: currentLevel?.timeLimit || 0,
+      pointToPass: currentLevel?.pointToPass || 0,
+      isPublic: currentLevel?.isPublic == 1 ? true : false,
+    }),
+    [currentLevel]
+  );
+
   const validationSchema = Yup.object().shape({
     quizName: Yup.string().trim().required("Tên đề thi không được để trống"),
     timeOpen: Yup.date().required("Giờ mở đề không được để trống"),
@@ -50,21 +65,9 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
       .min(0.1, "Điểm đạt phải lớn hơn hoặc bằng 0,1"),
   });
 
-  const defaultValues = useMemo(
-    () => ({
-      name: currentLevel?.name || "",
-      timeOpen: currentLevel?.timeOpen ? dayjs(currentLevel.timeOpen) : "",
-      timeClose: currentLevel?.timeClose ? dayjs(currentLevel.timeClose) : "",
-      timeLimit: currentLevel?.timeLimit || 0,
-      pointToPass: currentLevel?.pointToPass || 0,
-      isPublic: currentLevel?.isPublic == 1 ? true : false,
-    }),
-    [currentLevel]
-  );
-
   const methods = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues,
+    values: defaultValues,
   });
 
   const {
@@ -80,9 +83,9 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
 
   const createNew = async (data) => {};
 
-  const onSubmit = (data) => {
+  const onSubmit = (async (data) => {
     console.log(data);
-  };
+  });
 
   return (
     <Stack sx={{ px: 3, py: 2, minWidth: "270px" }}>
@@ -109,7 +112,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
           <Container maxWidth="xl">
             <Stack display="flex" flexWrap="wrap" direction="column" gap={2}>
               <RHFTextField name="name" id="name" label="Tên đề thi" />
-              <DateTimePicker
+              <RHFDateTimePicker
                 name="timeOpen"
                 id="timeOpen"
                 label="Giờ mở đề thi"
@@ -117,7 +120,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
                   width: "100%",
                 }}
               />
-              <DateTimePicker
+              <RHFDateTimePicker
                 name="timeClose"
                 id="timeClose"
                 label="Giờ đóng đề thi"

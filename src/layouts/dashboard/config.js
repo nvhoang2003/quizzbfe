@@ -37,7 +37,7 @@ export const items = [
   },
   {
     title: "Câu hỏi",
-    path: "/category",
+    path: "/question",
     icon: (
       <SvgIcon fontSize="small">
         <QuestionMark />
