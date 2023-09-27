@@ -310,7 +310,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       answers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: parseInt(answer.fraction, 10),
+          fraction: answer?.fraction && answer.fraction != 0 ? parseInt(answer.fraction, 10) : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
