@@ -44,17 +44,17 @@ export const tokenExpired = (exp) => {
 
   // Test token expires after 10s
   // const timeLeft = currentTime + 10000 - currentTime; // ~10s
-  const timeLeft = exp * 1000 - currentTime;
+  // const timeLeft = exp * 1000 - currentTime;
 
-  clearTimeout(expiredTimer);
+  // clearTimeout(expiredTimer);
 
-  expiredTimer = setTimeout(() => {
-    alert('Hết hạn đăng nhập, xin mời đăng nhập lại');
+  // expiredTimer = setTimeout(() => {
+  //   // alert('Hết hạn đăng nhập, xin mời đăng nhập lại');
 
-    localStorage.removeItem('access_token');
+  //   // localStorage.removeItem('access_token');
 
-    window.location.href = PATH_AUTH.login;
-  }, timeLeft);
+  //   //window.location.href = PATH_AUTH.login;
+  // }, timeLeft);
 };
 
 // ----------------------------------------------------------------------

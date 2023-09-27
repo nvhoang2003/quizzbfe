@@ -67,6 +67,5 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     )
-  },
- 
+  }, 
 ];

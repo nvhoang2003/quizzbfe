@@ -18,7 +18,8 @@ export default function MultiQuestionResponse(props) {
           <Typography variant="h7" gutterBottom>Câu {index} {questionData?.question?.content}</Typography>
         </Stack>
         <Box display="flex" justifyContent="flex-end" sx={{ fornWeight: 'bold' }}>
-          <Typography variant="h7" gutterBottom>{questionData?.question?.defaultMark} Điểm</Typography>
+          {/* <Typography variant="h7" gutterBottom>{questionData?.question?.defaultMark} Điểm</Typography> */}
+          <Typography variant="h7" gutterBottom> Điểm</Typography>
         </Box>
         {questionData.questionAnswer.map((item, index) => (
           item && item.isChosen === true ? <ChooseAnswerResponse answer={item} /> : <NoneChooseAnswerResponse answer={item} />

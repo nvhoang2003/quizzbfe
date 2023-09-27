@@ -7,23 +7,12 @@ import MultiChoiceQuestion from '@/components/question-information/MultiChoiceQu
 import OneChoiceQuestion from '@/components/question-information/OneChoiceQuestion';
 import { React, useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getQuizForTestID } from '@/dataProvider/quizApi';
-import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
-import ConfirmDialogQuestion from '@/components/confirm-dialog/ConfirmDialogQuestion';
+import { getQuizForTestID, submitQuiz } from '@/dataProvider/quizApi';
 import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
+import { useSelector } from '@/redux/store';
+import { changeQuizResult } from '@/redux/slice/quizResult';
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
-
-// Renderer callback with condition
-// const renderer = ({ hours, minutes, seconds, completed }) => {
-//   if (completed) {
-//     // Render a completed state
-//     return <Completionist />;
-//   } else {
-//     // Render a countdown
-//     return <span>{hours}:{minutes}:{seconds}</span>;
-//   }
-// };
 
 const TestQuiz = (props) => {
   const {
@@ -48,8 +37,28 @@ const TestQuiz = (props) => {
     setOpenConfirm(false);
   };
 
-  const handleSubmitConfirm = (id) => {
-    router.push(`/ortherpage/` + id);
+  const listQuestionResult = useSelector(state => state.quizResult.value);
+
+  const handleSubmitConfirm = async (id) => {
+    const resultForSend = listQuestionResult.map(obj => {
+      const newObj = { ...obj }; // Tạo một đối tượng mới sao chép từ đối tượng hiện có
+
+      newObj.answer = JSON.stringify(obj.answer); // Gán giá trị mới cho thuộc tính answer của đối tượng mới
+      
+      return newObj;
+    });
+
+    try {
+      const res = await submitQuiz(id, resultForSend);
+      console.log(res);
+      router.push(`/ortherpage/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  
+    // const res = await submitQuiz(id, resultForSend);
+    // console.log(res);
+    // router.push(`/ortherpage/` + id);
   }
   const setNewCurrentValue = (newValue) => {
     setCurrent(parseInt(newValue));
@@ -127,9 +136,9 @@ const TestQuiz = (props) => {
               }}
               className='right-item'
             >
-              <Typography variant='h4'>
+              {/* <Typography variant='h4'>
                 <CountdownTimer initialTime={10} question={curent} sum={sumValue} />
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack
               flexWrap="wrap"
