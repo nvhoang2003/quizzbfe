@@ -26,7 +26,7 @@ export default function Details() {
       const transformData = {
         id: q.id,
         name: q.name,
-        generalfeedback:q.generalfeedback,
+        generalfeedback: q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
         author : q.author,
@@ -66,7 +66,6 @@ export default function Details() {
         </Grid>
       </Grid>
     </div>
-
   );
 }
 

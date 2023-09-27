@@ -330,7 +330,6 @@ export default function Form({ isEdit = false, currentLevel }) {
                 </Stack>
               </Stack>
               <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
-
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!isEdit ? 'Back List' : 'Delete'}

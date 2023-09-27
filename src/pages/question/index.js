@@ -8,29 +8,29 @@ import { useRouter } from 'next/navigation';
 import QuestionTable from './question_table';
 import SearchQuestion from '@/components/search/search_question';
 
-// const links = [
-//   { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },
-//   { label: 'Numerical', href: '/link2' },
-//   { label: 'ShortAnswer', href: '/link3' },
-//   { label: 'DragAndDrop', href: '/link4' },
-//   { label: 'Matching', href: '/link1' },
-//   { label: 'TrueFalse', href: '/link2' },
-// ];
-// const item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-// }));
+const links = [
+  { label: 'Multichoice', href: '/question/multiQuestion/create' },
+  { label: 'Numerical', href: '/link2' },
+  { label: 'ShortAnswer', href: '/link3' },
+  { label: 'DragAndDrop', href: '/link4' },
+  { label: 'Matching', href: '/link1' },
+  { label: 'TrueFalse', href: '/link2' },
+];
+const item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
-// function Item({ children }) {
-//   return (
-//     <Box sx={{ border: '1px', p: [2], m: 2, padding: '5px' }}>
-//       {children}
-//     </Box>
-//   );
-// }
+function Item({ children }) {
+  return (
+    <Box sx={{ border: '1px', p: [2], m: 2, padding: '5px' }}>
+      {children}
+    </Box>
+  );
+}
 
 const Page = () => {
   const router = useRouter();
@@ -80,6 +80,7 @@ const Page = () => {
                   Question
                 </Typography>
               </Stack>
+              <Stack direction="row" spacing={2}>
               {/* <Stack direction="row" spacing={2}>
                 <Stack>
                   <Button
@@ -116,6 +117,7 @@ const Page = () => {
                     <DialogTitle id="responsive-dialog-title">
                     </DialogTitle>
                     <DialogContent>
+                      <Grid container >
                     <Grid container >
                         <Typography content='center' textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
                           Chọn loại câu hỏi bạn muốn tạo mới
@@ -137,15 +139,16 @@ const Page = () => {
 
 
               </Stack> */}
+              </Stack>
             </Stack>
 
 
 
 
-            <SearchQuestion handleSearchSubmit={handleSubmit}/>
+            <SearchQuestion handleSearchSubmit={handleSubmit} />
 
-            
-            <QuestionTable questionData={questionData}/>
+
+            <QuestionTable questionData={questionData} />
           </Stack>
         </Container>
       </Box>

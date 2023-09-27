@@ -54,7 +54,7 @@ const catchError = (err) => {
 
 const instance = axios.create({
   baseURL: `${process.env.HOST_API_KEY}api/`,
-  timeout: 60000,
+  timeout: 600000,
 });
 
 const getLocalStorage = (key) => {

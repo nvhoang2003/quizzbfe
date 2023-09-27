@@ -34,7 +34,7 @@ export const TopNavItem = (props) => {
             borderColor: "primary.main"
           }),
           '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.04)'
+            backgroundColor: '#686AC3'
           }
         }}
         {...linkProps}
@@ -49,7 +49,7 @@ export const TopNavItem = (props) => {
               justifyContent: 'center',
               mr: 2,
               ...(active && {
-                color: 'primary.main'
+                color: '#ede7f6'
               })
             }}
           >
