@@ -1,10 +1,11 @@
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
 import Head from "next/head";
 import QuizForm from "@/sections/@dashboard/form/quiz/QuizForm";
+import { getQuizById } from "@/dataProvider/quizApi";
 
 const QuizEdit = (props) => {
   const {
@@ -14,18 +15,18 @@ const QuizEdit = (props) => {
   const [editData, setEditData] = useState();
 
   async function fetchQuizById(quizId) {
-    const res = await getQuestionBankByID(quizId);
+    const res = await getQuizById(quizId);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
         id: q.id,
         name: q.name,
-        timeOpen: q.generalfeedback,
-        timeClose: q.content,
-        timeLimit: q.defaultMark,
-        description: q.categoryId,
-        pointToPass: [],
-        maxPoint: [],
+        timeOpen: q.timeOpen,
+        timeClose: q.timeClose,
+        timeLimit: q.timeLimit,
+        description: q.description,
+        pointToPass: q.pointToPass,
+        maxPoint: q.maxPoint,
         isPublic: q.isPublic,
         isValid: q.isValid,
         courseid: q.courseid,
@@ -34,6 +35,7 @@ const QuizEdit = (props) => {
 
       setEditData(transformData);
       props.changeLastPath(transformData.name);
+      props.changeBreadCrumbsStatus(true);
     } else {
       return res;
     }

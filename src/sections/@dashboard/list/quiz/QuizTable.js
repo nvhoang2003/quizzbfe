@@ -90,6 +90,13 @@ export default function QuizTable(prop) {
     }
   };
 
+  const switchToUpdate = (id) => {
+    router.push({
+      pathname: '/quiz/[quizId]/edit',
+      query: { quizId: id },
+    });
+  }
+
   return (
     <TableContainer sx={{ position: "relative", overflow: "unset" }}>
       <Scrollbar>
@@ -114,6 +121,7 @@ export default function QuizTable(prop) {
                 row={item}
                 seleted={selected.includes(item.id)}
                 onSelectRow={() => onSelectRow(item.id)}
+                onUpdateRow={() => switchToUpdate(item.id)}
                 onDeleteRow={() => handleDeleteRow(item.id)}
                 index={index}
               />
