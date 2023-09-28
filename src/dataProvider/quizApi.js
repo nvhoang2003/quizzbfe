@@ -17,7 +17,7 @@ function getAllQuiz(params) {
 }
 
 function getQuizForTestID(id){
-  return getApi(quizPath + `/getQuizForTest/ ${id}`);
+  return getApi(quizPath + `/getQuizForTest/${id}`);
 }
 
 function submitQuiz(id, params){
@@ -25,11 +25,11 @@ function submitQuiz(id, params){
 }
 
 function getQuizById(quizId) {
-  return getApi(quizApiPath.getQuizById + `/${quizId}`, {});
+  return getApi(quizApiPath.getQuizById + `/${quizId}`);
 }
 
 function deleteQuizById(quizId) {
-  return deleteApi(quizApiPath.deleteQuizById + `/${quizId}`, {});
+  return deleteApi(quizApiPath.deleteQuizById + `/${quizId}`);
 }
 
 export {

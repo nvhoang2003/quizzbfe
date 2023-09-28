@@ -1,19 +1,26 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { setupLocalStorage } from '@/auth/utils';
-import { loginAuth } from '@/dataProvider/authApi';
-import snackbarUtils from '@/utils/snackbar-utils';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import { setupLocalStorage } from "@/auth/utils";
+import { loginAuth } from "@/dataProvider/authApi";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 const HANDLERS = {
-  INITIALIZE: 'INITIALIZE',
-  SIGN_IN: 'SIGN_IN',
-  SIGN_OUT: 'SIGN_OUT'
+  INITIALIZE: "INITIALIZE",
+  SIGN_IN: "SIGN_IN",
+  SIGN_OUT: "SIGN_OUT",
 };
 
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
-  user: null
+  user: null,
 };
 
 const handlers = {
@@ -22,18 +29,16 @@ const handlers = {
 
     return {
       ...state,
-      ...(
-        // if payload (user) is provided, then is authenticated
-        user
-          ? ({
+      ...// if payload (user) is provided, then is authenticated
+      (user
+        ? {
             isAuthenticated: true,
             isLoading: false,
-            user
-          })
-          : ({
-            isLoading: false
-          })
-      )
+            user,
+          }
+        : {
+            isLoading: false,
+          }),
     };
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
@@ -41,21 +46,20 @@ const handlers = {
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null
+      user: null,
     };
-  }
+  },
 };
 
-const reducer = (state, action) => (
-  handlers[action.type] ? handlers[action.type](state, action) : state
-);
+const reducer = (state, action) =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 // The role of this context is to propagate authentication state through the App tree.
 
@@ -77,23 +81,24 @@ export const AuthProvider = (props) => {
     let isAuthenticated = false;
 
     try {
-      isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
+      isAuthenticated =
+        window.sessionStorage.getItem("authenticated") === "true";
     } catch (err) {
       console.error(err);
     }
 
     if (isAuthenticated) {
       const user = {
-         name: "userI",
-       };
+        name: "userI",
+      };
 
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: user
+        payload: user,
       });
     } else {
       dispatch({
-        type: HANDLERS.INITIALIZE
+        type: HANDLERS.INITIALIZE,
       });
     }
   };
@@ -106,37 +111,35 @@ export const AuthProvider = (props) => {
     []
   );
 
- 
   const signIn = async (username, password) => {
     try {
       const responseLogin = await loginAuth({ username, password });
 
       if (responseLogin.status < 400) {
         setupLocalStorage(responseLogin.data.accessToken);
-        window.sessionStorage.setItem('authenticated', 'true');  
-        snackbarUtils.success('Đăng nhập thành công');
+        window.sessionStorage.setItem("authenticated", "true");
+        snackbarUtils.success("Đăng nhập thành công");
         const user = {
-         id: responseLogin?.data?.userId,
-          name: username,
+          id: responseLogin?.data?.userId,
+          username: username,
         };
 
         dispatch({
           type: HANDLERS.SIGN_IN,
-          payload: user
+          payload: user,
         });
       }
-       
+
       return responseLogin;
     } catch (err) {
       console.error(err);
     }
-
   };
   const signOut = () => {
     setupLocalStorage("");
-    window.sessionStorage.setItem('authenticated', 'false');  
+    window.sessionStorage.setItem("authenticated", "false");
     dispatch({
-      type: HANDLERS.SIGN_OUT
+      type: HANDLERS.SIGN_OUT,
     });
   };
 
@@ -145,7 +148,7 @@ export const AuthProvider = (props) => {
       value={{
         ...state,
         signIn,
-        signOut
+        signOut,
       }}
     >
       {children}
@@ -154,7 +157,7 @@ export const AuthProvider = (props) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import QuizTableRows from "./QuizTableRows";
 import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
 import { enqueueSnackbar } from "notistack";
+import { addQuizAccess } from "@/dataProvider/quizAccess";
+import { jwtDecode } from "@/auth/utils";
+import { getLocalStorage } from "@/dataProvider/baseApi";
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "left" },
@@ -63,9 +66,32 @@ export default function QuizTable(prop) {
     [filter]
   );
 
+  const handleShowRow = async (quizId) => {
+    const token = getLocalStorage("access_token");
+    const dataToken = jwtDecode(token);
+
+    const params = {
+      userId: parseInt(dataToken.nameid),
+      quizId: parseInt(quizId),
+      timeStartQuiz: null,
+      status: "Wait",
+    };
+    const response = await addQuizAccess(params);
+
+    if (response.status < 400) {
+      const accessId = response.data.data.id;
+      router.push({
+        pathname: "/testquiz/[id]",
+        query: { id: accessId },
+      });
+    } else {
+      enqueueSnackbar("Vui lòng thử lại!", { variant: "error" });
+    }
+  };
+
   const handleDeleteRow = async (selected) => {
     const response = await deleteQuizById(selected);
-    console.log(response);
+
     if (response.status < 400) {
       setSelected([]);
       await fetchQuiz();
@@ -92,10 +118,10 @@ export default function QuizTable(prop) {
 
   const switchToUpdate = (id) => {
     router.push({
-      pathname: '/quiz/[quizId]/edit',
+      pathname: "/quiz/[quizId]/edit",
       query: { quizId: id },
     });
-  }
+  };
 
   return (
     <TableContainer sx={{ position: "relative", overflow: "unset" }}>
@@ -121,6 +147,7 @@ export default function QuizTable(prop) {
                 row={item}
                 seleted={selected.includes(item.id)}
                 onSelectRow={() => onSelectRow(item.id)}
+                onShowRow={() => handleShowRow(item.id)}
                 onUpdateRow={() => switchToUpdate(item.id)}
                 onDeleteRow={() => handleDeleteRow(item.id)}
                 index={index}

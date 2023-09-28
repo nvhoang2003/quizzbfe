@@ -25,16 +25,17 @@ export const TopNavItem = (props) => {
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'flex-start',
-          pl: '20px',
-          pr: '14px',
-          py: '6px',
+          px: 2,
+          py: 1,
+          mx: 0.5,
           textAlign: 'center',
           ...(active && {
             borderBottom: 3,
             borderColor: "primary.main"
           }),
           '&:hover': {
-            backgroundColor: '#686AC3'
+            borderBottom: 3,
+            borderColor: "primary.main"
           }
         }}
         {...linkProps}
