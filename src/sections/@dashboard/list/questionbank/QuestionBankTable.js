@@ -103,7 +103,8 @@ const QuestionBankTable = ({ questionData }) => {
   };
 
   const handleEditClick = (row) => {
-    push(`/questionbank/multiChoiceQuestion/` + row.id +`/edit`);
+    console.log(row.questionstype);
+    push(`/questionbank/` + row.questionstype + `/` + row.id +`/edit`);
   };
 
   const handleDeleteRow = async (id) => {
@@ -137,7 +138,8 @@ const QuestionBankTable = ({ questionData }) => {
       setPaging(JSON.parse(res.headers['x-pagination']));
       setData(transformData);
     } else {
-      enqueueSnackbar(response.response.data.title, { variant: "error" });
+      console.log(res);
+      // enqueueSnackbar(res.response.data.title, { variant: "error" });
     }
   }
 

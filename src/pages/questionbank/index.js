@@ -10,11 +10,10 @@ import QuestionBankTable from '@/sections/@dashboard/list/questionbank/QuestionB
 
 const links = [
   { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },
-  { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
-  { label: 'DragAndDrop', href: '/link4' },
+  { label: 'DragAndDrop', href: '/questionbank/DragAndDropQuestion/create' },
   { label: 'Matching', href: '/link1' },
-  { label: 'TrueFalse', href: '/link2' },
+  { label: 'TrueFalse', href: '/questionbank/dragAndDropQuestion/create' },
 ];
 const item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

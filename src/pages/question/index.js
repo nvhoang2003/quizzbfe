@@ -10,7 +10,6 @@ import SearchQuestion from '@/components/search/search_question';
 
 const links = [
   { label: 'Multichoice', href: '/question/multiQuestion/create' },
-  { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
   { label: 'DragAndDrop', href: '/link4' },
   { label: 'Matching', href: '/link1' },
