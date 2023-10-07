@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
-import { Card, Grid } from '@mui/material';
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getMultiById } from '@/dataProvider/questionApi';
-import Form from '../form_question';
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +28,8 @@ export default function Details() {
         generalfeedback: q.generalfeedback,
         content: q.content,
         defaultMark: q.defaultMark,
-        author : q.author,
-        answers:[],
+        author: q.author,
+        answers: [],
         questionsType: q.questionstype,
       };
 
@@ -58,13 +57,26 @@ export default function Details() {
 
   return (
     <div>
-      <Grid container spacing={3}>
-        <Grid item xs={12} >
-          <Card sx={{ p: 3 }}>
-            <Form isEdit={false} currentLevel={editData} />
-          </Card>
-        </Grid>
-      </Grid>
+      <Stack
+        spacing={4}
+      >
+        <Stack
+          direction="row-reverse"
+          justifyContent="flex-end"
+          alignItems="center"
+          spacing={4}
+        >
+
+          <Typography variant="h4" component="h2">
+            Chi tiết câu hỏi
+          </Typography>
+
+        </Stack>
+        <Card sx={{ p: 3 , position:"center", width:"70%"}} >
+         
+        </Card>
+
+      </Stack>
     </div>
   );
 }

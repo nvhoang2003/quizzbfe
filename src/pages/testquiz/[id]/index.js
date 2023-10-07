@@ -11,6 +11,7 @@ import { getQuizForTestID, submitQuiz } from '@/dataProvider/quizApi';
 import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
 import { useSelector } from '@/redux/store';
 import { changeQuizResult } from '@/redux/slice/quizResult';
+import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
@@ -136,9 +137,9 @@ const TestQuiz = (props) => {
               }}
               className='right-item'
             >
-              {/* <Typography variant='h4'>
-                <CountdownTimer initialTime={10} question={curent} sum={sumValue} />
-              </Typography> */}
+              <Typography variant='h4'>
+                <CountdownTimer initialTime={100} question={curent} sum={sumValue} />
+              </Typography>
             </Stack>
             <Stack
               flexWrap="wrap"

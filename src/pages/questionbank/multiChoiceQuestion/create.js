@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Card, Divider, Grid} from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import Form from '@/sections/@dashboard/form/questionbank/form';
+import Form from '@/sections/@dashboard/form/questionbank/formMultichoiceQuestion';
 
 // ----------------------------------------------------------------------
 

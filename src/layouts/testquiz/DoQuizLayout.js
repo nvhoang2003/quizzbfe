@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { TopNav } from '../dashboard/top-nav';
 import { SideNav } from './SideNav';
-import { useState} from 'react';
+import { useState } from 'react';
 import React from 'react';
 
 const SIDE_NAV_WIDTH = 10;
@@ -31,7 +31,7 @@ export const DoQuizLayout = (props) => {
     quiz: '',
   });
 
-  const {children} = props;
+  const { children } = props;
 
   const setNewInfo = (name, course, quiz) => {
     setInfo({
@@ -44,9 +44,16 @@ export const DoQuizLayout = (props) => {
     <>
       <TopNav />
       <LayoutRoot>
+        {/* <TopNav /> */}
         <LayoutContainer>
-          <SideNav informationDoQuiz={info}/>
-          <div className='ml-300'>
+          <SideNav informationDoQuiz={info} />
+          <div className='ml-300'
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingTop: "100px"
+            }}>
             {React.Children.map(children, (child) => {
               return React.cloneElement(child, {
                 changeInfo: setNewInfo,

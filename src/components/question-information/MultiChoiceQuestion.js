@@ -1,12 +1,15 @@
-import { Typography, Box, FormGroup, FormControlLabel, Checkbox, Stack } from '@mui/material'
-import { useSelector, useDispatch } from 'react-redux'
-import { changeQuizResult } from '@/redux/slice/quizResult';
+import { Typography, Box, FormGroup, FormControlLabel, Checkbox, Stack, Icon } from '@mui/material'
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import CheckQuestion from './checkquestion';
+//-------------------------------------------------------------
 
 export default function MultiChoiceQuestion(props) {
-  const { question, numberQuestion } = props;
-  const dispatch = useDispatch();
+
+  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit} = props;
+  const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
@@ -14,8 +17,12 @@ export default function MultiChoiceQuestion(props) {
     answer: [],
   });
   const selectedCheckboxes = useRef([]);
-  const listQuestionResult = useSelector(state => state.quizResult.value);
+  const listQuestionResult = useState([]);
   const [listIdSelected, setListIdSelected] = useState([]);
+  const [select, setSelect] = useState(0);
+
+  const [initialFraction, setInitialFraction] = useState(null);
+
   const checkHaveWrongAnswer = (value) => {
     if (value.length == 0) {
       return false;
@@ -33,28 +40,32 @@ export default function MultiChoiceQuestion(props) {
       selectedCheckboxes.current = [...selectedCheckboxes.current, item];
       setQuestionResult(prevResult => ({
         mark: prevResult?.mark + item.fraction,
-        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && (questionResult?.mark + item.fraction) === 1) ? 'Right' : 'Wrong',
-        questionId: question.question.id,
+        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && (questionResult?.mark + item.fraction) === 1) ? 'correct' : 'wrong',
+        questionId: question?.id,//question.question.id
         answer: [...prevResult?.answer, item]
       }));
-      console.log(questionResult);
       listIdSelected.push(item.id);
       setListIdSelected([...listIdSelected]);
+      setInitialFraction(item.fraction);
     } else {
       selectedCheckboxes.current = selectedCheckboxes.current.filter(sel => sel.id !== item.id);
       setQuestionResult({
         mark: questionResult.mark - item.fraction,
-        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && questionResult.mark - item.fraction === 1) ? 'Right' : 'Wrong',
-        questionId: question.question.id,
+        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && questionResult.mark - item.fraction === 1) ? 'correct' : 'wrong',
+        questionId: question?.id,//question.question.id
         answer: [...questionResult.answer.filter(sel => sel.id !== item.id)]
       })
       setListIdSelected(listIdSelected.filter(checkbox => checkbox !== item.id));
     }
+
   }
+  useEffect(() => {
+    setAnswerResult(questionResult);
+  }, [questionResult, answerResult]);
 
   useEffect(() => {
     if (question, listQuestionResult) {
-      const answer = listQuestionResult.filter(item => item.questionId == question.question.id);
+      const answer = listQuestionResult?.filter(item => item.questionId == question?.id);
       const ids = answer[0]?.answer?.map(i => i.id);
       if (ids) {
         if (typeof ids === 'Array') {
@@ -63,19 +74,17 @@ export default function MultiChoiceQuestion(props) {
           setListIdSelected(ids);
         }
       }
-      console.log(listQuestionResult.filter(item => item.questionId == question.question.id)[0])
-      if (listQuestionResult.filter(item => item.questionId == question.question.id)[0]) {
-        setQuestionResult(listQuestionResult.filter(item => item.questionId == question.question.id)[0])
+      // console.log(listQuestionResult.filter(item => item.questionId == question?.id)[0])
+      if (listQuestionResult?.filter(item => item.questionId == question?.id)[0]) {
+        setQuestionResult(listQuestionResult.filter(item => item.questionId == question?.id)[0])
       }
     }
   }, [question]);
 
 
   useEffect(() => {
-    if (questionResult.questionId !== 0) {
-      dispatch(changeQuizResult(questionResult));
-    }
-  }, [listIdSelected]);
+    setSelect(listIdSelected.length);
+  }, [listIdSelected, select, initialFraction]);
 
 
   return (
@@ -83,19 +92,43 @@ export default function MultiChoiceQuestion(props) {
       display: 'flex',
       p: 1,
       m: 1,
-      bgcolor: 'background.paper',
+      // bgcolor: 'background.paper',
       borderTop: 'solid 1px',
       width: 1
     }}
     >
-      <Box sx={{ py: 3, width: 1 }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.question?.content}</Typography>
-        <Typography sx={{ fontSize: '12px' }}>Chọn Nhiều Đáp Án</Typography>
+      <Box sx={{ py: 3, width: 1 }} alignItems='center'>
+        <Stack alignItems="flex-start" sx={{ paddingLeft: "50px" }}>
+          <Typography variant="h5" >Câu Hỏi {numberQuestion}: {question?.content}</Typography>
+          <Typography sx={{ paddingLeft: "20px" }} variant="subtitle2">Chọn Nhiều Đáp Án</Typography>
+        </Stack>
 
         <FormGroup sx={{ py: 3 }}>
-          {question?.questionAnswer?.map((item, index) => (
-            <FormControlLabel key={index} control={<Checkbox checked={listIdSelected?.includes(item.id)} onChange={(event) => handleChange(event, item)} name="checked" />} label={item?.content} />
-          ))}
+          <Stack direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+            spacing={2}>
+            {question?.answer_content?.map((item, index) => (
+              
+              <FormControlLabel key={index}
+                sx={{ paddingLeft: "100px" }}
+                control={<Checkbox disabled={isSubmit} checked={listIdSelected?.includes(item.id)} onChange={(event) => handleChange(event, item)} name="checked" />}
+                // label={item?.answer}
+                label={
+
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {alphabet.map((item) => {
+                      <Typography variant="body1" sx={{ paddingRight: "10px" }}>{item}</Typography>
+                    })}
+                    <Typography variant="body1">{item?.answer}</Typography>
+                    <CheckQuestion questionResult={questionResult} listIdSelected={listIdSelected} isSubmit={isSubmit} item={item} />
+
+                  </div>
+                }
+              />
+            ))}
+          </Stack>
+
         </FormGroup>
       </Box>
     </Box>

@@ -2,9 +2,13 @@ import { changeQuizResult } from '@/redux/slice/quizResult';
 import { useDispatch, useSelector } from '@/redux/store';
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import CheckQuestion from './checkquestion';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+//----------------------------------------------------------------------
 
 export default function OneChoiceQuestion(props) {
-  const { question, numberQuestion } = props;
+  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
@@ -13,16 +17,13 @@ export default function OneChoiceQuestion(props) {
   });
   const [idAnswerChoose, setIdAnswerChoose] = useState();
 
-  const listQuestionResult = useSelector(state => state.quizResult.value);
-
-  const dispatch = useDispatch();
+  const listQuestionResult = useState([]);
 
   const handleChange = (event, item) => {
-    console.log(item);
     setQuestionResult({
       mark: item.fraction,
-      status: item.fraction == 1 ? 'Right' : 'Wrong',
-      questionId: question.question.id,
+      status: item.fraction == 1 ? 'right' : 'wrong',
+      questionId: question.question?.id,
       answer: item,
     })
   }
@@ -32,9 +33,7 @@ export default function OneChoiceQuestion(props) {
   }, [question]);
 
   useEffect(() => {
-    if (questionResult.questionId !== 0) {
-      dispatch(changeQuizResult(questionResult));
-    }
+    setAnswerResult(questionResult);
   }, [questionResult]);
 
   return (
@@ -47,7 +46,7 @@ export default function OneChoiceQuestion(props) {
       width: 1
     }}>
       <Box sx={{ py: 3, }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.question?.content}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi: {question?.content}</Typography>
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
@@ -56,8 +55,32 @@ export default function OneChoiceQuestion(props) {
           name="radio-buttons-group"
           sx={{ py: 3 }}
         >
-          {question?.questionAnswer?.map((item, index) => (
-            <FormControlLabel value={item?.id} key={index} control={<Radio onChange={(event) => handleChange(event, item)} />} label={item?.content} />
+          {question?.answer_content?.map((item, index) => (
+            <FormControlLabel
+              value={item?.id}
+              key={index}
+              control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
+              // label={item?.answer} 
+              label={
+
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="body1">{item?.answer}</Typography>
+                  {isSubmit === true &&
+                    idAnswerChoose == item.id &&
+                    questionResult.answer && (
+                      <span>
+                        {item.fraction === questionResult.answer.fraction && questionResult.answer.fraction === 1 ? (
+                          <span key={index}><DoneIcon /></span>
+                        ) : (
+                          <span key={index}> <ClearIcon /></span>
+                        )}
+                      </span>
+                    )
+                  }
+                </div>
+              }
+
+            />
           ))}
         </RadioGroup>
       </Box>
