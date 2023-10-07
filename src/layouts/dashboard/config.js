@@ -15,16 +15,16 @@ export const items = [
     ),
     disabled: false
   },
-  {
-    title: "Khóa học",
-    path: "/courses",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    ),
-    disabled: false
-  },
+  // {
+  //   title: "Khóa học",
+  //   path: "/courses",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   ),
+  //   disabled: false
+  // },
   {
     title: "Danh mục",
     path: "/tags",

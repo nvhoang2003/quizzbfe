@@ -28,6 +28,8 @@ QuizTableRows.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onSelectRow: PropTypes.func,
+  onShowRow: PropTypes.func,
+  onUpdateRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   index: PropTypes.number,
 };
@@ -38,6 +40,7 @@ export default function QuizTableRows({
   row,
   selected,
   onSelectRow,
+  onShowRow,
   onUpdateRow,
   onDeleteRow,
   index,
@@ -137,7 +140,7 @@ export default function QuizTableRows({
             }}
           >
             <Tooltip title="Show" placement="right">
-              <IconButton color="info">
+              <IconButton color="info" onClick={onShowRow}>
                 <Visibility />
               </IconButton>
             </Tooltip>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import snackbarUtils from "@/utils/snackbar-utils";
+import { axiosInstance } from "@/auth/axiosHeader";
 
 const axiosDisplayError = {
   ERR_NETWORK: "Lỗi kết nối",
@@ -52,10 +53,7 @@ const catchError = (err) => {
   return false;
 };
 
-const instance = axios.create({
-  baseURL: `${process.env.HOST_API_KEY}api/`,
-  timeout: 600000,
-});
+const instance = axiosInstance;
 
 const getLocalStorage = (key) => {
   if (typeof window !== "undefined") {
