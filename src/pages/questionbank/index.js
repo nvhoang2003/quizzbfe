@@ -9,11 +9,11 @@ import SearchQuestionBank from '@/components/search/search_questionBank';
 import QuestionBankTable from '@/sections/@dashboard/list/questionbank/QuestionBankTable';
 
 const links = [
-  { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },
+  { label: 'Multichoice', href: '/questionbank/multiChoice/create' },
   { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
   { label: 'DragAndDrop', href: '/link4' },
-  { label: 'Matching', href: '/link1' },
+  { label: 'Match', href: '/questionbank/match/create' },
   { label: 'TrueFalse', href: '/link2' },
 ];
 const item = styled(Paper)(({ theme }) => ({

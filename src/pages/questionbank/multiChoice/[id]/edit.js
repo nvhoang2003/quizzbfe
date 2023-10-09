@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
-import Form from '@/sections/@dashboard/form/questionbank/form';
+import MultiChoiceForm from '@/sections/@dashboard/form/questionbank/multichoice/form';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
 
@@ -69,7 +69,7 @@ export default function Edit(props) {
   return (
     <div>
       <Card sx={{ p: 3 }}>
-        <Form isEdit={true} currentLevel={editData} />
+        <MultiChoiceForm isEdit={true} currentLevel={editData} />
       </Card>
     </div>
   );
