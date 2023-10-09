@@ -103,7 +103,12 @@ const QuestionBankTable = ({ questionData }) => {
   };
 
   const handleEditClick = (row) => {
-    push(`/questionbank/multiChoiceQuestion/` + row.id +`/edit`);
+    if (row.questionstype != null && row?.questionstype != undefined && row?.questionstype != '') {
+      const questionType = row.questionstype[0].toLowerCase() + row.questionstype.slice(1);
+      push(`/questionbank/${questionType}/${row.id}/edit`);
+    } else {
+      enqueueSnackbar("Loại câu hỏi này chưa có sẵn trong hệ thống", { variant: "error" });
+    }
   };
 
   const handleDeleteRow = async (id) => {

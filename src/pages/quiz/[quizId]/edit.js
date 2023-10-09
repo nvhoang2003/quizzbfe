@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
 import Head from "next/head";
-import QuizForm from "@/sections/@dashboard/form/quiz/QuizForm";
+import QuizForm from "@/sections/@dashboard/form/quiz/form";
 import { getQuizById } from "@/dataProvider/quizApi";
 
 const QuizEdit = (props) => {
