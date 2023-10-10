@@ -1,14 +1,9 @@
 import PropTypes from 'prop-types';
 import { Card, Divider, Grid} from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import Form from '@/sections/@dashboard/form/questionbank/form';
+import MatchingForm from '@/sections/@dashboard/form/questionbank/matching/form';
 
 // ----------------------------------------------------------------------
-
-NewForm.propTypes = {
-    isEdit: PropTypes.bool,
-    currentLevel: PropTypes.object,
-};
 
 export default function NewForm() {
 
@@ -16,7 +11,7 @@ export default function NewForm() {
         // <Grid container spacing={3}>
         //     <Grid item xs={12} >
                 <Card sx={{ p: 3 }}>
-                    <Form />
+                    <MatchingForm />
                 </Card>
         //     </Grid>
         // </Grid>

@@ -44,7 +44,7 @@ Form.propTypes = {
 export default function Form({ isEdit = false, currentLevel }) {
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
-  const [categoryId, setCategoryId] = useState();
+  const [categoryId, setCategoryId] = useState(0);
   const [category, setCategory] = useState([]);
   const [tags, setTags] = useState([]);
   const [reRender, setReRender] = useState([]);
@@ -72,8 +72,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   const [tagChoose, setTagChoose] = useState([
     {
-      id: 0,
-      tags: "",
+      id: 1,
+      name: "",
     },
   ]);
 
@@ -112,6 +112,8 @@ export default function Form({ isEdit = false, currentLevel }) {
     defaultValues,
   });
 
+ 
+
   const {
     reset,
     watch,
@@ -142,14 +144,16 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => {}, [tags]);
+
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
       if (
-        currentLevel?.answers !== null &&
-        currentLevel?.answers !== "undefined"
+        currentLevel?.categoryId !== null &&
+        currentLevel?.categoryId !== "undefined"
       ) {
+        tagChoose.shift();
         currentLevel?.tagId?.forEach((element) => {
           const tag = tags.find((tag) => tag.id === element);
           tagChoose.push(tag);
@@ -174,6 +178,9 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
+  useEffect(() => {
+    console.log(tagChoose);
+  }, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -215,11 +222,11 @@ export default function Form({ isEdit = false, currentLevel }) {
     const updatedInputs = [...tagChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      tags: selectedValue,
+      name: selectedValue,
     };
 
     const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.tags === selectedValue;
+      return i !== index && input.name === selectedValue;
     });
 
     if (!isDuplicate) {
@@ -229,6 +236,8 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
+  useEffect(() => {
+  }, [tagChoose]);
 
   const handleInputAnswerChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -259,7 +268,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => {}, [answerChoose]);
+  useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
@@ -275,11 +284,12 @@ export default function Form({ isEdit = false, currentLevel }) {
   const handleAddInputTag = () => {
     const newInput = { id: tagChoose.length + 1, tags: "" };
     setTagChoose([...tagChoose, newInput]);
+
   };
 
+
   const handleRemoveInputTag = (index) => {
-    const updatedInputs = [...tagChoose];
-    updatedInputs.splice(index, 1);
+    const updatedInputs = tagChoose.filter((_, i) => i !== index);
     setTagChoose(updatedInputs);
   };
 
@@ -310,7 +320,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       answers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: answer?.fraction && answer.fraction != 0 ? parseInt(answer.fraction, 10) : 0,
+          fraction: answer?.fraction && answer.fraction != 0 ? parseFloat(answer.fraction) : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -365,7 +375,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
-    
+
     try {
       const res = await update(currentLevel.id, transformData);
       if (res.status < 400) {
@@ -380,6 +390,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   const onSubmit = async (data) => {
+    console.log(data);
     if (!isEdit) {
       createNew(data);
     } else {
@@ -437,7 +448,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                     name="questionstype"
                     id="questionstype"
                     value="MultiChoice"
-                    disabled
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </div>
 
@@ -570,7 +583,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                         >
                           <RHFTextField
                             key={`answer[${index}].answer`}
-                            name={`answer[${index}].answer`}
+                            name={`answer[${index}.answer]`}
                             label="Answers Content"
                             id={`answer[${index}].answer`}
                             value={answerChooses.answer}
@@ -583,7 +596,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             name={`answer[${index}].feedback`}
                             label="Feed Back"
                             id={`answer[${index}].feedback`}
-                            value={answerChooses.feedback}
+                            value={answerChooses.feedback ?? 0}
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }

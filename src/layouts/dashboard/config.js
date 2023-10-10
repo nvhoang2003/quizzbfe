@@ -55,14 +55,24 @@ export const items = [
     ),
     disabled: false
   },
-  // {
-  //   title: "Cài đặt",
-  //   path: "/settings",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <CogIcon />
-  //     </SvgIcon>
-  //   ),
-  //   disabled: false
-  // },
+  {
+    title: "Quiz",
+    path: "/quiz",
+    icon: (
+      <SvgIcon fontSize="small">
+        <QuestionMark />
+      </SvgIcon>
+    ),
+    disabled: false
+  },
+  {
+    title: "Cài đặt",
+    path: "/settings",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    ),
+    disabled: false
+  },
 ];

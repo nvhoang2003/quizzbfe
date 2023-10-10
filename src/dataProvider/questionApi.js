@@ -1,17 +1,16 @@
 import { deleteApi, getApi, postApi, putApi } from "@/dataProvider/baseApi";
-//MultiQuestion/GetQuestionBankById/19
 const listPath = 'getListQuestion';
 const multi = 'MultiQuestion';
-
+///getListQuestion/DeleteQuestion/56
 
 
 function getAllQuestion(params) {
   return getApi(listPath + `/getListQuestion`, params);
 }
 
-// function create(qb){
-//   return postApi(qbPath + `/CreateNewMultipeChoiceQuestionBank`,qb);
-// }
+function addMultiQuestions(qb){
+  return postApi(listPath + `/AddMultiQuestions`,qb);
+}
 
 function getMultiById(id){
   return getApi(multi + `/GetQuestionBankById/${id}`);
@@ -25,8 +24,8 @@ function getMultiById(id){
 //   return putApi(catePath +`/updateCategories/${id}`,cate);
 // }
 
-function deleteMultiById(id){
-  return deleteApi(multi + `/DeleteQuestionBank/${id}`);
+function deleteQuestionById(id){
+  return deleteApi(listPath + `/DeleteQuestion/${id}`);
 }
 
 
@@ -35,5 +34,6 @@ function deleteMultiById(id){
 export {
     getAllQuestion,
     getMultiById,
-    deleteMultiById
+    deleteQuestionById,
+    addMultiQuestions
 }

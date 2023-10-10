@@ -17,9 +17,13 @@ import { getAllQuestionbank, getQuestionType } from '@/dataProvider/questionbank
 import { Icon } from '@iconify/react';
 import { format } from 'date-fns';
 import snackbarUtils from '@/utils/snackbar-utils';
+import { RotateLeft } from "@mui/icons-material";
 //--------------------------------------------------
 
-const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
+const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
+
+  const { filter, setListQuiz } = prop;
+
   const [newData, setNewData] = useState([]);
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
@@ -27,21 +31,20 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
   const [categoryId, setCategoryId] = useState(0);
   const [reRender, setReRender] = useState([]);
 
-  const validationSchema = Yup.object().shape({
-  });
+  const validationSchema = Yup.object().shape({});
 
 
   const defaultValues = useMemo(
     () => ({
-      name: currentLevel?.name || '',
-      tags: currentLevel?.tags || '',
-      authorName: currentLevel?.authorName || '',
-      categoryId: currentLevel?.categoryId || '',
-      questiontype: currentLevel?.questiontype || '',
-      startDate: currentLevel?.startDate || null,
-      endDate: currentLevel?.endDate || null
+      name: '',
+      tags: '',
+      authorName: '',
+      categoryId: '',
+      questiontype: '',
+      startDate: null,
+      endDate: null
     }),
-    [currentLevel]
+    [filter]
   );
 
   const methods = useForm({
@@ -58,12 +61,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (currentLevel) {
-      reset(defaultValues);
-    }
 
-  }, [currentLevel]);
 
 
   const handlerCategoryChange = (event, index) => {
@@ -124,18 +122,18 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
     const res = await getAllQuestionbank(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
-        
+
         return {
           id: qb.id,
           num: index + 1,
           name: qb.name,
           questionstype: qb.questionstype,
           authorName: qb.authorName,
-          tags: qb.tags[0] ? qb.tags[0].name : "",
+          tags: qb.tags,
           categoryName: qb.categoryName,
         };
       });
-      setNewData(transformData);
+      setListQuiz(transformData);
     } else {
       return res;
     }
@@ -161,12 +159,15 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
         endDate,
       };
       fetchAllQuestion(Data);
-      handleSearchSubmit(newData);
-
     } catch (error) {
       snackbarUtils.error(error);
     }
   };
+
+  const onReset = async () => {
+    reset(defaultValues);
+    await fetchAllQuestion(defaultValues);
+  }
 
   return (
     <Container maxWidth='100%' sx={{ paddingTop: "20px" }}>
@@ -223,7 +224,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                       </RHFSelect>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
                       <Controller
                         control={control}
                         name="startDate"
@@ -238,14 +239,14 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                                 name={startDate}
                                 // error={!!fieldState.error}
                                 helperText={fieldState.error?.message}
-                                fullWidth
+                                sx={{ width: '250px' }}
                               />
                             )}
                           />
                         )}
                       />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
                       <Controller
                         control={control}
                         name="endDate"
@@ -260,7 +261,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                                 name={endDate}
                                 // error={!!fieldState.error}
                                 helperText={fieldState.error?.message}
-                                fullWidth
+                                sx={{ width: '250px' }}
                               />
                             )}
                           />
@@ -276,12 +277,14 @@ const SearchQuestionBank = ({ handleSearchSubmit, currentLevel }) => {
                       Search
                     </LoadingButton>
                     <Button
-                      size="small"
                       color="error"
-                      onClick={() => {
-                        reset(defaultValues);
-                      }}
-                      startIcon={<Icon icon="mdi:reload" />}
+                      startIcon={
+                        <SvgIcon fontSize="small">
+                          <RotateLeft />
+                        </SvgIcon>
+                      }
+                      variant="contained"
+                      onClick={onReset}
                     >
                       Xóa
                     </Button>
