@@ -1,21 +1,22 @@
 import PropTypes from 'prop-types';
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, Stack, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
-import Form from '@/sections/@dashboard/form/questionbank/formMultichoiceQuestion';
-import MultiChoiceForm from '@/sections/@dashboard/form/questionbank/multichoice/form';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
+import { Container } from 'postcss';
+import FormDetailMultichoice from '@/sections/@dashboard/form/questionbank/formMultichoiceDetails';
 
 // ----------------------------------------------------------------------
 
-Edit.propTypes = {
+Details.propTypes = {
   isEdit: PropTypes.bool,
   currentLevel: PropTypes.object,
 };
 
-export default function Edit(props) {
+export default function Details(props) {
   const [editData, setEditData] = useState({});
+  
   const {
     query: { id }
   } = useRouter()
@@ -32,7 +33,7 @@ export default function Edit(props) {
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
         tagId: [],
-        answers: [],
+        answer_content: [],
         isPublic: q.isPublic
       };
 
@@ -41,7 +42,7 @@ export default function Edit(props) {
       });
 
       q.answers?.forEach(element => {
-        transformData.answers.push({
+        transformData.answer_content.push({
           id: element.id,
           answer: element.content,
           feedback: element.feedback,
@@ -50,14 +51,13 @@ export default function Edit(props) {
           questionId: element.questionId
         });
       });
-      
       setEditData(transformData);
       props.changeLastPath(transformData.name)
-
     } else {
       return res;
     }
   };
+
 
   useEffect(() => {
     if (id) {
@@ -68,13 +68,13 @@ export default function Edit(props) {
   return (
     <div>
       <Card sx={{ p: 3 }}>
-        <MultiChoiceForm isEdit={true} currentLevel={editData} />
+        <FormDetailMultichoice currentLevel={editData}/>
       </Card>
     </div>
   );
 }
 
-Edit.getLayout = (page) => (
+Details.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>

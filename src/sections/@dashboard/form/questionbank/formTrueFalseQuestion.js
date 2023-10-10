@@ -14,6 +14,9 @@ import {
   Tooltip,
   IconButton,
   Box,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { LoadingButton } from "@mui/lab";
@@ -24,7 +27,7 @@ import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import snackbarUtils from "@/utils/snackbar-utils";
 //import RHFSelect from '@/components/form/RHFSelect';
-import _ from "lodash";
+import _, { set } from "lodash";
 import { getAllCate } from "@/dataProvider/categoryApi";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -34,46 +37,33 @@ import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { create, update } from "@/dataProvider/multipchoiceApi";
 import { id } from "date-fns/locale";
+import { createTFQestionBank, updateTFQuestionBank } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
-Form.propTypes = {
+FormTrueFalseQuestionBank.propTypes = {
   isEdit: PropTypes.bool,
   currentLevel: PropTypes.object,
 };
 
-export default function Form({ isEdit = false, currentLevel }) {
+export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel }) {
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState();
   const [category, setCategory] = useState([]);
   const [tags, setTags] = useState([]);
   const [reRender, setReRender] = useState([]);
-  const [fraction, setFraction] = useState([
-    0,
-    0.2,
-    0.25,
-    1 / 3,
-    0.4,
-    0.5,
-    0.6,
-    2 / 3,
-    0.75,
-    0.8,
-    1,
-  ]);
-  const [answerChoose, setAnswerChoose] = useState([
+
+  const [answerChoose, setAnswerChoose] = useState(
     {
-      id: 1,
-      fraction: 0,
       feedback: "",
-      answer: "",
+      answer_truefalse: null,
     },
-  ]);
+  );
 
   const [tagChoose, setTagChoose] = useState([
     {
-      id: 1,
-      name: "",
+      id: 0,
+      tags: "",
     },
   ]);
 
@@ -100,19 +90,19 @@ export default function Form({ isEdit = false, currentLevel }) {
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
       tagId: currentLevel?.tagId || "",
-      answer: currentLevel?.answers || [],
-      questionstype: "MultiChoice",
+      answer: currentLevel?.answers == 'True' ? true : false || null,
+      questionstype: "TrueFalse",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
     [currentLevel]
   );
 
+  console.log(currentLevel);
+
   const methods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues,
   });
-
- 
 
   const {
     reset,
@@ -124,20 +114,6 @@ export default function Form({ isEdit = false, currentLevel }) {
   } = methods;
 
   useEffect(() => {
-    async function fetchAlltags(categoryId) {
-      const res = await getTagByCategory(categoryId);
-      if (res.status < 400) {
-        const transformData = res.data.data.map((cate) => {
-          return {
-            id: cate.id,
-            name: cate.name,
-          };
-        });
-        setTags(transformData);
-      } else {
-        return res;
-      }
-    }
     if (categoryId) {
       fetchAlltags(categoryId);
     } else {
@@ -145,7 +121,22 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
   }, [categoryId]);
 
-  useEffect(() => { }, [tags]);
+  async function fetchAlltags(cateId) {
+    const res = await getTagByCategory(cateId);
+    console.log("sahgdjsad" + res);
+    if (res.status < 400) {
+      const transformData = res.data.data.map((tag) => {
+        return {
+          id: tag.id,
+          tags: tag.name,
+        };
+      });
+      console.log(transformData);
+      setTags([...transformData]);
+    } else {
+      return res;
+    }
+  }
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -153,10 +144,17 @@ export default function Form({ isEdit = false, currentLevel }) {
         currentLevel?.categoryId !== null &&
         currentLevel?.categoryId !== "undefined"
       ) {
-        tagChoose.shift();
+        if(isEdit){
+          tagChoose.shift();
+        }
+
         currentLevel?.tagId?.forEach((element) => {
           const tag = tags.find((tag) => tag.id === element);
-          tagChoose.push(tag);
+
+          tagChoose.push({
+            id: tag?.id,
+            tags: tag?.id
+          });
         });
       }
 
@@ -164,34 +162,43 @@ export default function Form({ isEdit = false, currentLevel }) {
         currentLevel?.answers !== null &&
         currentLevel?.answers !== "undefined"
       ) {
-        answerChoose.shift();
         currentLevel?.answers?.forEach((element) => {
           const ans = {
-            id: element.id,
-            fraction: element.fraction,
-            feedback: element.feedback,
-            answer: element.answer,
+            feedback: element.feedback === null ? "" : element.feedback,
+            answer_truefalse: element.answer == "True" ? true : false,
           };
-          answerChoose.push(ans);
+          setAnswerChoose(ans);
         });
       }
     }
     return;
   }
   useEffect(() => {
-    console.log(tagChoose);
-  }, [tagChoose]);
+  }, [answerChoose, tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
       setCategoryId(currentLevel?.categoryId);
-      fetchTagChoose(currentLevel);
-      reset(defaultValues);
+       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
   }, [isEdit, currentLevel]);
+
+  useEffect(() => {
+    if (categoryId) {
+      fetchAlltags(categoryId);
+    }
+   
+  }, [categoryId]);
+
+  useEffect(() => {
+    if (categoryId) {
+      fetchTagChoose(currentLevel);
+    }
+   
+  }, [tags]);
 
   useEffect(() => {
     async function fetchAllCate() {
@@ -222,47 +229,34 @@ export default function Form({ isEdit = false, currentLevel }) {
     const updatedInputs = [...tagChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      name: selectedValue,
+      tags: selectedValue,
     };
-
     const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.name === selectedValue;
+      return i !== index && input?.tags == selectedValue;
     });
 
     if (!isDuplicate) {
       setValue(event.target.name, selectedValue);
       setTagChoose(updatedInputs);
     } else {
+      setValue(event.target.name, null)
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
-  };
-  useEffect(() => {
-  }, [tagChoose]);
 
-  const handleInputAnswerChange = (index, event) => {
-    const updatedInputs = [...answerChoose];
-    updatedInputs[index] = {
-      ...updatedInputs[index],
-      answer: event.target.value,
+  };
+
+  const handleInputAnswerChange = (event) => {
+    const updatedInput = {
+      ...answerChoose,
+      answer_truefalse: event.target.value,
     };
     setValue(event.target.name, event.target.value);
-    setAnswerChoose(updatedInputs);
+    setAnswerChoose(updatedInput);
   };
 
-  const handleFractionChange = (index, event) => {
-    const updatedInputs = [...answerChoose];
-    updatedInputs[index] = {
-      ...updatedInputs[index],
-      fraction: event.target.value,
-    };
-    setValue(event.target.name, event.target.value);
-    setAnswerChoose(updatedInputs);
-  };
-
-  const handleFeedbackChange = (index, event) => {
-    const updatedInputs = [...answerChoose];
-    updatedInputs[index] = {
-      ...updatedInputs[index],
+  const handleFeedbackChange = (event) => {
+    const updatedInputs = {
+      ...answerChoose,
       feedback: event.target.value,
     };
     setValue(event.target.name, event.target.value);
@@ -270,26 +264,15 @@ export default function Form({ isEdit = false, currentLevel }) {
   };
   useEffect(() => { }, [answerChoose]);
 
-  const handleAddInputAnswer = () => {
-    const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
-    setAnswerChoose([...answerChoose, newInput]);
-  };
-
-  const handleRemoveInputAnswer = (index) => {
-    const updatedInputs = [...answerChoose];
-    updatedInputs.splice(index, 1);
-    setAnswerChoose(updatedInputs);
-  };
 
   const handleAddInputTag = () => {
     const newInput = { id: tagChoose.length + 1, tags: "" };
     setTagChoose([...tagChoose, newInput]);
-
   };
 
-
   const handleRemoveInputTag = (index) => {
-    const updatedInputs = tagChoose.filter((_, i) => i !== index);
+    const updatedInputs = [...tagChoose];
+    updatedInputs.splice(index, 1);
     setTagChoose(updatedInputs);
   };
 
@@ -301,14 +284,12 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
       defaultMark: data.defaultMark,
       isShuffle: 1,
       qbTags: data.tagId.filter((tag) => {
         if (!tag || tag == undefined || tag == '') {
           return false;
         }
-
         return true;
       }).map((tag) => {
         return {
@@ -316,20 +297,21 @@ export default function Form({ isEdit = false, currentLevel }) {
           tagId: parseInt(tag, 10),
         };
       }),
-      questionstype: "MultiChoice",
-      answers: data.answer.map((answer, index) => {
-        return {
-          content: answer.answer,
-          fraction: answer?.fraction && answer.fraction != 0 ? parseFloat(answer.fraction) : 0,
-          feedback: answer.feedback,
-          quizBankId: 0,
-          questionId: 0,
-          id: 0,
-        };
-      }),
+      questionstype: "TrueFalse",
+      answers: [
+        //   {
+        //   // content: data.answer.answer_truefalse,
+        //   // fraction: data.answer.answer_truefalse === "true" ? 1 : 0,
+        //   feedback: data.answer.feedback,
+        //   // quizBankId: 0,
+        //   // questionId: 0,
+        //   // id: 0,
+        // }
+      ],
+      rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
     };
     try {
-      const res = await create(transformData);
+      const res = await createTFQestionBank(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -342,13 +324,13 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   async function fetchUpdate(data) {
+
     const transformData = {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
       defaultMark: data.defaultMark,
       isShuffle: 1,
       qbTags: data.tagId.filter((tag) => {
@@ -363,34 +345,38 @@ export default function Form({ isEdit = false, currentLevel }) {
           tagId: parseInt(tag, 10),
         };
       }),
-      questionstype: "MultiChoice",
-      answers: data.answer.map((answer, index) => {
-        return {
-          content: answer.answer,
-          fraction: parseInt(answer.fraction, 10),
-          feedback: answer.feedback,
-          quizBankId: 0,
-          questionId: 0,
-          id: 0,
-        };
-      }),
+      questionstype: "TrueFalse",
+      answers: [],
+      // data.answer.map((answer, index) => {
+      //   return {
+      //     content: answer.answer,
+      //     fraction: parseInt(answer.fraction, 10),
+      //     feedback: answer.feedback,
+      //     quizBankId: 0,
+      //     questionId: 0,
+      //     id: 0,
+      //   };
+      // }),
+
+      rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
+      authorId: currentLevel?.authorId
     };
 
     try {
-      const res = await update(currentLevel.id, transformData);
+      console.log(transformData);
+      const res = await updateTFQuestionBank(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        snackbarUtils.success(res.message);
       }
     } catch (error) {
-      console.log(error);
+      snackbarUtils.success(error);
     }
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
     if (!isEdit) {
       createNew(data);
     } else {
@@ -404,14 +390,14 @@ export default function Form({ isEdit = false, currentLevel }) {
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
             {!isEdit
-              ? "Tạo mới MultiQuestionBank"
-              : "Cập nhật MultiQuestionBank"}
+              ? "Tạo mới TrueFalseQuestionBank"
+              : "Cập nhật TrueFalseQuestionBank"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
             spacing={3}
           >
-            <Stack alignItems="flex-end" spacing={1.5}>
+            <Stack alignItems="flex-end" spacing={2}>
               <Stack spacing={2} sx={{ width: 1 }}>
                 <RHFTextField name="name" label="Name" id="name" />
 
@@ -447,7 +433,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   <RHFTextField
                     name="questionstype"
                     id="questionstype"
-                    value="MultiChoice"
+                    value="TrueFalse"
                     InputProps={{
                       readOnly: true,
                     }}
@@ -524,7 +510,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           {!_.isEmpty(tags) &&
                             tags.map((option) => (
                               <option key={option.id} value={option.id}>
-                                {option.name}
+                                {option.tags}
                               </option>
                             ))}
                         </RHFSelect>
@@ -557,93 +543,58 @@ export default function Form({ isEdit = false, currentLevel }) {
                 </div>
 
                 <Stack>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: "text.disabled", mb: 3 }}
-                  >
-                    Answers
-                  </Typography>
-                  <Stack spacing={2} sx={{ width: 1 }}>
-                    {answerChoose.map((answerChooses, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-start",
-                          flexDirection: "row",
-                          alignItems: "stretch",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            "& > :not(style)": { m: 1, width: "35ch" },
-                          }}
-                          noValidate
-                          autoComplete="off"
-                        >
-                          <RHFTextField
-                            key={`answer[${index}].answer`}
-                            name={`answer[${index}.answer]`}
-                            label="Answers Content"
-                            id={`answer[${index}].answer`}
-                            value={answerChooses.answer}
-                            onChange={(event) =>
-                              handleInputAnswerChange(index, event)
-                            }
-                          />
-                          <RHFTextField
-                            key={`answer[${index}].feedback`}
-                            name={`answer[${index}].feedback`}
-                            label="Feed Back"
-                            id={`answer[${index}].feedback`}
-                            value={answerChooses.feedback ?? 0}
-                            onChange={(event) =>
-                              handleFeedbackChange(index, event)
-                            }
-                          />
-                          <RHFSelect
-                            key={`answer[${index}].fraction`}
-                            id={`answer[${index}].fraction`}
-                            name={`answer[${index}].fraction`}
-                            value={answerChooses.fraction}
-                            style={{ width: "80px" }}
-                            onChange={(event) =>
-                              handleFractionChange(index, event)
-                            }
-                          >
-                            {!_.isEmpty(fraction) &&
-                              fraction.map((option) => (
-                                <option key={option} value={option}>
-                                  {option}
-                                </option>
-                              ))}
-                          </RHFSelect>
-                        </Box>
 
-                        {index === answerChoose.length - 1 && (
-                          <Tooltip arrow placement="left" title="Add">
-                            <IconButton
-                              variant="contained"
-                              color="success"
-                              onClick={handleAddInputAnswer}
-                            >
-                              <AddCircleIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {index !== 0 && (
-                          <Tooltip arrow placement="right" title="Remove">
-                            <IconButton
-                              variant="contained"
-                              color="error"
-                              onClick={() => handleRemoveInputAnswer(index)}
-                            >
-                              <RemoveCircleOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </div>
-                    ))}
+                  <Stack spacing={2} sx={{ width: 1, paddingTop: "30px", paddingBottom: "25px" }}>
+
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        flexDirection: "row",
+                        alignItems: "stretch",
+                      }}
+                    >
+
+                      <Typography
+                        variant="h6"
+                        sx={{ color: "text.disabled", mb: 3 }}
+                      >
+                        Correct Answer
+                      </Typography>
+
+
+                      <RadioGroup
+                        key={`answer.answer_truefalse`}
+                        name={`answer.answer_truefalse`}
+                        value={answerChoose.answer_truefalse}
+                        onChange={(event) =>
+                          handleInputAnswerChange(event)
+                        }
+                        sx={{ paddingLeft: "35px" }}
+                      >
+                        <FormControlLabel value="true" control={<Radio />} label="True" />
+                        <FormControlLabel value="false" control={<Radio />} label="False" />
+                      </RadioGroup>
+
+                      <RHFTextField
+                        name={`answer.feedback`}
+                        label="Feed Back"
+                        id={`answer.feedback`}
+                        // key={`answer.feedback`}
+                        // name={`answer.feedback`}
+                        // label="Feed Back"
+                        // id={`answer.feedback`}
+                        // value={answerChoose.feedback}
+                        onChange={(event) =>
+                          handleFeedbackChange(event)
+                        }
+                        multiline
+                        rows={3}
+                        sx={{ width: "60%", height: "100%", margin: "10px" }}
+
+                      />
+                    </div>
                   </Stack>
 
                   <Stack sx={{ ml: 1.5 }}>
@@ -693,4 +644,4 @@ export default function Form({ isEdit = false, currentLevel }) {
   );
 }
 
-Form.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+FormTrueFalseQuestionBank.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
