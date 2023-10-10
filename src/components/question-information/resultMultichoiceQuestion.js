@@ -45,9 +45,9 @@ export default function ResultQuestion(props) {
         {answerResult.status ? (
           answerResult.mark > 0 && answerResult.mark < 1 ? (
             <span>
-              <span>Your answer is is partially correct.</span>
+              <span>Câu trả lời của bạn đã đúng 1 nửa.</span>
               <br />
-              <span>You have correctly selected  {selected.length} </span>
+              <span>Bạn đã chọn đúng {selected.length} câu  </span>
               {answerResult.answer.map((items, index) => {
                  {items.fraction !==0 ? (
                   <span key={index}>{items.answer}</span>
@@ -58,14 +58,14 @@ export default function ResultQuestion(props) {
             </span>
 
           ) : (
-            <span>Your answer is {answerResult.status}.</span>
+            <span>Câu trả lời của bạn  {answerResult.status}.</span>
           )
         ) : (
-          <span>You did not choose an answer.</span>
+          <span>Bạn cần chọn câu trả lời trước .</span>
         )}
 
         <br />
-        <span>The correct answer is: </span><br />
+        <span>Đáp án của câu hỏi : </span><br />
         {questionResult.answer_content.map((item, index) => {
           if (item.fraction > 0) {
             return <span key={index} style={{ paddingLeft: '30px' }}>{item.answer}<br /></span>;

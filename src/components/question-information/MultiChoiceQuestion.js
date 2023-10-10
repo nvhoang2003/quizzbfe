@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
-import CheckQuestion from './checkquestion';
+import CheckQuestion from './checkMultiquestion';
 //-------------------------------------------------------------
 
 export default function MultiChoiceQuestion(props) {
@@ -40,7 +40,7 @@ export default function MultiChoiceQuestion(props) {
       selectedCheckboxes.current = [...selectedCheckboxes.current, item];
       setQuestionResult(prevResult => ({
         mark: prevResult?.mark + item.fraction,
-        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && (questionResult?.mark + item.fraction) === 1) ? 'correct' : 'wrong',
+        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && (questionResult?.mark + item.fraction) === 1) ? 'Đúng' : 'Sai',
         questionId: question?.id,//question.question.id
         answer: [...prevResult?.answer, item]
       }));
@@ -51,7 +51,7 @@ export default function MultiChoiceQuestion(props) {
       selectedCheckboxes.current = selectedCheckboxes.current.filter(sel => sel.id !== item.id);
       setQuestionResult({
         mark: questionResult.mark - item.fraction,
-        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && questionResult.mark - item.fraction === 1) ? 'correct' : 'wrong',
+        status: (checkHaveWrongAnswer(selectedCheckboxes.current) && questionResult.mark - item.fraction === 1) ? 'Đúng' : 'Sai',
         questionId: question?.id,//question.question.id
         answer: [...questionResult.answer.filter(sel => sel.id !== item.id)]
       })
@@ -113,7 +113,6 @@ export default function MultiChoiceQuestion(props) {
               <FormControlLabel key={index}
                 sx={{ paddingLeft: "100px" }}
                 control={<Checkbox disabled={isSubmit} checked={listIdSelected?.includes(item.id)} onChange={(event) => handleChange(event, item)} name="checked" />}
-                // label={item?.answer}
                 label={
 
                   <div style={{ display: 'flex', alignItems: 'center' }}>

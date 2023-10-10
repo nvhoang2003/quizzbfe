@@ -16,14 +16,15 @@ import MultiChoiceQuestion from "@/components/question-information/MultiChoiceQu
 import OneChoiceQuestion from "@/components/question-information/OneChoiceQuestion";
 import ResultQuestion from "@/components/question-information/resultMultichoiceQuestion";
 import { useRouter } from "next/router";
+import TrueFalseQuestion from "@/components/question-information/TrueFalseQuestion";
+import ResultTruFalseQuestion from "@/components/question-information/resultTrueFalseQuestion";
 
 //---------------------------------------------------
 
-FormDetailMultichoice.propTypes = {
+FormDetailTrueFalse.propTypes = {
   currentLevel: PropTypes.object,
-
 };
-export default function FormDetailMultichoice({ currentLevel }) {
+export default function FormDetailTrueFalse({ currentLevel }) {
   const { push } = useRouter();
 
   const [answerResult, setAnswerResult] = useState([]);
@@ -41,14 +42,7 @@ export default function FormDetailMultichoice({ currentLevel }) {
     formState: { isSubmitting },
   } = methods;
 
-  const isMultiRightAnswer = (currentQuestion) => {
-    const totalRightAnswers = currentQuestion?.answer_content?.reduce((total, item) => {
-      return total + (item.fraction > 0 ? 1 : 0);
-    }, 0);
-    return totalRightAnswers > 1;
-  }
-
-
+  
   const restart = () => {
     window.location.reload(true);
 
@@ -57,16 +51,12 @@ export default function FormDetailMultichoice({ currentLevel }) {
     push("/questionbank");
   }
 
-
-
   const onSubmit = async () => {
     setSubmit(true);
   };
 
   useEffect(() => {
   }, [submit]);
-
-
 
   return (
     <Container maxWidth="100%">
@@ -78,18 +68,14 @@ export default function FormDetailMultichoice({ currentLevel }) {
             </Typography>
             <Card sx={{ p: 5 }}>
               <Stack
-                divider={<Divider variant="middle" />}//flexItem sx={{ borderStyle: "dashed" }}  //, backgroundColor: '#EEFCEE'
+                divider={<Divider variant="middle" />}
                 spacing={3}
               >
-                {isMultiRightAnswer(currentLevel) ?
-                  <MultiChoiceQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} /> //
-
-                  : <OneChoiceQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />}
-
+                <TrueFalseQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />
               </Stack>
             </Card>
 
-            <ResultQuestion questionResult={currentLevel} answerResult={answerResult} isSubmit={submit} />
+            <ResultTruFalseQuestion questionResult={currentLevel} answerResult={answerResult} isSubmit={submit} />
 
           </Card>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mt: 3 }}>
@@ -101,6 +87,8 @@ export default function FormDetailMultichoice({ currentLevel }) {
               Start again
             </LoadingButton>
 
+           
+
             <LoadingButton
               type="submit"
               variant="contained"
@@ -111,6 +99,7 @@ export default function FormDetailMultichoice({ currentLevel }) {
             </LoadingButton>
 
             <LoadingButton
+              // type="submit"
               variant="contained"
               onClick={() => close()}
             >
@@ -119,8 +108,9 @@ export default function FormDetailMultichoice({ currentLevel }) {
           </Stack>
         </Stack>
       </FormProvider>
+     
     </Container>
   );
 }
 
-FormDetailMultichoice.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+FormDetailTrueFalse.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
