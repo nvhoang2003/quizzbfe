@@ -27,11 +27,11 @@ import { enqueueSnackbar } from "notistack";
 
 
 const links = [
-  { label: 'Multichoice', href: '/questionbank/multiChoiceQuestion/create' },
+  { label: 'Multichoice', href: '/questionbank/multiChoice/create' },
   { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
   { label: 'DragAndDrop', href: '/link4' },
-  { label: 'Matching', href: '/link1' },
+  { label: 'Matching', href: '/questionbank/match/create' },
   { label: 'TrueFalse', href: '/questionbank/TrueFalseQuestion/create' },
 ];
 

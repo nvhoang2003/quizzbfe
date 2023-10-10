@@ -96,17 +96,17 @@ export default function QuestionBankTable(prop) {
   };
 
   const switchToUpdate = (item) => {
-    if (item.questionstype == "MultiChoice") {
+    // if (item.questionstype == "MultiChoice") {
       router.push({
-        pathname: '/questionbank/multiChoiceQuestion/[questionBankId]/edit',
+        pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
         query: { questionBankId: item.id },
       });
-    } if (item.questionstype == "TrueFalse") {
-      router.push({
-        pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
-        query: { questionBankId: item.id },
-      });
-    }
+    // } if (item.questionstype == "TrueFalse") {
+    //   router.push({
+    //     pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
+    //     query: { questionBankId: item.id },
+    //   });
+    // }
   }
   const handleShowDetails = (item) => {
     if (item.questionstype == "MultiChoice") {

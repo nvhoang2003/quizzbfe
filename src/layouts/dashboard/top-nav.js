@@ -51,9 +51,6 @@ export const TopNav = () => {
       <AppBar
         position="fixed"
         color="inherit"
-        sx={{
-          backgroundColor: "rgba(255,255,255, 0.8)",
-        }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
