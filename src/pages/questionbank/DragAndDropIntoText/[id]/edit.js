@@ -8,11 +8,6 @@ import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
 
 // ----------------------------------------------------------------------
 
-Edit.propTypes = {
-  isEdit: PropTypes.bool,
-  currentLevel: PropTypes.object,
-};
-
 export default function Edit(props) {
   const [editData, setEditData] = useState({});
   const {
@@ -73,6 +68,11 @@ export default function Edit(props) {
     </div>
   );
 }
+
+Edit.propTypes = {
+  isEdit: PropTypes.bool,
+  currentLevel: PropTypes.object,
+};
 
 Edit.getLayout = (page) => (
   <DashboardLayout>
