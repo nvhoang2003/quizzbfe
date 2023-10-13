@@ -56,7 +56,7 @@ export default function index() {
   )
 }
 
-Edit.getLayout = (page) => (
+index.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
