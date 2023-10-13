@@ -24,7 +24,7 @@ const statusMap = {
   refunded: 'error'
 };
 
-export default OverviewLatestOrders = (props) => {
+export default function OverviewLatestOrders(props){
   const { orders = [], sx } = props;
 
   return (

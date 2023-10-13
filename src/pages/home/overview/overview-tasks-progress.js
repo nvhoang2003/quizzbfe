@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 
-export default OverviewTasksProgress = (props) => {
+export default function OverviewTasksProgress(props){
   const { value, sx } = props;
 
   return (

@@ -104,7 +104,7 @@ const useChartOptions = () => {
   };
 };
 
-export default OverviewSales = (props) => {
+export default function OverviewSales(props){
   const { chartSeries, sx } = props;
   const chartOptions = useChartOptions();
 

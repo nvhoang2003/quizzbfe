@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export default OverviewTotalProfit = (props) => {
+export default function OverviewTotalProfit(props) {
   const { value, sx } = props;
 
   return (

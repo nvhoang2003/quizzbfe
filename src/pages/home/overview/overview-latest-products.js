@@ -17,7 +17,7 @@ import {
   SvgIcon
 } from '@mui/material';
 
-export default OverviewLatestProducts = (props) => {
+export default function OverviewLatestProducts(props){
   const { products = [], sx } = props;
 
   return (

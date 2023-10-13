@@ -80,7 +80,7 @@ const iconMap = {
   )
 };
 
-export default OverviewTraffic = (props) => {
+export default function OverviewTraffic(props){
   const { chartSeries, labels, sx } = props;
   const chartOptions = useChartOptions(labels);
 
