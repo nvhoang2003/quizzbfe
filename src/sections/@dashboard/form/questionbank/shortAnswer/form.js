@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import snackbarUtils from "@/utils/snackbar-utils";
 //import RHFSelect from '@/components/form/RHFSelect';
-import _ from "lodash";
+import _, { set } from "lodash";
 import { getAllCate } from "@/dataProvider/categoryApi";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -34,6 +34,7 @@ import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { create, update } from "@/dataProvider/multipchoiceApi";
 import { id } from "date-fns/locale";
+import { createQb, updateQb } from "@/dataProvider/shortAnswerQbApi";
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -44,7 +45,7 @@ Form.propTypes = {
 export default function Form({ isEdit = false, currentLevel }) {
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState();
   const [category, setCategory] = useState([]);
   const [tags, setTags] = useState([]);
   const [reRender, setReRender] = useState([]);
@@ -64,16 +65,16 @@ export default function Form({ isEdit = false, currentLevel }) {
   const [answerChoose, setAnswerChoose] = useState([
     {
       id: 1,
+      content: "",
       fraction: 0,
       feedback: "",
-      answer: "",
     },
   ]);
 
   const [tagChoose, setTagChoose] = useState([
     {
-      id: 1,
-      name: "",
+      id: 0,
+      tags: "",
     },
   ]);
 
@@ -82,16 +83,16 @@ export default function Form({ isEdit = false, currentLevel }) {
     content: Yup.string().trim().required("Content không được để trống"),
     generalfeedback: Yup.string()
       .trim()
-      .required("generalfeedback không được để trống"),
+      .required("General Feedback không được để trống"),
     answer: Yup.array(
       Yup.object({
-        context: Yup.string().required("Thông tin không được trống"),
+        content: Yup.string().required("Thông tin không được trống"),
       })
     ),
     defaultMark: Yup.number()
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
-      .required("generalfeedback không được để trống"),
+      .required("General Feedback không được để trống"),
 
     categoryId: Yup.number().required("Vui lòng chọn category"),
   });
@@ -105,7 +106,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       categoryId: currentLevel?.categoryId || "",
       tagId: currentLevel?.tagId || "",
       answer: currentLevel?.answers || [],
-      questionstype: "MultiChoice",
+      questionstype: "ShortAnswer",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
     [currentLevel]
@@ -115,8 +116,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     resolver: yupResolver(validationSchema),
     defaultValues,
   });
-
- 
 
   const {
     reset,
@@ -148,16 +147,14 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-
-  useEffect(() => { }, [tags]);
+  useEffect(() => {}, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
       if (
-        currentLevel?.categoryId !== null &&
-        currentLevel?.categoryId !== "undefined"
+        currentLevel?.matchSubQuestions !== null &&
+        currentLevel?.matchSubQuestions !== "undefined"
       ) {
-        tagChoose.shift();
         currentLevel?.tagId?.forEach((element) => {
           const tag = tags.find((tag) => tag.id === element);
           tagChoose.push(tag);
@@ -165,8 +162,8 @@ export default function Form({ isEdit = false, currentLevel }) {
       }
 
       if (
-        currentLevel?.answers !== null &&
-        currentLevel?.answers !== "undefined"
+        currentLevel?.matchSubQuestions !== null &&
+        currentLevel?.matchSubQuestions !== undefined
       ) {
         answerChoose.shift();
         currentLevel?.answers?.forEach((element) => {
@@ -174,7 +171,7 @@ export default function Form({ isEdit = false, currentLevel }) {
             id: element.id,
             fraction: element.fraction,
             feedback: element.feedback,
-            answer: element.answer,
+            content: element.content,
           };
           answerChoose.push(ans);
         });
@@ -182,8 +179,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
-  useEffect(() => {
-  }, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -225,11 +220,11 @@ export default function Form({ isEdit = false, currentLevel }) {
     const updatedInputs = [...tagChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      name: selectedValue,
+      tags: selectedValue,
     };
 
     const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.name === selectedValue;
+      return i !== index && input.tags === selectedValue;
     });
 
     if (!isDuplicate) {
@@ -239,14 +234,12 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
-  useEffect(() => {
-  }, [tagChoose]);
 
   const handleInputAnswerChange = (index, event) => {
     const updatedInputs = [...answerChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      answer: event.target.value,
+      content: event.target.value,
     };
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
@@ -274,7 +267,12 @@ export default function Form({ isEdit = false, currentLevel }) {
   useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
-    const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
+    const newInput = {
+      id: 1,
+      content: "",
+      fraction: 0,
+      feedback: "",
+    };
     setAnswerChoose([...answerChoose, newInput]);
   };
 
@@ -290,9 +288,9 @@ export default function Form({ isEdit = false, currentLevel }) {
     setTagChoose([...tagChoose, newInput]);
   };
 
-
   const handleRemoveInputTag = (index) => {
-    const updatedInputs = tagChoose.filter((_, i) => i !== index);
+    const updatedInputs = [...tagChoose];
+    updatedInputs.splice(index, 1);
     setTagChoose(updatedInputs);
   };
 
@@ -304,26 +302,31 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: 0,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag == "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
-      questionstype: "MultiChoice",
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
+      questionstype: "ShortAnswer",
       answers: data.answer.map((answer, index) => {
         return {
-          content: answer.answer,
-          fraction: answer?.fraction && answer.fraction != 0 ? parseFloat(answer.fraction) : 0,
+          content: answer.content,
+          fraction:
+            answer?.fraction && answer.fraction != 0
+              ? parseFloat(answer.fraction)
+              : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -331,8 +334,9 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
+    
     try {
-      const res = await create(transformData);
+      const res = await createQb(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -351,26 +355,31 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: 0,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag == "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
-      questionstype: "MultiChoice",
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
+      questionstype: "ShortAnswer",
       answers: data.answer.map((answer, index) => {
         return {
-          content: answer.answer,
-          fraction: parseInt(answer.fraction, 10),
+          content: answer.content,
+          fraction:
+            answer?.fraction && answer.fraction != 0
+              ? parseFloat(answer.fraction)
+              : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -380,7 +389,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
 
     try {
-      const res = await update(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -405,9 +414,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
-            {!isEdit
-              ? "Tạo mới MultiQuestionBank"
-              : "Cập nhật MultiQuestionBank"}
+            {!isEdit ? "Tạo mới" : "Cập nhật"} ShortAnswer Question
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -449,7 +456,6 @@ export default function Form({ isEdit = false, currentLevel }) {
                   <RHFTextField
                     name="questionstype"
                     id="questionstype"
-                    value="MultiChoice"
                     InputProps={{
                       readOnly: true,
                     }}
@@ -584,11 +590,11 @@ export default function Form({ isEdit = false, currentLevel }) {
                           autoComplete="off"
                         >
                           <RHFTextField
-                            key={`answer[${index}].answer`}
-                            name={`answer[${index}.answer`}
+                            key={`answer[${index}].content`}
+                            name={`answer[${index}.content`}
                             label="Answers Content"
-                            id={`answer[${index}].answer`}
-                            value={answerChooses.answer}
+                            id={`answer[${index}].content`}
+                            value={answerChooses.content}
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
@@ -608,14 +614,14 @@ export default function Form({ isEdit = false, currentLevel }) {
                             id={`answer[${index}].fraction`}
                             name={`answer[${index}].fraction`}
                             value={answerChooses.fraction}
-                            style={{ width: "80px" }}
+                            style={{ width: "100px" }}
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
                           >
                             {!_.isEmpty(fraction) &&
-                              fraction.map((option) => (
-                                <option key={option} value={option}>
+                              fraction.map((option, index) => (
+                                <option key={index} value={option}>
                                   {option.toFixed(4)*100}%
                                 </option>
                               ))}

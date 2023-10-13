@@ -48,26 +48,18 @@ export default function Form({ isEdit = false, currentLevel }) {
   const [categoryId, setCategoryId] = useState();
   const [category, setCategory] = useState([]);
   const [tags, setTags] = useState([]);
-  const [reRender, setReRender] = useState([]);
-  const [fraction, setFraction] = useState([
-    0,
-    0.2,
-    0.25,
-    1 / 3,
-    0.4,
-    0.5,
-    0.6,
-    2 / 3,
-    0.75,
-    0.8,
-    1,
-  ]);
   const [answerChoose, setAnswerChoose] = useState([
     {
       questionText: "",
       answerText: "",
     },
   ]);
+
+  const {
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
   const [tagChoose, setTagChoose] = useState([
     {
@@ -84,7 +76,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       .required("generalfeedback không được để trống"),
     matchSubs: Yup.array(
       Yup.object({
-        questionText: Yup.string().required("Thông tin không được trống"),
         answerText: Yup.string().required("Thông tin không được trống"),
       })
     ),
@@ -98,7 +89,7 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   const convertMatchSubAnswer = (data) => {
     const matchSubs = [];
-    
+
     if (data?.matchSubQuestions) {
       data.matchSubQuestions.map((matchSubQuestion, index) => {
         matchSubs.push({
@@ -182,7 +173,6 @@ export default function Form({ isEdit = false, currentLevel }) {
         answerChoose.shift();
         const convertedMatchSubs = convertMatchSubAnswer(currentLevel);
         setAnswerChoose([...convertedMatchSubs]);
-        console.log([...convertedMatchSubs]);
       }
     }
     return;
@@ -319,14 +309,22 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
-    console.log(transformData);
+
     try {
       const res = await createQb(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Tạo Mới Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -365,14 +363,22 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
-    
+
     try {
       const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Sửa Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -434,8 +440,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                   <RHFTextField
                     name="questionstype"
                     id="questionstype"
-                    value="Match"
-                    disabled
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </div>
 
@@ -612,6 +619,13 @@ export default function Form({ isEdit = false, currentLevel }) {
                         )}
                       </div>
                     ))}
+                    {errors.MatchSubQuestionBanks && (
+                      <Stack>
+                        <Typography color={"orangered"}>
+                          {errors.MatchSubQuestionBanks?.message}
+                        </Typography>
+                      </Stack>
+                    )}
                   </Stack>
 
                   <Stack sx={{ ml: 1.5 }}>
