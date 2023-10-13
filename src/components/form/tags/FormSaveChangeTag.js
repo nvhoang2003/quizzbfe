@@ -1,5 +1,5 @@
 // import { TextField, Button, FormControl } from '@mui/material';
-import {RHFTextField} from '../RHFTextField';
+import RHFTextField from '../RHFTextField';
 import { FormProvider } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';

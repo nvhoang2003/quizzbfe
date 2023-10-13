@@ -4,7 +4,7 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
-import { CateSearch } from './cate_search';
+import CateSearch from './cate_search';
 import { useRouter } from 'next/navigation';
 import CateTable from './cate_table';
 

@@ -23,7 +23,7 @@ import { getAllTags } from '@/dataProvider/tagApi';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const TagsTable = (props) => {
+export default function TagsTable(props){
   const {
      onDeselectAll,
      onDeselectOne,
