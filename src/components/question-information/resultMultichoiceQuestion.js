@@ -45,7 +45,7 @@ export default function ResultQuestion(props) {
         {answerResult.status ? (
           answerResult.mark > 0 && answerResult.mark < 1 ? (
             <span>
-              <span>Câu trả lời của bạn đã đúng 1 nửa.</span>
+              <span>Câu trả lời của bạn đã đúng 1 phần.</span>
               <br />
               <span>Bạn đã chọn đúng {selected.length} câu  </span>
               {answerResult.answer.map((items, index) => {
