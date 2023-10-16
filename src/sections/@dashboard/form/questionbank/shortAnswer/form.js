@@ -31,8 +31,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { createQb } from "@/dataProvider/shortAnswerQbApi";
-import { updateQb } from "@/dataProvider/questionbankApi";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -329,7 +328,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "ShortAnswer",
-      answers: data.answer.map((answer, index) => {
+      quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.content,
           fraction:
@@ -405,7 +404,6 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
-    console.log(transformData.qbTags);
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
