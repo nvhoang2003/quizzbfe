@@ -1,14 +1,11 @@
-import PropTypes from "prop-types";
-import { Card } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { React, useEffect, useState } from "react";
-import ShortAnswerForm from "@/sections/@dashboard/form/questionbank/shortAnswer/form";
-import { useRouter } from "next/router";
 import { getById } from "@/dataProvider/questionbankApi";
+import FormDetailShortAnswer from "@/sections/@dashboard/form/questionbank/shortAnswer/detail";
+import { Card } from "@mui/material";
+import { useRouter } from "next/router";
+import { React, useEffect, useState } from "react";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 
-// ----------------------------------------------------------------------
-
-export default function Edit(props) {
+export default function Details(props) {
   const [editData, setEditData] = useState({});
   const {
     query: { id },
@@ -65,14 +62,12 @@ export default function Edit(props) {
   }, [id]);
 
   return (
-    // <Grid container spacing={3}>
-    //     <Grid item xs={12} >
-    <Card sx={{ p: 3 }}>
-      <ShortAnswerForm isEdit={true} currentLevel={editData} />
-    </Card>
-    //     </Grid>
-    // </Grid>
+    <div>
+      <Card sx={{ p: 3 }}>
+        <FormDetailShortAnswer currentLevel={editData} />
+      </Card>
+    </div>
   );
 }
 
-Edit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Details.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

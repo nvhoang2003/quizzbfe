@@ -28,13 +28,11 @@ import _, { set } from "lodash";
 import { getAllCate } from "@/dataProvider/categoryApi";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import RHFRadioGroup from "@/components/form/RHFRadioGroup";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { create, update } from "@/dataProvider/multipchoiceApi";
-import { id } from "date-fns/locale";
-import { createQb, updateQb } from "@/dataProvider/shortAnswerQbApi";
+import { createQb } from "@/dataProvider/shortAnswerQbApi";
+import { updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -152,8 +150,8 @@ export default function Form({ isEdit = false, currentLevel }) {
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
       if (
-        currentLevel?.matchSubQuestions !== null &&
-        currentLevel?.matchSubQuestions !== "undefined"
+        currentLevel?.answers !== null &&
+        currentLevel?.answers !== "undefined"
       ) {
         currentLevel?.tagId?.forEach((element) => {
           const tag = tags.find((tag) => tag.id === element);
@@ -162,8 +160,9 @@ export default function Form({ isEdit = false, currentLevel }) {
       }
 
       if (
-        currentLevel?.matchSubQuestions !== null &&
-        currentLevel?.matchSubQuestions !== undefined
+        currentLevel?.answers !== null &&
+        currentLevel?.answers !== undefined &&
+        currentLevel?.answers?.length > 0
       ) {
         answerChoose.shift();
         currentLevel?.answers?.forEach((element) => {
@@ -373,7 +372,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "ShortAnswer",
-      answers: data.answer.map((answer, index) => {
+      quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.content,
           fraction:
@@ -700,5 +699,3 @@ export default function Form({ isEdit = false, currentLevel }) {
     </Container>
   );
 }
-
-Form.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
