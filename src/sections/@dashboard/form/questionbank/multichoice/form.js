@@ -116,8 +116,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     defaultValues,
   });
 
- 
-
   const {
     reset,
     watch,
@@ -149,7 +147,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
   }, [categoryId]);
 
-  useEffect(() => { }, [tags]);
+  useEffect(() => {}, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -182,8 +180,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
-  useEffect(() => {
-  }, [tagChoose]);
+  useEffect(() => {}, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -239,8 +236,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
-  useEffect(() => {
-  }, [tagChoose]);
+  useEffect(() => {}, [tagChoose]);
 
   const handleInputAnswerChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -271,7 +267,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => { }, [answerChoose]);
+  useEffect(() => {}, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
@@ -290,9 +286,10 @@ export default function Form({ isEdit = false, currentLevel }) {
     setTagChoose([...tagChoose, newInput]);
   };
 
-
   const handleRemoveInputTag = (index) => {
-    const updatedInputs = tagChoose.filter((_, i) => i !== index);
+    const updatedInputs = [...tagChoose];
+    updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
@@ -307,23 +304,37 @@ export default function Form({ isEdit = false, currentLevel }) {
       authorId: 2,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "MultiChoice",
       answers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: answer?.fraction && answer.fraction != 0 ? parseFloat(answer.fraction) : 0,
+          fraction:
+            answer?.fraction && answer.fraction != 0
+              ? parseFloat(answer.fraction)
+              : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -354,18 +365,29 @@ export default function Form({ isEdit = false, currentLevel }) {
       authorId: 2,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "MultiChoice",
       answers: data.answer.map((answer, index) => {
         return {
@@ -616,7 +638,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             {!_.isEmpty(fraction) &&
                               fraction.map((option) => (
                                 <option key={option} value={option}>
-                                  {option.toFixed(4)*100}%
+                                  {option.toFixed(4) * 100}%
                                 </option>
                               ))}
                           </RHFSelect>

@@ -263,7 +263,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => { }, [answerChoose]);
+  useEffect(() => {}, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = {
@@ -290,6 +290,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
@@ -306,7 +307,16 @@ export default function Form({ isEdit = false, currentLevel }) {
       isShuffle: 1,
       qbTags: data.tagId
         .filter((tag) => {
-          if (!tag || tag == undefined || tag == "") {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
+
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
             return false;
           }
 
@@ -333,7 +343,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
-    
+
     try {
       const res = await createQb(transformData);
       if (res.status < 400) {
@@ -359,7 +369,16 @@ export default function Form({ isEdit = false, currentLevel }) {
       isShuffle: 1,
       qbTags: data.tagId
         .filter((tag) => {
-          if (!tag || tag == undefined || tag == "") {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
+
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
             return false;
           }
 
@@ -386,6 +405,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         };
       }),
     };
+    console.log(transformData.qbTags);
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
@@ -621,7 +641,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             {!_.isEmpty(fraction) &&
                               fraction.map((option, index) => (
                                 <option key={index} value={option}>
-                                  {option.toFixed(4)*100}%
+                                  {option.toFixed(4) * 100}%
                                 </option>
                               ))}
                           </RHFSelect>
