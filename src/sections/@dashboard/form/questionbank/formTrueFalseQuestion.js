@@ -273,6 +273,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
@@ -286,12 +287,24 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       categoryId: data.categoryId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
-        return true;
-      }).map((tag) => {
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
+
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
         return {
           qbId: 0,
           tagId: parseInt(tag, 10),
@@ -333,13 +346,24 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       categoryId: data.categoryId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
         return {
           qbId: 0,
           tagId: parseInt(tag, 10),
