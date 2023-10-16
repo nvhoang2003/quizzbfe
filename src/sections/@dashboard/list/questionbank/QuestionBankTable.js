@@ -111,7 +111,8 @@ export default function QuestionBankTable(prop) {
   const handleShowDetails = (item) => {
     // if (item.questionstype == "MultiChoice") {
       router.push({
-        pathname: `/questionbank/${item.questionstype}/${item.id}/detail`,
+        pathname: `/questionbank/${item.questionstype}/[questionBankId]/detail`,
+        query: { questionBankId: item.id },
       });
     // } if (item.questionstype == "TrueFalse") {
     //   router.push({
