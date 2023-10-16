@@ -5,8 +5,8 @@ import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { TagsTable } from './tags-table';
-import { TagsSearch } from './tags-search';
+import TagsTable from './tags-table';
+import  TagsSearch  from './tags-search';
 //import { useRouter } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 

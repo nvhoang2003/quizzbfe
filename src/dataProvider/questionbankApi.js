@@ -11,38 +11,42 @@ function getAllQuestionbank(params) {
   return getApi(listPath + `/getListQuestionBank`, params);
 }
 
-function getQuestionType(){
+function getQuestionType() {
   return getApi(`GetFixData/getListQuestionBank`);
 }
 
 ///multichoice
-function create(qb){
-  return postApi(qbPath + `/CreateNewMultipeChoiceQuestionBank`,qb);
+function create(qb) {
+  return postApi(qbPath + `/CreateNewMultipeChoiceQuestionBank`, qb);
 }
 
-function getQuestionBankByID(id){
+function getQuestionBankByID(id) {
   return getApi(qbPath + `/GetMultipeQuestionBankById/ ${id}`);
 }
 
-function deleteByID(id){
+function deleteByID(id) {
   return deleteApi(listPath + `/DeleteQuestionBank/${id}`);
 }
 //truefalse
 //TrueFalseQuestionBank/updateTrueFalseQuestionBank/
 
-function getTFQuestionBankByID(id){
+function getTFQuestionBankByID(id) {
   return getApi(tfPath + `/getTrueFalseQuestionBankById/ ${id}`);
 }
 
-function createTFQestionBank(qb){
-  return postApi(tfPath + `/createNewTrueFalseQuestionBank`,qb);
+function createTFQestionBank(qb) {
+  return postApi(tfPath + `/createNewTrueFalseQuestionBank`, qb);
 }
-function updateTFQuestionBank(id, qb){
-  return putApi(tfPath +`/updateTrueFalseQuestionBank/${id}`,qb);
+function updateTFQuestionBank(id, qb) {
+  return putApi(tfPath + `/updateTrueFalseQuestionBank/${id}`, qb);
 }
 
 function getById(id) {
   return getApi(path + `/GetQuestionBankById/${id}`);
+}
+
+function getQuestionBankById(id) {
+  return getApi(`QuestionBank/getQuestionBankById/ ${id}`);
 }
 
 function createQb(qb) {
@@ -59,6 +63,9 @@ function deleteQb(id) {
 
 export {
   getAllQuestionbank,
+  //   getCateByID,
+  //   updateCateByID,
+  getQuestionBankById,
   deleteByID,
   create,
   getQuestionType,
