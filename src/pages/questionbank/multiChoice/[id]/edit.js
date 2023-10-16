@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
-import Form from '@/sections/@dashboard/form/questionbank/formMultichoiceQuestion';
 import MultiChoiceForm from '@/sections/@dashboard/form/questionbank/multichoice/form';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID } from '@/dataProvider/questionbankApi';

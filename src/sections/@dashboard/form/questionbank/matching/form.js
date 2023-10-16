@@ -273,6 +273,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
@@ -289,7 +290,16 @@ export default function Form({ isEdit = false, currentLevel }) {
       isShuffle: 1,
       qbTags: data.tagId
         .filter((tag) => {
-          if (!tag || tag == undefined || tag == "") {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
+
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
             return false;
           }
 
@@ -343,7 +353,16 @@ export default function Form({ isEdit = false, currentLevel }) {
       isShuffle: 1,
       qbTags: data.tagId
         .filter((tag) => {
-          if (!tag || tag == undefined || tag == "") {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
+
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
             return false;
           }
 
