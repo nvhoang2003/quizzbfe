@@ -96,30 +96,39 @@ export default function QuestionBankTable(prop) {
   };
 
   const switchToUpdate = (item) => {
-    // if (item.questionstype == "MultiChoice") {
-      router.push({
-        pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
-        query: { questionBankId: item.id },
-      });
-    // } if (item.questionstype == "TrueFalse") {
-    //   router.push({
-    //     pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
-    //     query: { questionBankId: item.id },
-    //   });
-    // }
-  }
-  const handleShowDetails = (item) => {
+    // router.push({
+    //   pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
+    //   query: { questionBankId: item.id },
+    // });
     if (item.questionstype == "MultiChoice") {
       router.push({
-        pathname: '/questionbank/multiChoiceQuestion/[questionBankId]/detail',
+        pathname: `/questionbank/multiChoice/[questionBankId]/edit`,
         query: { questionBankId: item.id },
       });
+     
     } if (item.questionstype == "TrueFalse") {
       router.push({
-        pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/detail',
+        pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
         query: { questionBankId: item.id },
       });
     }
+  }
+  const handleShowDetails = (item) => {
+    router.push({
+      pathname: `/questionbank/${item.questionstype}/[questionBankId]/detail`,
+      query: { questionBankId: item.id },
+    });
+    // if (item.questionstype == "MultiChoice") {
+    //   router.push({
+    //     pathname: '/questionbank/multiChoiceQuestion/[questionBankId]/detail',
+    //     query: { questionBankId: item.id },
+    //   });
+    // } if (item.questionstype == "TrueFalse") {
+    //   router.push({
+    //     pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/detail',
+    //     query: { questionBankId: item.id },
+    //   });
+    // }
   }
 
 

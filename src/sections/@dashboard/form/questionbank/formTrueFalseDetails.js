@@ -87,8 +87,6 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               Start again
             </LoadingButton>
 
-           
-
             <LoadingButton
               type="submit"
               variant="contained"
@@ -99,7 +97,6 @@ export default function FormDetailTrueFalse({ currentLevel }) {
             </LoadingButton>
 
             <LoadingButton
-              // type="submit"
               variant="contained"
               onClick={() => close()}
             >

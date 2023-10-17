@@ -367,33 +367,37 @@ export default function Form({ isEdit = false, currentLevel }) {
       answers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: parseInt(answer.fraction, 10),
+          fraction: 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
           id: 0,
         };
+        //answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) :
       }),
     };
+    console.log(transformData);
 
-    try {
-      const res = await update(currentLevel.id, transformData);
-      if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
-        push("/questionbank");
-      } else {
-        console.log(res.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const res = await update(currentLevel.id, transformData);
+    //   if (res.status < 400) {
+    //     snackbarUtils.success(res.data.message);
+    //     push("/questionbank");
+    //   } else {
+    //     console.log(res.message);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   const onSubmit = async (data) => {
     console.log(data);
     if (!isEdit) {
+      console.log("meno");
       createNew(data);
     } else {
+      console.log(isEdit);
       fetchUpdate(data);
     }
   };
@@ -596,7 +600,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             name={`answer[${index}].feedback`}
                             label="Feed Back"
                             id={`answer[${index}].feedback`}
-                            value={answerChooses.feedback ?? 0}
+                            value={answerChooses.feedback ?? ''}
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }

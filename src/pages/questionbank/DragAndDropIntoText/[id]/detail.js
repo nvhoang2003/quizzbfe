@@ -1,8 +1,13 @@
+import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
+import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/formDragAndDropDetail';
+import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
+import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+//------------------------------------------------------------
 
-export default function index() {
-  const [data, setData] = useState({});
+export default function DragAndDropDetail() {
+  const [data, setData] = useState([]);
   const {
     query: {id}
   } = useRouter();
@@ -38,7 +43,6 @@ export default function index() {
           questionId: element.questionId
         });
       });
-
       setData(transformData);
     } else {
       return res;
@@ -52,11 +56,15 @@ export default function index() {
   }, [id]);
 
   return (
-    <div>index</div>
+    <div>
+      <Card sx={{ p: 3 }}>
+        <FormDetailDragAndDrop currentLevel={data}/>
+      </Card>
+    </div>
   )
 }
 
-Edit.getLayout = (page) => (
+DragAndDropDetail.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>

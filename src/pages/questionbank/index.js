@@ -30,7 +30,7 @@ const links = [
   { label: 'Multichoice', href: '/questionbank/multiChoice/create' },
   { label: 'Numerical', href: '/link2' },
   { label: 'ShortAnswer', href: '/link3' },
-  { label: 'DragAndDrop', href: '/questionbank/DragAndDropQuestion/create' },
+  { label: 'DragAndDrop', href: '/questionbank/DragAndDropIntoText/create' },
   { label: 'Matching', href: '/questionbank/match/create' },
   { label: 'TrueFalse', href: '/questionbank/TrueFalseQuestion/create' },
 ];
