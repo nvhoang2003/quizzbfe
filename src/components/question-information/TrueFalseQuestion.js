@@ -69,7 +69,6 @@ export default function TrueFalseQuestion(props) {
               key={index}
               control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
               label={
-
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="body1">{item?.answer}</Typography>
                   {isSubmit === true &&
@@ -77,9 +76,9 @@ export default function TrueFalseQuestion(props) {
                     questionResult.answer && (
                       <span>
                         {item.fraction === questionResult.fraction && questionResult.fraction === 1 ? (
-                          <span key={index}><DoneIcon /></span>
+                          <span key={index}><DoneIcon color='success' /></span>
                         ) : (
-                          <span key={index}> <ClearIcon /></span>
+                          <span key={index}> <ClearIcon color='error' /></span>
                         )}
                       </span>
                     )

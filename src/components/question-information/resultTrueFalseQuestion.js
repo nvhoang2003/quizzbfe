@@ -9,12 +9,12 @@ export default function ResultTruFalseQuestion(props) {
   return (
 
     <Stack spacing={3} sx={{ paddingTop: '20px' }} >
-      {isSubmit === true ? <Card sx={{ p: 5, backgroundColor: '#FCEEEE' }} >
+      {isSubmit === true ? <Card sx={{ p: 5, backgroundColor:  answerResult.status === 'Đúng' ? '#A9D097' : '#FCEEEE' }} >
 
         {answerResult.status ? (
           <span>Câu trả lời của bạn  {answerResult.status}.</span>
         ) : (
-          <span>Bạn cần chọn câu trả lời trước.</span>
+          <span>Bạn cần chọn câu trả lời trước khi nộp bài.</span>
         )}
 
         <br />

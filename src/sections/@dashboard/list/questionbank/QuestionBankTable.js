@@ -23,7 +23,7 @@ const TABLE_HEAD = [
   { id: "name", label: "Tên câu hỏi", align: "center" },
   { id: "questionstype", label: "Dạng câu hỏi", align: "center" },
   { id: "authorName", label: "Tên Tác Giả", align: "center" },
-  { id: "tags", label: "tags", align: "center" },
+  { id: "tags", label: "Từ khóa", align: "center" },
   { id: "categoryName", label: "Loại câu hỏi", align: "center" },
   { id: "isPublic", label: "Công khai", align: "center" },
   { id: "action", label: "Thao Tác", align: "left" },

@@ -31,7 +31,7 @@ const links = [
   { label: 'ShortAnswer', href: '/questionbank/ShortAnswer/create' },
   { label: 'DragAndDrop', href: '/questionbank/DragAndDropIntoText/create' },
   { label: 'Matching', href: '/questionbank/Match/create' },
-  { label: 'TrueFalse', href: '/questionbank/TrueFalseQuestion/create' },
+  { label: 'TrueFalse', href: '/questionbank/TrueFalse/create' },
 ];
 
 const item = styled(Paper)(({ theme }) => ({

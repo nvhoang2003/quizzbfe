@@ -98,7 +98,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     categoryId: Yup.number().required("Vui lòng chọn category"),
   });
 
-  console.log(defaultValues);
 
   const defaultValues = useMemo(
     () => ({

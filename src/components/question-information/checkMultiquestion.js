@@ -17,12 +17,12 @@ export default function CheckQuestion(props) {
           if (resultIndex === 0 ) {
             if(item.fraction === 0 && resultItem.fraction === 0 || item.fraction === 0 && resultItem.fraction !== 0 ){
              return <span key={resultIndex}>
-              <ClearIcon/>
+              <ClearIcon color='error'/>
             </span>;
             }
             if(item.fraction !== 0 && resultItem.fraction === 0 || item.fraction !== 0 && resultItem.fraction !== 0 ){
              return <span key={resultIndex}>
-              <DoneIcon/>
+              <DoneIcon color='success' />
             </span>;
             }
           } else {

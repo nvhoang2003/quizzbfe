@@ -127,6 +127,10 @@ export default function Form({ isEdit = false, currentLevel }) {
     formState: { isSubmitting },
   } = methods;
 
+  const backBtnOnclick = () => {
+    push("/questionbank");
+  }
+
   useEffect(() => {
     async function fetchAlltags(categoryId) {
       const res = await getTagByCategory(categoryId);
@@ -266,7 +270,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => {}, [answerChoose]);
+  useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = {
@@ -427,7 +431,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
-      }else {
+      } else {
         const responseData = res.data;
         snackbarUtils.error("Cập Thất Bại");
 
@@ -460,7 +464,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
-            {!isEdit ? "Tạo mới" : "Cập nhật"} ShortAnswer Question
+            {!isEdit ? "Tạo mới" : "Cập nhật"} câu hỏi
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -468,19 +472,19 @@ export default function Form({ isEdit = false, currentLevel }) {
           >
             <Stack alignItems="flex-end" spacing={1.5}>
               <Stack spacing={2} sx={{ width: 1 }}>
-                <RHFTextField name="name" label="Name" id="name" />
+                <RHFTextField name="name" label="Tên câu hỏi" id="name" />
 
-                <RHFTextField name="content" label="Content" id="content" />
+                <RHFTextField name="content" label="Đề bài" id="content" />
 
                 <RHFTextField
                   name="generalfeedback"
-                  label="General Feedback"
+                  label="Phản hồi chung"
                   id="generalfeedback"
                 />
 
                 <RHFTextField
                   name="defaultMark"
-                  label="Default Mark"
+                  label="Điểm mặc định"
                   id="defaultMark"
                 />
                 <div
@@ -497,7 +501,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    QuestionType
+                    Loại câu hỏi
                   </span>
                   <RHFTextField
                     name="questionstype"
@@ -522,14 +526,14 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Category
+                    Danh mục
                   </span>
                   <RHFSelect
                     name="categoryId"
-                    placeholder="Category"
+                    placeholder="Danh mục"
                     onChange={handleCateChange}
                   >
-                    <option value="">-- Select Category --</option>
+                    <option value="">-- Hãy chọn danh mục --</option>
                     {!_.isEmpty(category) &&
                       category.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -553,7 +557,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Tag
+                    Từ khóa
                   </span>
 
                   <Stack spacing={2} sx={{ width: 1 }}>
@@ -574,7 +578,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           }
                           disabled={!categoryId}
                         >
-                          <option value="">-- Select Tag --</option>
+                          <option value="">-- Hãy chọn từ khóa --</option>
                           {!_.isEmpty(tags) &&
                             tags.map((option) => (
                               <option key={option.id} value={option.id}>
@@ -615,7 +619,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                     variant="h6"
                     sx={{ color: "text.disabled", mb: 3 }}
                   >
-                    Answers
+                    Đáp án
                   </Typography>
                   <Stack spacing={2} sx={{ width: 1 }}>
                     {answerChoose.map((answerChooses, index) => (
@@ -638,25 +642,25 @@ export default function Form({ isEdit = false, currentLevel }) {
                           <RHFTextField
                             key={`answer[${index}].content`}
                             name={`answer[${index}.content`}
-                            label="Answers Content"
+                            label="Nội dung đáp án"
                             id={`answer[${index}].content`}
                             value={answerChooses.content}
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
-                            // error={errors.Answer}
-                            // helperText={errors.Answer?.message}
+                          // error={errors.Answer}
+                          // helperText={errors.Answer?.message}
                           />
                           <RHFTextField
                             key={`answer[${index}].feedback`}
                             name={`answer[${index}].feedback`}
-                            label="Feed Back"
+                            label="Phản hồi riêng từng đáp án"
                             id={`answer[${index}].feedback`}
                             value={answerChooses.feedback ?? 0}
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }
-                            // error={errors.Answer}
+                          // error={errors.Answer}
                           />
                           <RHFSelect
                             key={`answer[${index}].fraction`}
@@ -667,7 +671,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
-                            // error={errors.Answer}
+                          // error={errors.Answer}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option, index) => (
@@ -723,26 +727,25 @@ export default function Form({ isEdit = false, currentLevel }) {
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  reset(defaultValues);
-                }}
-              >
-                Xóa
-              </Button>
+
             </Stack>
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <Stack direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+            <Button
+              variant="outlined"
+              onClick={backBtnOnclick}
+              sx={{ color: '#000000', backgroundColor: '#FFFFFF', borderColor: '#000000' }}
+            >
+              Trở Lại
+            </Button>
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isSubmitting}
             >
-              {!isEdit ? "Create New" : "Update"}
+              {!isEdit ? "Tạo mới" : "Cập nhật"}
             </LoadingButton>
           </Stack>
         </Card>
