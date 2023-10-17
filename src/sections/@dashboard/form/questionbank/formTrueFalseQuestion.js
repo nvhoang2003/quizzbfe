@@ -56,7 +56,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   const [answerChoose, setAnswerChoose] = useState(
     {
       feedback: "",
-      answer_truefalse: null,
+      answer_truefalse: true,
     },
   );
 
@@ -601,7 +601,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                         <FormControlLabel value="false" control={<Radio />} label="False" />
                       </RadioGroup>
 
-                      <RHFTextField
+                      {/* <RHFTextField
                         name={`answer.feedback`}
                         label="Feed Back"
                         id={`answer.feedback`}
@@ -617,7 +617,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                         rows={3}
                         sx={{ width: "60%", height: "100%", margin: "10px" }}
 
-                      />
+                      /> */}
                     </div>
                   </Stack>
 

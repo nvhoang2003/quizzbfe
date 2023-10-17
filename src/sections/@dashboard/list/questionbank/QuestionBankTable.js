@@ -71,14 +71,14 @@ export default function QuestionBankTable(prop) {
 
   const handleDeleteRow = async (id) => {
     const response = await deleteByID(id);
-    console.log(response);
+
     if (response.status < 400) {
       setSelected([]);
-      await fetchQuiz();
-      enqueueSnackbar("response?.data?.message", { variant: "success" });
+      enqueueSnackbar(response?.data?.message ? response?.data?.message : " ", { variant: "success" });
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
+    await fetchQuiz();
   };
 
   useEffect(() => {

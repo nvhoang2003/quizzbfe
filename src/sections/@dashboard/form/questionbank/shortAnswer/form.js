@@ -75,23 +75,27 @@ export default function Form({ isEdit = false, currentLevel }) {
     },
   ]);
 
+  const { setError, clearErrors, formState: { errors } } = useForm();
+
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên không được trống"),
-    content: Yup.string().trim().required("Content không được để trống"),
+    name: Yup.string().trim().required("Tên không được trống").max(255, "Tên câu hỏi không đươc quá 255 kí tự"),
+    content: Yup.string().trim().required("Nội dung không được để trống").max(255, "Nội dung câu hỏi không đươc quá 255 kí tự"),
     generalfeedback: Yup.string()
       .trim()
-      .required("General Feedback không được để trống"),
+      .required("Phản hồi chung không được để trống")
+      .max(1000, "Phản hồi không được quá 1000 kí tự"),
     answer: Yup.array(
       Yup.object({
-        content: Yup.string().required("Thông tin không được trống"),
+        content: Yup.string().required("Thông tin không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
+        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
       })
     ),
-    defaultMark: Yup.number()
+    defaultMark: Yup.number("Vui lòng nhập số")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
-      .required("General Feedback không được để trống"),
+      .required("Điểm không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn category"),
+    categoryId: Yup.number().required("Vui lòng chọn danh mục"),
   });
 
   const defaultValues = useMemo(
@@ -144,7 +148,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => {}, [tags]);
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -295,6 +299,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   //allquestiontype
   async function createNew(data) {
+    clearErrors();
+
     const transformData = {
       name: data.name,
       content: data.content,
@@ -349,7 +355,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Tạo Mới Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -357,6 +371,8 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   async function fetchUpdate(data) {
+    clearErrors();
+
     const transformData = {
       name: data.name,
       content: data.content,
@@ -407,11 +423,22 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
+      console.log(res);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
-      } else {
-        console.log(res.message);
+      }else {
+        const responseData = res.data;
+        snackbarUtils.error("Cập Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
+
+        console.log(errors);
       }
     } catch (error) {
       console.log(error);
@@ -419,6 +446,8 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   const onSubmit = async (data) => {
+    clearErrors();
+
     if (!isEdit) {
       createNew(data);
     } else {
@@ -615,6 +644,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
+                            // error={errors.Answer}
+                            // helperText={errors.Answer?.message}
                           />
                           <RHFTextField
                             key={`answer[${index}].feedback`}
@@ -625,6 +656,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }
+                            // error={errors.Answer}
                           />
                           <RHFSelect
                             key={`answer[${index}].fraction`}
@@ -635,6 +667,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
+                            // error={errors.Answer}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option, index) => (

@@ -78,14 +78,16 @@ export default function Form({ isEdit = false, currentLevel }) {
   ]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên không được trống"),
-    content: Yup.string().trim().required("Content không được để trống"),
+    name: Yup.string().trim().required("Tên không được trống").max(255, "Tên câu hỏi không đươc quá 255 kí tự"),
+    content: Yup.string().trim().required("Nội dung không được để trống").max(255, "Nội dung câu hỏi không đươc quá 255 kí tự"),
     generalfeedback: Yup.string()
       .trim()
-      .required("generalfeedback không được để trống"),
+      .required("Phản hồi chung không được để trống")
+      .max(1000, "Phản hồi không được quá 1000 kí tự"),
     answer: Yup.array(
       Yup.object({
-        context: Yup.string().required("Thông tin không được trống"),
+        answer: Yup.string().required("Câu trả lời không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
+        feedback: Yup.string().required("Phản hồi không được trống").max(1000, "Phản hồi không đươc quá 1000 kí tự"),
       })
     ),
     defaultMark: Yup.number()
@@ -95,6 +97,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     categoryId: Yup.number().required("Vui lòng chọn category"),
   });
+
+  console.log(defaultValues);
 
   const defaultValues = useMemo(
     () => ({
@@ -111,10 +115,14 @@ export default function Form({ isEdit = false, currentLevel }) {
     [currentLevel]
   );
 
+  const { setError, clearErrors, formState: { errors } } = useForm();
+
   const methods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues,
   });
+
+  console.log();
 
   const {
     reset,
@@ -180,7 +188,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
-  useEffect(() => {}, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -236,7 +244,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
-  useEffect(() => {}, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   const handleInputAnswerChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -267,7 +275,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => {}, [answerChoose]);
+  useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
@@ -295,6 +303,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   //allquestiontype
   async function createNew(data) {
+    clearErrors();
+    console.log("here");
     const transformData = {
       name: data.name,
       content: data.content,
@@ -348,7 +358,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Tạo Mới Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -356,6 +374,8 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   async function fetchUpdate(data) {
+    clearErrors();
+
     const transformData = {
       name: data.name,
       content: data.content,
@@ -407,11 +427,25 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Cập Nhật Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
+
+        console.log(errors);
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const backBtnOnclick = () => {
+    push("/questionbank");
   }
 
   const onSubmit = async (data) => {
@@ -426,10 +460,10 @@ export default function Form({ isEdit = false, currentLevel }) {
     <Container maxWidth="100%">
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
-          <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
+          <Typography variant="h4" sx={{ textAlign: 'center', mb: 3 }}>
             {!isEdit
-              ? "Tạo mới MultiQuestionBank"
-              : "Cập nhật MultiQuestionBank"}
+              ? "Tạo mới Câu Hỏi"
+              : "Cập nhật Câu Hỏi"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -437,19 +471,19 @@ export default function Form({ isEdit = false, currentLevel }) {
           >
             <Stack alignItems="flex-end" spacing={1.5}>
               <Stack spacing={2} sx={{ width: 1 }}>
-                <RHFTextField name="name" label="Name" id="name" />
+                <RHFTextField name="name" label="Tên Câu Hỏi" id="name" />
 
-                <RHFTextField name="content" label="Content" id="content" />
+                <RHFTextField name="content" label="Nội Dung" id="content" />
 
                 <RHFTextField
                   name="generalfeedback"
-                  label="General Feedback"
+                  label="Phản Hồi Chung"
                   id="generalfeedback"
                 />
 
                 <RHFTextField
                   name="defaultMark"
-                  label="Default Mark"
+                  label="Điểm Mặc Định"
                   id="defaultMark"
                 />
                 <div
@@ -466,7 +500,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    QuestionType
+                    Loại Câu Hỏi
                   </span>
                   <RHFTextField
                     name="questionstype"
@@ -492,14 +526,14 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Category
+                    Danh Mục
                   </span>
                   <RHFSelect
                     name="categoryId"
                     placeholder="Category"
                     onChange={handleCateChange}
                   >
-                    <option value="">-- Select Category --</option>
+                    <option value="">Vui Lòng Chọn Danh Mục</option>
                     {!_.isEmpty(category) &&
                       category.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -523,7 +557,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Tag
+                    Từ Khóa
                   </span>
 
                   <Stack spacing={2} sx={{ width: 1 }}>
@@ -544,7 +578,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           }
                           disabled={!categoryId}
                         >
-                          <option value="">-- Select Tag --</option>
+                          <option value="">Vui Lòng Chọn Từ Khóa</option>
                           {!_.isEmpty(tags) &&
                             tags.map((option) => (
                               <option key={option.id} value={option.id}>
@@ -585,7 +619,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                     variant="h6"
                     sx={{ color: "text.disabled", mb: 3 }}
                   >
-                    Answers
+                    Đáp Án
                   </Typography>
                   <Stack spacing={2} sx={{ width: 1 }}>
                     {answerChoose.map((answerChooses, index) => (
@@ -608,7 +642,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           <RHFTextField
                             key={`answer[${index}].answer`}
                             name={`answer[${index}.answer`}
-                            label="Answers Content"
+                            label="Nội Dung Đáp Án"
                             id={`answer[${index}].answer`}
                             value={answerChooses.answer}
                             onChange={(event) =>
@@ -618,7 +652,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           <RHFTextField
                             key={`answer[${index}].feedback`}
                             name={`answer[${index}].feedback`}
-                            label="Feed Back"
+                            label="Phản hồi riêng với từng đáp án"
                             id={`answer[${index}].feedback`}
                             value={answerChooses.feedback ?? 0}
                             onChange={(event) =>
@@ -634,6 +668,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
+                            error={errors.Answers}
+                            helperText={errors.Answers?.message}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option) => (
@@ -689,26 +725,25 @@ export default function Form({ isEdit = false, currentLevel }) {
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  reset(defaultValues);
-                }}
-              >
-                Xóa
-              </Button>
             </Stack>
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <Stack direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+            <Button
+              variant="outlined"
+              onClick={backBtnOnclick}
+              // color="dark"
+              sx={{ color: '#000000', backgroundColor: '#FFFFFF', borderColor: '#000000' }}
+            >
+              Trở Lại
+            </Button>
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isSubmitting}
             >
-              {!isEdit ? "Create New" : "Update"}
+              {!isEdit ? "Tạo Mới" : "Cập Nhật"}
             </LoadingButton>
           </Stack>
         </Card>
