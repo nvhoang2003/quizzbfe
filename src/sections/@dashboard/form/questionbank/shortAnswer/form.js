@@ -90,12 +90,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
       })
     ),
-    defaultMark: Yup.number("Vui lòng nhập số")
+    defaultMark: Yup.number()
+      .typeError("Vui lòng nhập số")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
       .required("Điểm không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn danh mục"),
+    categoryId: Yup.number()
+      .typeError("Vui lòng chọn danh mục")
+      .required("Vui lòng chọn danh mục"),
   });
 
   const defaultValues = useMemo(
@@ -355,8 +358,9 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await createQb(transformData);
+      console.log(res);
       if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
+        snackbarUtils.success("Tạo mới thành công");
         push("/questionbank");
       } else {
         const responseData = res.errors;
@@ -429,20 +433,20 @@ export default function Form({ isEdit = false, currentLevel }) {
       const res = await updateQb(currentLevel.id, transformData);
       console.log(res);
       if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
+        snackbarUtils.success("Cập Nhật Thành Công");
         push("/questionbank");
       } else {
-        const responseData = res.data;
-        snackbarUtils.error("Cập Thất Bại");
+      const responseData = res.data;
+      snackbarUtils.error("Cập Nhật Thất Bại");
 
-        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
-          setError(fieldKey, {
-            type: "manual",
-            message: errorMessage,
-          });
+      Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+        setError(fieldKey, {
+          type: "manual",
+          message: errorMessage,
         });
+      });
 
-        console.log(errors);
+      console.log(errors);
       }
     } catch (error) {
       console.log(error);
@@ -474,7 +478,7 @@ export default function Form({ isEdit = false, currentLevel }) {
               <Stack spacing={2} sx={{ width: 1 }}>
                 <RHFTextField name="name" label="Tên câu hỏi" id="name" />
 
-                <RHFTextField name="content" label="Đề bài" id="content" />
+                <RHFTextField name="content" label="Nội dung" id="content" />
 
                 <RHFTextField
                   name="generalfeedback"
@@ -648,8 +652,6 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
-                          // error={errors.Answer}
-                          // helperText={errors.Answer?.message}
                           />
                           <RHFTextField
                             key={`answer[${index}].feedback`}
@@ -660,18 +662,18 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }
-                          // error={errors.Answer}
                           />
                           <RHFSelect
                             key={`answer[${index}].fraction`}
                             id={`answer[${index}].fraction`}
                             name={`answer[${index}].fraction`}
                             value={answerChooses.fraction}
-                            style={{ width: "100px" }}
+                            style={{ width: "200px" }}
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
-                          // error={errors.Answer}
+                            error={errors.Answer}
+                            helperText={errors.Answer?.message}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option, index) => (

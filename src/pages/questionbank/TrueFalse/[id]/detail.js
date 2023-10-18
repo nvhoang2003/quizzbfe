@@ -5,7 +5,7 @@ import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID, getTFQuestionBankByID } from '@/dataProvider/questionbankApi';
 import { Container } from 'postcss';
-import FormDetailTrueFalse from '@/sections/@dashboard/form/questionbank/formTrueFalseDetails';
+import FormDetailTrueFalse from '@/sections/@dashboard/form/questionbank/trueFalse/formTrueFalseDetails';
 
 // ----------------------------------------------------------------------
 
