@@ -31,7 +31,7 @@ export default function index(props) {
       };
 
       q.tags?.forEach(element => {
-        transformData.tagId.push(element.id);
+        transformData.tagId.push(element?.id);
       });
 
       q.matchSubQuestionBanks?.forEach(element => {

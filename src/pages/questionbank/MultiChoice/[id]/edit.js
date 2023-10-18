@@ -32,7 +32,8 @@ export default function Edit(props) {
         categoryId: q.categoryId,
         tagId: [],
         answers: [],
-        isPublic: q.isPublic
+        isPublic: q.isPublic,
+        authorId: q.authorId
       };
 
       q.tags?.forEach(element => {

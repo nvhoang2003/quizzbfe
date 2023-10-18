@@ -81,11 +81,14 @@ export default function Form({ isEdit = false, currentLevel }) {
       })
     ),
     defaultMark: Yup.number()
+      .typeError("Vui lòng nhập số")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
       .required("generalfeedback không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn category"),
+    categoryId: Yup.number()
+      .typeError("Vui lòng chọn danh mục")
+      .required("Vui lòng chọn category"),
   });
 
   const convertMatchSubAnswer = (data) => {

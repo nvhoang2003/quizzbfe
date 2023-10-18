@@ -87,15 +87,18 @@ export default function Form({ isEdit = false, currentLevel }) {
     answer: Yup.array(
       Yup.object({
         answer: Yup.string().required("Câu trả lời không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
-        feedback: Yup.string().required("Phản hồi không được trống").max(1000, "Phản hồi không đươc quá 1000 kí tự"),
+        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
       })
     ),
     defaultMark: Yup.number()
+      .typeError("Điểm Bạn phải nhập vào điểm là một số")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
       .required("generalfeedback không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn category"),
+    categoryId: Yup.number()
+      .typeError("Vui lòng chọn danh mục")
+      .required("Vui lòng chọn category"),
   });
 
 
@@ -109,7 +112,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       tagId: currentLevel?.tagId || "",
       answer: currentLevel?.answers || [],
       questionstype: "MultiChoice",
-      isPublic: currentLevel?.isPublic == 1 ? true : false,
+      isPublic: currentLevel?.isPublic == 0 ? false : true,
     }),
     [currentLevel]
   );
@@ -154,7 +157,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
   }, [categoryId]);
 
-  useEffect(() => {}, [tags]);
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -277,7 +280,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
-    const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
+    const newInput = { id: answerChoose.length + 1, answer: "",feedback: "", fraction: 0 };
     setAnswerChoose([...answerChoose, newInput]);
   };
 
@@ -310,7 +313,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: currentLevel?.authorId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
       qbTags: data.tagId
@@ -381,7 +384,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: currentLevel?.authorId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
       qbTags: data.tagId
@@ -435,8 +438,6 @@ export default function Form({ isEdit = false, currentLevel }) {
             message: errorMessage,
           });
         });
-
-        console.log(errors);
       }
     } catch (error) {
       console.log(error);
@@ -663,7 +664,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             id={`answer[${index}].fraction`}
                             name={`answer[${index}].fraction`}
                             value={answerChooses.fraction}
-                            style={{ width: "80px" }}
+                            style={{ width: "200px" }}
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
@@ -677,8 +678,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                                 </option>
                               ))}
                           </RHFSelect>
+                          {/* <Typography color="error" className="right-item error-message auto-width" sx={{}}>{errors.Answers?.message}</Typography> */}
                         </Box>
-
                         {index === answerChoose.length - 1 && (
                           <Tooltip arrow placement="left" title="Add">
                             <IconButton

@@ -84,7 +84,7 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               disabled={!submit}
               onClick={() => restart()}
             >
-              Làm lại câu hỏi 
+              Làm Lại 
             </LoadingButton>
 
             <LoadingButton
@@ -93,14 +93,14 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               loading={isSubmitting}
               disabled={submit}
             >
-              Nộp bài 
+              Kiểm Tra Đáp Án 
             </LoadingButton>
 
             <LoadingButton
               variant="contained"
               onClick={() => close()}
             >
-              Đóng lại 
+              Trở Về
             </LoadingButton>
           </Stack>
         </Stack>

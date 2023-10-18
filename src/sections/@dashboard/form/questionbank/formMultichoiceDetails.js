@@ -98,7 +98,7 @@ export default function FormDetailMultichoice({ currentLevel }) {
               disabled={!submit}
               onClick={() => restart()}
             >
-              Start again
+              Làm Lại
             </LoadingButton>
 
             <LoadingButton
@@ -107,14 +107,14 @@ export default function FormDetailMultichoice({ currentLevel }) {
               loading={isSubmitting}
               disabled={submit}
             >
-              Submit and finish
+              Kiểm Tra Đáp Án
             </LoadingButton>
 
             <LoadingButton
               variant="contained"
               onClick={() => close()}
             >
-              Close preview
+              Trở Về
             </LoadingButton>
           </Stack>
         </Stack>

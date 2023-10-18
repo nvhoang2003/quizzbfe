@@ -22,9 +22,9 @@ export default function MatchQuestion(props) {
     questionId: 0,
     answer: [],
   });
-  const [oneSubQuestionPoint, setOneSubQuestionPoint] = useState(0); 
+  const [oneSubQuestionPoint, setOneSubQuestionPoint] = useState(0);
 
-  
+
 
   console.log(oneSubQuestionPoint);
 
@@ -35,7 +35,7 @@ export default function MatchQuestion(props) {
     };
 
     const matchRemove = matchAnswerChoose.filter((question) => question.questionText !== subQuestion);
-    const newMatch = [ ...matchRemove, chooseAnswer ];
+    const newMatch = [...matchRemove, chooseAnswer];
     setMatchAnswerChoose(newMatch);
 
     checkRightAnswer(newMatch);
@@ -47,7 +47,7 @@ export default function MatchQuestion(props) {
     newMatch?.map(oneMatch => {
       if (question?.matchSubQuestionBanks?.find((rightAnswer) => rightAnswer.questionText === oneMatch.questionText && rightAnswer.answerText === oneMatch.answerText)) {
         mark += oneSubQuestionPoint;
-      }      
+      }
     })
 
     const status = mark == question?.defaultMark ? "Đúng" : "Sai";
@@ -65,7 +65,7 @@ export default function MatchQuestion(props) {
       setListSubQuestion(question.matchSubQuestionBanks.map((item) => item.questionText).filter((item) => item !== ""));
       setListSubAnswer(question.matchSubQuestionBanks.map((item) => item.answerText));
       // setListRightResult(question.matchSubQuestionBanks);
-      setOneSubQuestionPoint(question?.defaultMark  / question.matchSubQuestionBanks.filter((item) => item.questionText !== "").length);
+      setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestionBanks.filter((item) => item.questionText !== "").length);
       setMatchAnswerChoose(question.matchSubQuestionBanks.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
     }
   }, [question]);
@@ -87,7 +87,7 @@ export default function MatchQuestion(props) {
         <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.content}</Typography>
 
         {listSubQuestion?.map((subQuestion, quesIndex) => (
-          <Stack direction="row" spacing={3} key={quesIndex}>
+          <Stack direction="row" spacing={3} key={quesIndex} sx={{ my: 3 }}>
             <Typography sx={{ fontWeight: 'bold', m: 3 }}>{subQuestion}</Typography>
 
             <FormControl sx={{ minWidth: 120 }}>

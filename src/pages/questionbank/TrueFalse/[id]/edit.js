@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID, getTFQuestionBankByID } from '@/dataProvider/questionbankApi';
-import FormTrueFalseQuestionBank from '@/sections/@dashboard/form/questionbank/formTrueFalseQuestion';
+import FormTrueFalseQuestionBank from '@/sections/@dashboard/form/questionbank/trueFalse/formTrueFalseQuestionseQuestion';
 
 // ----------------------------------------------------------------------
 
