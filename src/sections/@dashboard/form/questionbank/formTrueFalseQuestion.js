@@ -56,7 +56,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   const [answerChoose, setAnswerChoose] = useState(
     {
       feedback: "",
-      answer_truefalse: null,
+      answer_truefalse: true,
     },
   );
 
@@ -97,8 +97,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     [currentLevel]
   );
 
-  console.log(currentLevel);
-
   const methods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues,
@@ -112,6 +110,10 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const backBtnOnclick = () => {
+    push("/questionbank");
+  }
 
   useEffect(() => {
     if (categoryId) {
@@ -144,7 +146,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         currentLevel?.categoryId !== null &&
         currentLevel?.categoryId !== "undefined"
       ) {
-        if(isEdit){
+        if (isEdit) {
           tagChoose.shift();
         }
 
@@ -179,7 +181,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   useEffect(() => {
     if (isEdit && currentLevel) {
       setCategoryId(currentLevel?.categoryId);
-       reset(defaultValues);
+      reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -190,14 +192,14 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     if (categoryId) {
       fetchAlltags(categoryId);
     }
-   
+
   }, [categoryId]);
 
   useEffect(() => {
     if (categoryId) {
       fetchTagChoose(currentLevel);
     }
-   
+
   }, [tags]);
 
   useEffect(() => {
@@ -305,22 +307,13 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           return true;
         })
         .map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "TrueFalse",
-      answers: [
-        //   {
-        //   // content: data.answer.answer_truefalse,
-        //   // fraction: data.answer.answer_truefalse === "true" ? 1 : 0,
-        //   feedback: data.answer.feedback,
-        //   // quizBankId: 0,
-        //   // questionId: 0,
-        //   // id: 0,
-        // }
-      ],
+      answers: [],
       rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
     };
     try {
@@ -364,30 +357,18 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           return true;
         })
         .map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "TrueFalse",
       answers: [],
-      // data.answer.map((answer, index) => {
-      //   return {
-      //     content: answer.answer,
-      //     fraction: parseInt(answer.fraction, 10),
-      //     feedback: answer.feedback,
-      //     quizBankId: 0,
-      //     questionId: 0,
-      //     id: 0,
-      //   };
-      // }),
-
       rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
       authorId: currentLevel?.authorId
     };
 
     try {
-      console.log(transformData);
       const res = await updateTFQuestionBank(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
@@ -414,8 +395,8 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
             {!isEdit
-              ? "Tạo mới TrueFalseQuestionBank"
-              : "Cập nhật TrueFalseQuestionBank"}
+              ? "Tạo mới Câu hỏi Đúng/Sai"
+              : "Cập nhật Câu hỏi Đúng/Sai"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -423,19 +404,19 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           >
             <Stack alignItems="flex-end" spacing={2}>
               <Stack spacing={2} sx={{ width: 1 }}>
-                <RHFTextField name="name" label="Name" id="name" />
+                <RHFTextField name="name" label="Tên câu hỏi" id="name" />
 
-                <RHFTextField name="content" label="Content" id="content" />
+                <RHFTextField name="content" label="Đề bài " id="content" />
 
                 <RHFTextField
                   name="generalfeedback"
-                  label="General Feedback"
+                  label="Phản hồi chung"
                   id="generalfeedback"
                 />
 
                 <RHFTextField
                   name="defaultMark"
-                  label="Default Mark"
+                  label="Điểm mặc định"
                   id="defaultMark"
                 />
                 <div
@@ -452,7 +433,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                       width: "200px",
                     }}
                   >
-                    QuestionType
+                    Loại câu hỏi
                   </span>
                   <RHFTextField
                     name="questionstype"
@@ -478,14 +459,14 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                       width: "200px",
                     }}
                   >
-                    Category
+                    Danh mục
                   </span>
                   <RHFSelect
                     name="categoryId"
-                    placeholder="Category"
+                    placeholder="Danh mục"
                     onChange={handleCateChange}
                   >
-                    <option value="">-- Select Category --</option>
+                    <option value="">-- Vui lòng chọn danh mục --</option>
                     {!_.isEmpty(category) &&
                       category.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -509,7 +490,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                       width: "200px",
                     }}
                   >
-                    Tag
+                    Từ khóa
                   </span>
 
                   <Stack spacing={2} sx={{ width: 1 }}>
@@ -524,13 +505,13 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                       >
                         <RHFSelect
                           name={`tagId[${index}]`}
-                          placeholder="Tag"
+                          placeholder="Từ khóa"
                           onChange={(event) =>
                             handleInputTagsChange(index, event)
                           }
                           disabled={!categoryId}
                         >
-                          <option value="">-- Select Tag --</option>
+                          <option value="">-- Vui lòng chọn từ khóa --</option>
                           {!_.isEmpty(tags) &&
                             tags.map((option) => (
                               <option key={option.id} value={option.id}>
@@ -584,7 +565,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                         variant="h6"
                         sx={{ color: "text.disabled", mb: 3 }}
                       >
-                        Correct Answer
+                        Đáp án
                       </Typography>
 
 
@@ -597,27 +578,9 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                         }
                         sx={{ paddingLeft: "35px" }}
                       >
-                        <FormControlLabel value="true" control={<Radio />} label="True" />
-                        <FormControlLabel value="false" control={<Radio />} label="False" />
+                        <FormControlLabel value="true" control={<Radio />} label="Đúng" />
+                        <FormControlLabel value="false" control={<Radio />} label="Sai" />
                       </RadioGroup>
-
-                      <RHFTextField
-                        name={`answer.feedback`}
-                        label="Feed Back"
-                        id={`answer.feedback`}
-                        // key={`answer.feedback`}
-                        // name={`answer.feedback`}
-                        // label="Feed Back"
-                        // id={`answer.feedback`}
-                        // value={answerChoose.feedback}
-                        onChange={(event) =>
-                          handleFeedbackChange(event)
-                        }
-                        multiline
-                        rows={3}
-                        sx={{ width: "60%", height: "100%", margin: "10px" }}
-
-                      />
                     </div>
                   </Stack>
 
@@ -640,26 +603,25 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  reset(defaultValues);
-                }}
-              >
-                Xóa
-              </Button>
             </Stack>
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <Stack  direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+            <Button
+              variant="outlined" 
+              onClick={backBtnOnclick}
+              // color="dark"
+              sx={{ color: '#2A2D76', backgroundColor: '#FFFFFF', borderColor: '#2A2D76' }}
+            >
+              Trở Lại
+            </Button>
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isSubmitting}
             >
-              {!isEdit ? "Create New" : "Update"}
+              {!isEdit ? "Tạo mới" : "Cập nhật"}
             </LoadingButton>
           </Stack>
         </Card>

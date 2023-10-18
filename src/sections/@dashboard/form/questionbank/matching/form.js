@@ -54,6 +54,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       answerText: "",
     },
   ]);
+  const [reRender, setReRender] = useState([]);
 
   const {
     setError,
@@ -152,7 +153,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => {}, [tags]);
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -252,7 +253,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => {}, [answerChoose]);
+  useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = { questionText: "", answerText: "" };

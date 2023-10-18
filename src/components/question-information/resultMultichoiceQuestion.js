@@ -7,13 +7,9 @@ export default function ResultQuestion(props) {
   const { questionResult, isSubmit, answerResult } = props;
   const [selected, setSelected] = useState([]);
 
-
   const checkAnswer = () => {
-    console.log(answerResult);
     const selectedAnswer = answerResult?.find(item => item.fraction !== 0);
-    if (selectedAnswer) {
-      setSelected(selectedAnswer);
-    }
+    setSelected(selectedAnswer);
     //    answerResult?.map((item, index)=>{
     //   if(item.fraction !== 0){
     //     setSelected(item);
@@ -22,44 +18,39 @@ export default function ResultQuestion(props) {
   }
 
   useEffect(() => {
-    if(isSubmit == true){
+    if (isSubmit == true) {
       checkAnswer();
     }
-  
-  }, [selected]);
-  // useEffect(() => {
-  //   answerResult?.map((item, index)=>{
-  //     if(item.fraction !== 0){
-  //       setSelected(item);
-  //     }
-  //   })
-  //   console.log(selected);
-  // }, [selected]);
+  }, []);
+
 
 
   return (
 
     <Stack spacing={3} sx={{ paddingTop: '20px' }} >
-      {isSubmit === true ? <Card sx={{ p: 5, backgroundColor: '#FCEEEE' }} >
+      {isSubmit === true ? <Card sx={{ p: 5, backgroundColor: answerResult.status === 'Đúng' ? '#A9D097' : '#FCEEEE', }} >
+
 
         {answerResult.status ? (
-          answerResult.mark > 0 && answerResult.mark < 1 ? (
-            <span>
-              <span>Câu trả lời của bạn đã đúng 1 phần.</span>
-              <br />
-              <span>Bạn đã chọn đúng {selected.length} câu  </span>
-              {answerResult.answer.map((items, index) => {
-                 {items.fraction !==0 ? (
-                  <span key={index}>{items.answer}</span>
-                ) : (
-                  <span key={index}></span>
-                )}
-              })}
-            </span>
+          // answerResult.mark > 0 && answerResult.mark < 1 ? (
+          //   <span>
+          //     <span>Câu trả lời của bạn đã đúng 1 phần.</span>
+          //     <br />
+          //     <span>Bạn đã chọn đúng {selected.length} câu  </span>
+          //     {answerResult.answer.map((items, index) => {
+          //       {
+          //         items.fraction !== 0 ? (
+          //           <span key={index}>{items.answer}</span>
+          //         ) : (
+          //         <span key={index}></span>
+          //       )
+          //       }
+          //     })}
+          //   </span>
 
-          ) : (
+          // ) : (
             <span>Câu trả lời của bạn  {answerResult.status}.</span>
-          )
+          // )
         ) : (
           <span>Bạn cần chọn câu trả lời trước .</span>
         )}

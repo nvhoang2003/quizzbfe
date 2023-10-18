@@ -187,7 +187,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
 
                     <RHFTextField
                       name="tags"
-                      label="Tags"
+                      label="Từ khóa"
                       id="tags"
                       sx={{ width: '250px' }}
                     />
@@ -200,8 +200,8 @@ const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
                     />
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
-                      <RHFSelect name="questiontype" placeholder="Ques" onChange={handlerTypeChange}>
-                        <option value="">QuestionType</option>
+                      <RHFSelect name="questiontype" placeholder="Loại câu hỏi" onChange={handlerTypeChange}>
+                        <option value="">--- Hãy chọn loại câu hỏi ---</option>
                         {!_.isEmpty(type) &&
                           type.map((option) => (
                             <option key={option.name} value={option.id}>
@@ -213,8 +213,8 @@ const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
                   </Stack>
                   <Stack direction="row" spacing={2} sx={{ width: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
-                      <RHFSelect name="categoryId" placeholder="Category" onChange={handlerCategoryChange}>
-                        <option value="">Category</option>
+                      <RHFSelect name="categoryId" placeholder="Danh mục" onChange={handlerCategoryChange}>
+                        <option value="">--- Hãy chọn danh mục ---</option>
                         {!_.isEmpty(cate) &&
                           cate.map((option) => (
                             <option key={option.name} value={option.id}>
@@ -274,7 +274,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}
                       startIcon={<Icon icon="ion:search" />}
                     >
-                      Search
+                      Tìm kiếm
                     </LoadingButton>
                     <Button
                       color="error"

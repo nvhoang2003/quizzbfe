@@ -23,7 +23,7 @@ const TABLE_HEAD = [
   { id: "name", label: "Tên câu hỏi", align: "center" },
   { id: "questionstype", label: "Dạng câu hỏi", align: "center" },
   { id: "authorName", label: "Tên Tác Giả", align: "center" },
-  { id: "tags", label: "tags", align: "center" },
+  { id: "tags", label: "Từ khóa", align: "center" },
   { id: "categoryName", label: "Loại câu hỏi", align: "center" },
   { id: "isPublic", label: "Công khai", align: "center" },
   { id: "action", label: "Thao Tác", align: "left" },
@@ -71,14 +71,14 @@ export default function QuestionBankTable(prop) {
 
   const handleDeleteRow = async (id) => {
     const response = await deleteByID(id);
-    console.log(response);
+
     if (response.status < 400) {
       setSelected([]);
-      await fetchQuiz();
-      enqueueSnackbar("response?.data?.message", { variant: "success" });
+      enqueueSnackbar(response?.data?.message ? response?.data?.message : " ", { variant: "success" });
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
+    await fetchQuiz();
   };
 
   useEffect(() => {
