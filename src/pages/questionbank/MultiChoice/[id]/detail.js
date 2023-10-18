@@ -5,7 +5,7 @@ import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
 import { Container } from 'postcss';
-import FormDetailMultichoice from '@/sections/@dashboard/form/questionbank/formMultichoiceDetails';
+import FormDetailMultichoice from '@/sections/@dashboard/form/questionbank/multichoice/formMultichoiceDetails';
 
 // ----------------------------------------------------------------------
 
