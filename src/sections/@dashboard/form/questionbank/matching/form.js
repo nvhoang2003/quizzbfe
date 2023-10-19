@@ -32,9 +32,7 @@ import RHFRadioGroup from "@/components/form/RHFRadioGroup";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { create, update } from "@/dataProvider/multipchoiceApi";
-import { id } from "date-fns/locale";
-import { createQb, updateQb } from "@/dataProvider/matchingQbApi";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -50,6 +48,8 @@ export default function Form({ isEdit = false, currentLevel }) {
   const [tags, setTags] = useState([]);
   const [answerChoose, setAnswerChoose] = useState([
     {
+      id: 0,
+      questionBankId: 0,
       questionText: "",
       answerText: "",
     },
@@ -91,21 +91,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       .required("Vui lòng chọn category"),
   });
 
-  const convertMatchSubAnswer = (data) => {
-    const matchSubs = [];
-
-    if (data?.matchSubQuestions) {
-      data.matchSubQuestions.map((matchSubQuestion, index) => {
-        matchSubs.push({
-          questionText: matchSubQuestion.questionText,
-          answerText: data.matchSubAnswers[index],
-        });
-      });
-    }
-
-    return matchSubs;
-  };
-
   const defaultValues = useMemo(
     () => ({
       name: currentLevel?.name || "",
@@ -113,8 +98,11 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: currentLevel?.generalfeedback || "",
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
+      authorId: currentLevel?.authorid || 0,
       tagId: currentLevel?.tagId || "",
-      matchSubs: convertMatchSubAnswer(currentLevel),
+      matchSubs: currentLevel?.matchSubQuestionBanks
+        ? currentLevel.matchSubQuestionBanks
+        : [],
       questionstype: "Match",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
@@ -156,14 +144,15 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => { }, [tags]);
+  useEffect(() => {}, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
       if (
-        currentLevel?.matchSubQuestions !== null &&
-        currentLevel?.matchSubQuestions !== "undefined"
+        currentLevel?.categoryId !== null &&
+        currentLevel?.categoryId !== "undefined"
       ) {
+        tagChoose.shift();
         currentLevel?.tagId?.forEach((element) => {
           const tag = tags.find((tag) => tag.id === element);
           tagChoose.push(tag);
@@ -171,16 +160,17 @@ export default function Form({ isEdit = false, currentLevel }) {
       }
 
       if (
-        currentLevel?.matchSubQuestions !== null &&
-        currentLevel?.matchSubQuestions !== undefined
+        currentLevel?.matchSubQuestionBanks !== null &&
+        currentLevel?.matchSubQuestionBanks !== undefined
       ) {
         answerChoose.shift();
-        const convertedMatchSubs = convertMatchSubAnswer(currentLevel);
-        setAnswerChoose([...convertedMatchSubs]);
+        const matchSubQuestionBanks = currentLevel.matchSubQuestionBanks;
+        setAnswerChoose([...matchSubQuestionBanks]);
       }
     }
     return;
   }
+  useEffect(() => {}, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -222,12 +212,15 @@ export default function Form({ isEdit = false, currentLevel }) {
     const updatedInputs = [...tagChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      tags: selectedValue,
+      name: selectedValue,
     };
 
-    const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.tags === selectedValue;
-    });
+    const isDuplicate = updatedInputs
+      .filter((element) => !element?.tags)
+      .some(
+        (input, i) =>
+          i !== index && selectedValue != "" && input.name === selectedValue
+      );
 
     if (!isDuplicate) {
       setValue(event.target.name, selectedValue);
@@ -236,6 +229,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
+  useEffect(() => {}, [tagChoose]);
 
   const handleQuestionTextChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -256,16 +250,22 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => { }, [answerChoose]);
+  useEffect(() => {}, [answerChoose]);
 
   const handleAddInputAnswer = () => {
-    const newInput = { questionText: "", answerText: "" };
+    const newInput = {
+      id: 0,
+      questionBankId: 0,
+      questionText: "",
+      answerText: "",
+    };
     setAnswerChoose([...answerChoose, newInput]);
   };
 
   const handleRemoveInputAnswer = (index) => {
     const updatedInputs = [...answerChoose];
     updatedInputs.splice(index, 1);
+    setValue("answer", updatedInputs);
     setAnswerChoose(updatedInputs);
   };
 
@@ -281,29 +281,19 @@ export default function Form({ isEdit = false, currentLevel }) {
     setTagChoose(updatedInputs);
   };
 
-  //allquestiontype
-  async function createNew(data) {
-    const transformData = {
+  const convertToRequestData = (data) => {
+    return {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 0,
+      authorId: data?.authorid || 0,
       defaultMark: data.defaultMark,
       isShuffle: 1,
       qbTags: data.tagId
         .filter((tag) => {
           if (!tag || tag == undefined || tag === "") {
-            return false;
-          }
-
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
             return false;
           }
 
@@ -316,18 +306,25 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "Match",
-      matchSubs: data.matchSubs.map((matchSub, index) => {
+      matchSubQuestionBanks: data.matchSubs.map((matchSub, index) => {
         return {
+          id: 0,
+          questionBankId: 0,
           questionText: matchSub.questionText,
           answerText: matchSub.answerText,
         };
       }),
     };
+  };
+
+  //allquestiontype
+  async function createNew(data) {
+    const transformData = convertToRequestData(data);
 
     try {
       const res = await createQb(transformData);
       if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
+        snackbarUtils.success(res?.data?.message || "Tạo Mới Thành Công");
         push("/questionbank");
       } else {
         const responseData = res.errors;
@@ -346,51 +343,12 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   async function fetchUpdate(data) {
-    const transformData = {
-      name: data.name,
-      content: data.content,
-      generalfeedback: data.generalfeedback,
-      isPublic: data.isPublic ? 1 : 0,
-      categoryId: data.categoryId,
-      authorId: 0,
-      defaultMark: data.defaultMark,
-      isShuffle: 1,
-      qbTags: data.tagId
-        .filter((tag) => {
-          if (!tag || tag == undefined || tag === "") {
-            return false;
-          }
-
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
-          return true;
-        })
-        .map((tag) => {
-          return {
-            qbId: 0,
-            tagId: parseInt(tag, 10),
-          };
-        }),
-      questionstype: "Match",
-      matchSubs: data.matchSubs.map((matchSub, index) => {
-        return {
-          questionText: matchSub.questionText,
-          answerText: matchSub.answerText,
-        };
-      }),
-    };
+    const transformData = convertToRequestData(data);
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
+        snackbarUtils.success(res?.data?.message || "Sửa Thành Công");
         push("/questionbank");
       } else {
         const responseData = res.errors;
@@ -409,6 +367,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   const onSubmit = async (data) => {
+    clearErrors();
     if (!isEdit) {
       createNew(data);
     } else {

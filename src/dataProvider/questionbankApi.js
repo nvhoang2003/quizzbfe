@@ -46,7 +46,7 @@ function getById(id) {
 }
 
 function getQuestionBankById(id) {
-  return getApi(`QuestionBank/getQuestionBankById/ ${id}`);
+  return getApi(`QuestionBank/getQuestionBankById/${id}`);
 }
 
 function createQb(qb) {

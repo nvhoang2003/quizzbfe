@@ -235,9 +235,12 @@ export default function Form({ isEdit = false, currentLevel }) {
       name: selectedValue,
     };
 
-    const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.name === selectedValue;
-    });
+    const isDuplicate = updatedInputs
+      .filter((element) => !element?.tags)
+      .some(
+        (input, i) =>
+          i !== index && selectedValue != "" && input.name === selectedValue
+      );
 
     if (!isDuplicate) {
       setValue(event.target.name, selectedValue);

@@ -74,7 +74,7 @@ export default function QuestionBankTable(prop) {
 
     if (response.status < 400) {
       setSelected([]);
-      enqueueSnackbar(response?.data?.message ? response?.data?.message : " ", { variant: "success" });
+      enqueueSnackbar(response?.data?.message || "Xóa thành công", { variant: "success" });
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
