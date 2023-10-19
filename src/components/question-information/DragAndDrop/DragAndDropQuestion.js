@@ -1,4 +1,8 @@
+import DroppableContainer from "./DroppableContainer";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+import SortableItem from "./SortableItem";
+import Submission from "./Submission";
+import WordBank from "./WordBank";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import {
   DndContext,
@@ -10,25 +14,21 @@ import {
   useSensors
 } from "@dnd-kit/core";
 import { Global } from "@emotion/react";
+import { Item } from "./Item";
 import { RiDragDropLine } from "react-icons/ri";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import PropTypes from "prop-types";
 import shuffle from "lodash/shuffle";
 import uniq from "lodash/uniq";
-import { SolutionGetter, WORD_BANK } from "@/utils/drag-and-drop";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import DroppableContainer from "./DroppableContainer";
-import SortableItem from "./SortableItem";
-import WordBank from "./WordBank";
-import { Item } from "./Item";
-import Buttons from "./Submission";
-//-----------------------------------------------------------
+import { SolutionGetter, WORD_BANK } from "@/utils/drag-and-drop";
+import { Card, Stack } from "@mui/material";
+
 export function Blank({ solution }) {
   return <span></span>;
 }
 
 const parseItemsFromChildren = (children, wrongAnswers, isTaskComplete) => {
-  // console.log(isTaskComplete);
   const solutionGetter = new SolutionGetter();
   const childrenWithBlanks = React.Children.toArray(children).map(
     (child, index) => {
@@ -48,22 +48,27 @@ const parseItemsFromChildren = (children, wrongAnswers, isTaskComplete) => {
 
   const solutions = [];
   const blanks = childrenWithBlanks.reduce((acc, currChild) => {
-    if (currChild.items) {
+    if (currChild.solutions) {
       solutions.push(...currChild.solutions);
       return {
         ...acc,
         [currChild.id]: currChild
       };
     }
+
     return acc;
   }, {});
+
   blanks[WORD_BANK] = {
-    items: isTaskComplete ? wrongAnswers : shuffle(uniq(solutions).concat(wrongAnswers))
+    items: isTaskComplete
+      ? wrongAnswers
+      : shuffle(uniq(solutions).concat(wrongAnswers))
   };
+
   return [blanks, childrenWithBlanks];
 };
 
-export default function DragAndDropQuestion({
+export default function Dnd({
   taskId,
   children,
   wrongAnswers = [],
@@ -80,7 +85,6 @@ export default function DragAndDropQuestion({
     isTaskComplete && isTaskComplete.length ? true : false
   );
 
-
   const [initialItems] = useMemo(
     () => parseItemsFromChildren(children, wrongAnswers),
     [children, wrongAnswers]
@@ -89,26 +93,24 @@ export default function DragAndDropQuestion({
 
   const [defaultItems, childrenWithBlanks] = useMemo(
     () => parseItemsFromChildren(children, wrongAnswers, isTaskComplete),
-    [children, wrongAnswers, isTaskComplete]
+    [children, isTaskComplete, wrongAnswers]
   );
 
-
-  const [items, setItems] = useState([]);
-
+  const [items, setItems] = useState(defaultItems);
 
   useEffect(() => {
-    setItems(defaultItems);
+    if (defaultItems) {
+      setItems(defaultItems);
+    }
   }, [defaultItems]);
-
-  console.log(items);
+  console.log(defaultItems);
 
   const allBlanksEmpty = useMemo(
     () =>
       !Object.entries(items).some(
-        ([key, value]) => key !== WORD_BANK && value?.items?.length
+        ([key, value]) => key !== WORD_BANK && value.items.length
       ),
     [items]
-
   );
 
   const sensors = useSensors(
@@ -118,50 +120,39 @@ export default function DragAndDropQuestion({
     })
   );
 
-
+  // find the blank/droppableContainer that an item is in
   const findContainer = (id) => {
-    if (id in initialItems[WORD_BANK]?.items) {
+    if (id in items) {
       return id;
     }
-    return Object.keys(initialItems[WORD_BANK]?.items).find((key) => initialItems[WORD_BANK]?.items[key].includes(id));
+
+    return Object.keys(items).find((key) => items[key].items.includes(id));
   };
 
   const onDragStart = ({ active }) => {
     setActiveId(active.id);
   };
-  console.log(activeId);
 
   const onDragEnd = ({ active, over }) => {
-    console.log(active);
-    console.log(over);
     const activeContainer = findContainer(active.id);
+
     if (!activeContainer) {
       setActiveId(null);
       return;
     }
-    
+
     const overId = over?.id;
     const overContainer = findContainer(overId);
 
     if (activeContainer && overContainer) {
-      const activeIndex = items[WORD_BANK]?.items.indexOf(active.id);
-      const overIndex = items[WORD_BANK]?.items.indexOf(overId);
-      console.log(activeContainer);
-      // console.log(items);
-      // if it's different than overContainer, swap the items
+      const activeIndex = items[activeContainer].items.indexOf(active.id);
+      const overIndex = items[overContainer].items.indexOf(overId);
+
       if (activeContainer !== overContainer) {
         setItems((prevItems) => {
-          console.log(prevItems);
-          let activeItems = [];
-          if (Array.isArray(prevItems[activeContainer]?.items)) {
-            activeItems = [prevItems[activeContainer].items];
-          }
-          console.log(activeItems);
+          let activeItems = [...prevItems[activeContainer].items];
+          let overItems = [...prevItems[overContainer].items];
 
-          let overItems = [];
-          if (Array.isArray(prevItems[overContainer]?.items)) {
-            overItems = [prevItems[overContainer].items];
-          }
 
           if (overContainer === WORD_BANK) {
             activeItems = [];
@@ -169,32 +160,31 @@ export default function DragAndDropQuestion({
           } else {
             activeItems.splice(activeIndex, 1);
 
+            // if there's already something in the blank, push its contents to activeItems
             if (overItems.length) {
-              activeItems.push(overItems);
+              activeItems.push(...overItems);
             }
             overItems = [active.id];
           }
 
           const updatedItems = {
-            prevItems,
+            ...prevItems,
             [activeContainer]: {
+              ...prevItems[activeContainer],
               isCorrect: null,
               items: activeItems
             },
             [overContainer]: {
+              ...prevItems[overContainer],
               isCorrect: null,
               items: overItems
             }
           };
 
+          // reset isCorrect values if all of the blanks (minus word bank) are empty
           if (allBlanksEmpty) {
-            console.log(updatedItems);
-            Object.keys(updatedItems).forEach((key) => {
-              console.log(key);
-              const index = parseInt(key.split('-')[1]);
-              if (!isNaN(index) && updatedItems[key]) {
-                updatedItems[key].isCorrect = null;
-              }
+            Object.values(updatedItems).forEach((blank) => {
+              blank.isCorrect = null;
             });
           }
 
@@ -202,7 +192,7 @@ export default function DragAndDropQuestion({
         });
       } else if (activeIndex !== overIndex) {
         setItems((prevItems) => ({
-          prevItems,
+          ...prevItems,
           [overContainer]: {
             ...prevItems[overContainer],
             isCorrect: null,
@@ -211,6 +201,7 @@ export default function DragAndDropQuestion({
         }));
       }
     }
+
     setActiveId(null);
   };
 
@@ -218,10 +209,8 @@ export default function DragAndDropQuestion({
     setActiveId(null);
   };
 
-  
-
   const colorScheme = !hasSubmitted ? "blue" : isCorrect ? "green" : "red";
-  const showWordBank = !hasSubmitted || !isCorrect;//!hasSubmitted || !isCorrect;
+  const showWordBank = !hasSubmitted || !isCorrect;
 
   return (
     <Box pl="4" py="1" maxW="960px" mx="auto">
@@ -234,7 +223,8 @@ export default function DragAndDropQuestion({
         <Box mr="2" as={RiDragDropLine} fontSize="xl" />
         <Text>{title}</Text>
       </Flex>
-      <DndContext
+      <Card sx={{ p: 5 }}>
+        <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={onDragStart}
@@ -243,19 +233,12 @@ export default function DragAndDropQuestion({
       >
         <Flex direction="column" alignItems="flex-start">
           <div>
-          
             {childrenWithBlanks.map((child, index) => {
               const { solutions, id } = child;
+              // console.log(items[id]);
+              // need a blank for children that have a 'solution'
               if (solutions) {
-                let blankItems, isBlankCorrect;
-                if (items && items[id]) {
-                  const { items: itemsWithId, isCorrect: isCorrectWithId } = items[id];
-                  blankItems = itemsWithId;
-                  isBlankCorrect = isCorrectWithId;
-                } else {
-                  blankItems = [];
-                  isBlankCorrect = false;
-                }
+                const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
                 return (
                   <>
                     {" "}
@@ -286,11 +269,11 @@ export default function DragAndDropQuestion({
               return <Fragment key={index}>{child}</Fragment>;
             })}
           </div>
-          {items[WORD_BANK] && (
-            <div>
-              {showWordBank && <WordBank taskId={taskId} items={items} />}
-            </div>
-          )}
+
+          <div style={{paddingTop:'25px'}}>
+            {showWordBank && <WordBank taskId={taskId} items={items} />}
+          </div>
+          
         </Flex>
         <DragOverlay>
           {activeId && (
@@ -300,7 +283,16 @@ export default function DragAndDropQuestion({
             </>
           )}
         </DragOverlay>
-        <Buttons
+
+
+
+      </DndContext>
+      </Card>
+
+      
+
+      <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mt: 3 }}>
+        <Submission
           taskId={taskId}
           isCorrect={isCorrect}
           items={items}
@@ -313,12 +305,12 @@ export default function DragAndDropQuestion({
           initialItems={initialItems}
           setHasSubmitted={setHasSubmitted}
         />
-      </DndContext>
+      </Stack>
     </Box>
   );
 }
 
-DragAndDropQuestion.propTypes = {
+Dnd.propTypes = {
   taskId: PropTypes.string.isRequired,
   children: PropTypes.node,
   wrongAnswers: PropTypes.array,

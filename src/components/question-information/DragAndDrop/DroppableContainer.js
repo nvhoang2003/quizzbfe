@@ -16,6 +16,14 @@ export default function DroppableContainer({
   });
   const isOverContainer = isOver || (over ? items.includes(over.id) : false);
 
+  let backgroundColor = null;
+
+  if (isOverContainer) {
+    backgroundColor = "gray";
+  } else if (!allBlanksEmpty && typeof isCorrect === "boolean") {
+    backgroundColor = isCorrect ? "#C2F8C2" : "#EEADAD";
+  }
+
   return (
     <Box
       ref={setNodeRef}
@@ -27,21 +35,7 @@ export default function DroppableContainer({
       borderWidth="2px"
       rounded="md"
       transition="background-color .35s ease"
-      sx={style}
-      css={({ theme }) => {
-        if (isOverContainer) {
-          return {
-            backgroundColor: "#707171"
-          };
-        }
-
-        if (!allBlanksEmpty && typeof isCorrect === "boolean") {
-          const color = theme.colors?.[isCorrect ? "green" : "red"] || "#999999";
-          return {
-            backgroundColor: color
-          };
-        }
-      }}
+      sx={{ ...style, backgroundColor }}
     >
       {children.length ? (
         children

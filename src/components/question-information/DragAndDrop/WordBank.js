@@ -2,14 +2,15 @@ import DroppableContainer from "./DroppableContainer";
 import PropTypes from "prop-types";
 import React from "react";
 import SortableItem from "./SortableItem";
-import { Box, Text } from "@chakra-ui/react";
+// import { Box, Text } from "@chakra-ui/react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { WORD_BANK } from "@/utils/drag-and-drop";
+import { Box, Stack } from "@mui/material";
+import { Text } from "@chakra-ui/react";
 
 export default function WordBank({ taskId, items }) {
-  console.log('====', items[WORD_BANK]);
   return (
-    <Box p="2" mt="3" borderWidth="2px" borderRadius="lg">
+    <Stack spacing={4} >
       <Text
         fontSize="md" // make slightly smaller than other text
         color="gray.600"
@@ -33,14 +34,12 @@ export default function WordBank({ taskId, items }) {
             margin: "0"
           }}
         >
-          {items[WORD_BANK]?.items?.map((value) => {
-            
+          {items[WORD_BANK].items.map((value) => {
             return <SortableItem key={value} id={value} taskId={taskId} />;
           })}
-
         </DroppableContainer>
       </SortableContext>
-    </Box>
+    </Stack>
   );
 }
 

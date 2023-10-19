@@ -27,7 +27,6 @@ export class SolutionGetter {
     if (solutions.length === 1) {
       return solutions;
     }
-    console.log(solutions);
 
     // if the blank has multiple solutions, we need to pick the one that has NOT been selected as a correct answer already
     const solution = solutions.find(

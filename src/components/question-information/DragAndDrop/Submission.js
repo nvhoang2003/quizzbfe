@@ -4,14 +4,19 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Button,
+  AlertTitle,
   ButtonGroup
 } from "@chakra-ui/react";
 import { FiRotateCcw } from "react-icons/fi";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { WORD_BANK, getCorrectAnswers } from "@/utils/drag-and-drop";
 import { useConfetti } from "@/hooks/useConfetti";
-
+import { WORD_BANK, getCorrectAnswers } from "@/utils/drag-and-drop";
+import { Stack } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useRouter } from "next/router";
+//---------------------------------------------------
 export default function Buttons({
   taskId,
   items,
@@ -28,6 +33,7 @@ export default function Buttons({
   const [trials, setTrials] = useState(0);
   const [solutionShown, setSolutionShown] = useState(false);
   const [submitButtonRef, confetti] = useConfetti();
+  const { push } = useRouter();
   const allBlanksEmpty = useMemo(
     () =>
       !Object.entries(items).some(
@@ -82,6 +88,14 @@ export default function Buttons({
     setSolutionShown(false);
   };
 
+  const restart = () => {
+    window.location.reload(true);
+  }
+
+  const close = () => {
+    push("/questionbank");
+  }
+
   const showSolution = () => {
     setItems(getCorrectAnswers(items));
     setIsCorrect(true);
@@ -92,51 +106,93 @@ export default function Buttons({
   };
 
   return (
+
+
     <>
-      <ButtonGroup mt="3">
-        <Button
-          isDisabled={allBlanksEmpty || isCorrect}
-          onClick={checkAnswers}
-          ref={submitButtonRef}
-        >
-          Submit
-        </Button>
+      <Stack direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}>
 
-        {(trials > 0 || hasSubmitted) && !allBlanksEmpty && (
-          <Button rightIcon={<FiRotateCcw />} onClick={reset}>
-            Reset
-          </Button>
-        )}
-        {trials >= 3 && !solutionShown && (
-          <Button colorScheme="green" onClick={() => showSolution()}>
-            Show solution
-          </Button>
-        )}
-      </ButtonGroup>
 
-      {hasSubmitted && (
-        <Alert status={isCorrect ? "success" : "error"} mt="1">
-          <AlertIcon />
-          <AlertDescription>
-            {isCorrect ? (
-              solutionShown ? (
-                <>
-                  {" "}
-                  <strong>See correct answer above</strong> {successMessage}
-                </>
+        {hasSubmitted && (
+          <Alert status={isCorrect ? "success" : "error"} mt="3">
+            {/* <AlertIcon/> */}
+            <AlertTitle>
+              {isCorrect ? (
+                solutionShown ? (
+                  <>
+                    {" "}
+                    <CheckCircleIcon/>
+                    <strong>See correct answer above</strong> {successMessage}
+                  </>
+                ) : (
+                  <>
+                  <CheckCircleIcon/>
+                    <strong>Correct.</strong> {successMessage}
+                  </>
+                )
               ) : (
                 <>
-                  <strong>Correct.</strong> {successMessage}
+                <ErrorIcon/>
+                  <strong>Try again.</strong> {failureMessage}
                 </>
-              )
-            ) : (
-              <>
-                <strong>Try again.</strong> {failureMessage}
-              </>
-            )}
-          </AlertDescription>
-        </Alert>
-      )}
+              )}
+            </AlertTitle>
+          </Alert>
+        )}
+
+
+        <ButtonGroup mt="3">
+          <LoadingButton
+            onClick={restart}
+            variant="contained"
+          >
+            ReStart
+          </LoadingButton>
+
+          {(trials > 0 || hasSubmitted) && !allBlanksEmpty && (
+            <LoadingButton
+              rightIcon={<FiRotateCcw />}
+              onClick={reset}
+              variant="contained"
+            >
+              Reset
+            </LoadingButton>
+          )}
+
+
+          <LoadingButton
+            disabled={allBlanksEmpty || isCorrect}
+            onClick={checkAnswers}
+            ref={submitButtonRef}
+            variant="contained"
+          >
+            Submit
+          </LoadingButton>
+
+
+          {trials >= 3 && !solutionShown && (
+            <LoadingButton
+              colorScheme="green"
+              onClick={() => showSolution()}
+              variant="contained"
+            >
+              Show solution
+            </LoadingButton>
+          )}
+
+          <LoadingButton
+            variant="contained"
+            onClick={() => close()}
+          >
+            Close preview
+          </LoadingButton>
+        </ButtonGroup>
+
+      </Stack>
+
+
     </>
   );
 }

@@ -10,7 +10,7 @@ export const useLocalStorage = (
   // we don't need our function to go look in localStorage on every subsequent render, since that can potentially be computationally expensive
   const [state, setState] = React.useState(() => {
     const localStorageValue = window.localStorage.getItem(key);
-    console.log(key);
+
     if (localStorageValue) {
       // the try/catch is here in case the localStorage value was set before
 
@@ -49,6 +49,7 @@ export const useLocalStorage = (
     // when we try to put the value into localStorage, we want to serialize this so that we can parse it back out when we're retrieving it later
     window.localStorage.setItem(key, serialize(state));
   }, [key, state, serialize]);
+
 
   return [state, setState];
 };

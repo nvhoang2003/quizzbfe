@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Box, Flex, extendTheme } from "@chakra-ui/react";
+// import { Box, Flex } from "@chakra-ui/react";
 import { CSS } from "@dnd-kit/utilities";
 import { FiCheck, FiX } from "react-icons/fi";
 import { keyframes } from "@emotion/react";
-//--------------------------------------------------
-
+import { Box } from "@mui/material";
+import { Flex } from "@chakra-ui/react";
 
 const boxShadowBorder =
   "0 0 0 calc(1px / var(--scale-x, 1)) rgba(63, 63, 68, 0.05)";
@@ -27,13 +27,13 @@ const pop = keyframes({
 const wrapperDragOverlay = (dragOverlay) =>
   dragOverlay
     ? {
-        "--scale": 2.0,
+        "--scale": 1.05,
         "--box-shadow": boxShadow,
         "--box-shadow-picked-up": {
           "--box-shadow-picked-up": [
             boxShadowBorder,
-            "-1px 0 15px 0 rgba(34, 33, 81, 0.01)",
-            "0px 15px 15px 0 rgba(34, 33, 81, 0.25)"
+            "15px 15px 15px 15px rgba(34, 33, 81, 0.01)",
+            "15px 15px 15px 15px rgba(34, 33, 81, 0.25)"
           ].toString()
         },
         zIndex: 999
@@ -46,7 +46,7 @@ function getItemStyles({ dragging, dragOverlay }) {
       cursor: "inherit",
       animation: `${pop} 200ms cubic-bezier(0.18, 0.67, 0.6, 1.22)`,
       transform: "scale(var(--scale))",
-      // boxShadow: "var(--box-shadow-picked-up)",
+      boxShadow: "var(--box-shadow-picked-up)",
       opacity: 1
     };
   }
@@ -57,7 +57,7 @@ function getItemStyles({ dragging, dragOverlay }) {
       zIndex: 0,
 
       "&:focus": {
-        // boxShadow/
+        boxShadow
       }
     };
   }
@@ -105,15 +105,14 @@ export const Item = React.memo(
             justify="space-between"
             color="black"
             px="3"
-            boxShadow={isDisplayingAlertIcon ? "none" : boxShadow}
+            // boxShadow={isDisplayingAlertIcon ? "none" : boxShadow}
             outline="none"
             whiteSpace="nowrap"
             rounded="sm"
             cursor="grab"
             sx={{
-              WebkitTapHighlightColor: "transparent", // for mobile
+              WebkitTapHighlightColor: "transparent", 
 
-              // only show focus outline when using keyboard
               "&:focus-visible": {
                 boxShadow: "outline",
                 touchAction: "none",
@@ -125,7 +124,8 @@ export const Item = React.memo(
               ...style
             }}
             css={({ theme }) => ({
-              // backgroundColor:'#1F2222'
+              backgroundColor:
+                !isDisplayingAlertIcon && theme?.colors?.black
             })}
             {...listeners}
             {...props}
