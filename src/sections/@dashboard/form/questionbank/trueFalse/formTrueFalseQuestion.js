@@ -56,7 +56,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   const [answerChoose, setAnswerChoose] = useState(
     {
       feedback: "",
-      answer_truefalse: true,
+      answer_truefalse: "true",
     },
   );
 
@@ -69,17 +69,20 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required("Tên không được trống"),
-    content: Yup.string().trim().required("Content không được để trống"),
+    content: Yup.string().trim().required("Nội dung không được để trống"),
     generalfeedback: Yup.string()
       .trim()
-      .required("generalfeedback không được để trống"),
+      .required("Phản hồi không được để trống"),
 
     defaultMark: Yup.number()
+      .typeError("Vui lòng nhập số điểm")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
-      .required("generalfeedback không được để trống"),
+      .required(" không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn category"),
+    categoryId: Yup.number()
+      .typeError("Vui lòng chọn danh mục")
+      .required(),
   });
 
   const defaultValues = useMemo(
@@ -314,7 +317,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         }),
       questionstype: "TrueFalse",
       answers: [],
-      rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
+      rightAnswer: data.answer?.answer_truefalse === "true" ? true : false,
     };
     try {
       const res = await createTFQestionBank(transformData);
@@ -364,7 +367,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         }),
       questionstype: "TrueFalse",
       answers: [],
-      rightAnswer: data.answer.answer_truefalse === "true" ? true : false,
+      rightAnswer: data.answer.answer_truefalse === "false" ? false : true,
       authorId: currentLevel?.authorId
     };
 
