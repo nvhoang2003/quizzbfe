@@ -4,8 +4,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { React, useEffect, useState } from "react";
 import MatchingForm from '@/sections/@dashboard/form/questionbank/matching/form';
 import { useRouter } from "next/router";
-import { getQuestionBankByID } from "@/dataProvider/questionbankApi";
-import { getById } from "@/dataProvider/matchingQbApi";
+import { getQuestionBankById } from "@/dataProvider/questionbankApi";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +20,7 @@ export default function Edit(props) {
   } = useRouter();
 
   async function fetchQuestionByID(id) {
-    const res = await getById(id);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -31,31 +30,34 @@ export default function Edit(props) {
         content: q.content,
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
+        authorId: q.authorId,
         tagId: [],
-        matchSubQuestions: [],
-        matchSubAnswers: [],
+        matchSubQuestionBanks: [],
         isPublic: q.isPublic,
+        questionType: q.questionstype
       };
 
-      q.tags?.forEach((element) => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).map((element) => {
         transformData.tagId.push(element.id);
       });
 
-      q.matchSubQuestions?.forEach((element) => {
-        transformData.matchSubQuestions.push({
+      q.matchSubQuestionBanks?.forEach(element => {
+        transformData.matchSubQuestionBanks.push({
           id: element.id,
-          questionText: element.questionText,
+          questionBankId: element?.questionBankId || 0,
+          questionText: element?.questionText || "",
+          answerText: element?.answerText || ""
         });
       });
-
-      q.matchSubAnswers?.forEach((element) => {
-        transformData.matchSubAnswers.push(element);
-      });
-
-      // console.log(q);
-
+      
       setEditData(transformData);
-      props.changeLastPath(transformData.name);
+      props.changeLastPath(transformData.name)
     } else {
       return res;
     }

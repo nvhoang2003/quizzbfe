@@ -95,7 +95,7 @@ export default function QuizTable(prop) {
     if (response.status < 400) {
       setSelected([]);
       await fetchQuiz();
-      enqueueSnackbar(response?.data?.message, { variant: "success" });
+      enqueueSnackbar(response?.data?.message || "Xóa Thành Công", { variant: "success" });
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
