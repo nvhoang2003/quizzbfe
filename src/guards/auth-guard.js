@@ -32,7 +32,6 @@ export const AuthGuard = (props) => {
       ignore.current = true;
 
       if (!isAuthenticated) {
-        console.log('Not authenticated, redirecting');
         enqueueSnackbar("Chưa đăng nhập", {variant: 'error'});
         router
           .replace({

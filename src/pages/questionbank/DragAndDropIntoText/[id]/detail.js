@@ -1,14 +1,21 @@
+import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
+import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
+import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/formDragAndDropDetail';
+import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
+import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+//------------------------------------------------------------
 
-export default function index() {
-  const [data, setData] = useState({});
+export default function DragAndDropDetail() {
+  const [data, setData] = useState([]);
   const {
     query: {id}
   } = useRouter();
 
   async function fetchQuestionByID(id) {
-    const res = await getDDQuestionBankByID(id);
+    const res = await getQuestionBankByID(id);
+    console.log(res);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -18,17 +25,17 @@ export default function index() {
         content: q.content,
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
-        tagId: [],
+        // tagId: [],
         answers: [],
         isPublic: q.isPublic,
         authorId: q.authorId
       };
 
-      q.tags?.forEach(element => {
-        transformData.tagId.push(element.id);
-      });
+      // q.tags?.forEach(element => {
+      //   transformData.tagId.push(element.id);
+      // });
 
-      q.answers?.forEach(element => {
+      q.quizbankAnswers?.forEach(element => {
         transformData.answers.push({
           id: element.id,
           answer: element.content,
@@ -38,7 +45,7 @@ export default function index() {
           questionId: element.questionId
         });
       });
-
+      console.log(transformData);
       setData(transformData);
     } else {
       return res;
@@ -52,11 +59,15 @@ export default function index() {
   }, [id]);
 
   return (
-    <div>index</div>
+    <div>
+      <Card sx={{ p: 3 }}>
+        <FormDetailDragAndDrop currentLevel={data}/>
+      </Card>
+    </div>
   )
 }
 
-index.getLayout = (page) => (
+DragAndDropDetail.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>

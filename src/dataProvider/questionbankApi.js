@@ -3,9 +3,9 @@ import { deleteApi, getApi, postApi, putApi } from "@/dataProvider/baseApi";
 const listPath = 'getListQuestion';
 const path = 'QuestionBank';
 const qbPath = 'MultiQuestionBank';
-const tfPath = 'TrueFalseQuestionBank';
 ///getListQuestion/DeleteQuestionBank/4
-
+//QuestionBank/GetQuestionBankById/111
+const questionBank = 'QuestionBank';
 
 function getAllQuestionbank(params) {
   return getApi(listPath + `/getListQuestionBank`, params);
@@ -21,14 +21,12 @@ function create(qb) {
 }
 
 function getQuestionBankByID(id) {
-  return getApi(qbPath + `/GetMultipeQuestionBankById/ ${id}`);
+  return getApi(questionBank + `/GetQuestionBankById/ ${id}`);
 }
 
 function deleteByID(id) {
   return deleteApi(listPath + `/DeleteQuestionBank/${id}`);
 }
-//truefalse
-//TrueFalseQuestionBank/updateTrueFalseQuestionBank/
 
 function getTFQuestionBankByID(id) {
   return getApi(tfPath + `/getTrueFalseQuestionBankById/ ${id}`);
@@ -61,20 +59,12 @@ function deleteQb(id) {
   return deleteApi(path + `/DeleteQuesstionbank/${id}`);
 }
 
+
 export {
   getAllQuestionbank,
-  //   getCateByID,
-  //   updateCateByID,
   getQuestionBankById,
   deleteByID,
   create,
   getQuestionType,
   getQuestionBankByID,
-  getTFQuestionBankByID,
-  createTFQestionBank,
-  updateTFQuestionBank,
-  getById,
-  createQb,
-  updateQb,
-  deleteQb
 }
