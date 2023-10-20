@@ -16,8 +16,6 @@ import { store, persistor } from '@/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import '@/styles/globals.css';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -33,44 +31,42 @@ const App = (props) => {
   const theme = createTheme();
 
   return (
-    <Provider store={store} >
+    <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <CacheProvider value={emotionCache}>
-          <DndProvider backend={HTML5Backend} >
-            <Head>
-              <title>
-                QuizzBank
-              </title>
-              <meta
-                name="viewport"
-                content="initial-scale=1, width=device-width"
-              />
-            </Head>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <AuthProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <SnackbarProvider
-                    maxSnack={3}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey} />}
-                  >
-                    <SnackbarUtilsConfigurator />
-                    <AuthConsumer>
-                      {
-                        (auth) => auth.isLoading
-                          ? <SplashScreen />
-                          : getLayout(<Component {...pageProps} />)
-                      }
-                    </AuthConsumer>
-                  </SnackbarProvider>
-                </ThemeProvider>
-              </AuthProvider>
-            </LocalizationProvider>
-          </DndProvider>
+          <Head>
+            <title>
+              QuizzBank
+            </title>
+            <meta
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <AuthProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <SnackbarProvider
+                  maxSnack={3}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey} />}
+                >
+                  <SnackbarUtilsConfigurator />
+                  <AuthConsumer>
+                    {
+                      (auth) => auth.isLoading
+                        ? <SplashScreen />
+                        : getLayout(<Component {...pageProps} />)
+                    }
+                  </AuthConsumer>
+                </SnackbarProvider>
+              </ThemeProvider>
+            </AuthProvider>
+          </LocalizationProvider>
         </CacheProvider>
       </PersistGate>
     </Provider>
@@ -78,12 +74,6 @@ const App = (props) => {
 };
 
 export default App;
-
-
-
-
-
-
 
 // import '@/styles/globals.css'
 

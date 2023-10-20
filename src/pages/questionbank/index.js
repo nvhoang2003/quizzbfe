@@ -27,12 +27,11 @@ import { enqueueSnackbar } from "notistack";
 
 
 const links = [
-  { label: 'Multichoice', href: '/questionbank/multiChoice/create' },
-  { label: 'Numerical', href: '/link2' },
-  { label: 'ShortAnswer', href: '/link3' },
+  { label: 'Multichoice', href: '/questionbank/MultiChoice/create' },
+  { label: 'ShortAnswer', href: '/questionbank/ShortAnswer/create' },
   { label: 'DragAndDrop', href: '/questionbank/DragAndDropIntoText/create' },
-  { label: 'Matching', href: '/questionbank/match/create' },
-  { label: 'TrueFalse', href: '/questionbank/TrueFalseQuestion/create' },
+  { label: 'Matching', href: '/questionbank/Match/create' },
+  { label: 'TrueFalse', href: '/questionbank/TrueFalse/create' },
 ];
 
 const item = styled(Paper)(({ theme }) => ({

@@ -22,6 +22,11 @@ const axiosError = (response) => {
 
 const apiError = (response) => {
   const apiStatusError = {
+    404: {
+      action: () => {},
+      message: "Không tìm thấy",
+      returnUrl: "/404"
+    },
     403: {
       action: () => {},
       message: "Không có quyền",

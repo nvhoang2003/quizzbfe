@@ -69,9 +69,9 @@ export default function OneChoiceQuestion(props) {
                     questionResult.answer && (
                       <span>
                         {item.fraction === questionResult.answer.fraction && questionResult.answer.fraction === 1 ? (
-                          <span key={index}><DoneIcon /></span>
+                          <span key={index}><DoneIcon color='success' /></span>
                         ) : (
-                          <span key={index}> <ClearIcon /></span>
+                          <span key={index}> <ClearIcon color='error' /></span>
                         )}
                       </span>
                     )

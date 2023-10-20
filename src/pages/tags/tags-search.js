@@ -1,7 +1,7 @@
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from '@mui/material';
 
-export const TagsSearch = () => (
+export default function TagsSearch(){
   <Card sx={{ p: 2 }}>
     <OutlinedInput
       defaultValue=""
@@ -20,4 +20,4 @@ export const TagsSearch = () => (
       sx={{ maxWidth: 500 }}
     />
   </Card>
-);
+};

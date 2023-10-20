@@ -1,18 +1,12 @@
 import PropTypes from "prop-types";
-import { Card, Grid } from "@mui/material";
+import { Card } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { React, useEffect, useState } from "react";
-import MatchingForm from '@/sections/@dashboard/form/questionbank/matching/form';
+import ShortAnswerForm from "@/sections/@dashboard/form/questionbank/shortAnswer/form";
 import { useRouter } from "next/router";
-import { getQuestionBankByID } from "@/dataProvider/questionbankApi";
-import { getById } from "@/dataProvider/matchingQbApi";
+import { getById } from "@/dataProvider/questionbankApi";
 
 // ----------------------------------------------------------------------
-
-Edit.propTypes = {
-  isEdit: PropTypes.bool,
-  currentLevel: PropTypes.object,
-};
 
 export default function Edit(props) {
   const [editData, setEditData] = useState({});
@@ -32,27 +26,30 @@ export default function Edit(props) {
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
         tagId: [],
-        matchSubQuestions: [],
-        matchSubAnswers: [],
+        answers: [],
         isPublic: q.isPublic,
       };
 
-      q.tags?.forEach((element) => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).map((element) => {
         transformData.tagId.push(element.id);
       });
 
-      q.matchSubQuestions?.forEach((element) => {
-        transformData.matchSubQuestions.push({
+      q.quizbankAnswers?.forEach((element) => {
+        transformData.answers.push({
           id: element.id,
-          questionText: element.questionText,
+          content: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId,
         });
       });
-
-      q.matchSubAnswers?.forEach((element) => {
-        transformData.matchSubAnswers.push(element);
-      });
-
-      // console.log(q);
 
       setEditData(transformData);
       props.changeLastPath(transformData.name);
@@ -68,11 +65,13 @@ export default function Edit(props) {
   }, [id]);
 
   return (
-    <div>
-      <Card sx={{ p: 3 }}>
-        <MatchingForm isEdit={true} currentLevel={editData} />
-      </Card>
-    </div>
+    // <Grid container spacing={3}>
+    //     <Grid item xs={12} >
+    <Card sx={{ p: 3 }}>
+      <ShortAnswerForm isEdit={true} currentLevel={editData} />
+    </Card>
+    //     </Grid>
+    // </Grid>
   );
 }
 

@@ -23,7 +23,7 @@ const TABLE_HEAD = [
   { id: "name", label: "Tên câu hỏi", align: "center" },
   { id: "questionstype", label: "Dạng câu hỏi", align: "center" },
   { id: "authorName", label: "Tên Tác Giả", align: "center" },
-  { id: "tags", label: "tags", align: "center" },
+  { id: "tags", label: "Từ khóa", align: "center" },
   { id: "categoryName", label: "Loại câu hỏi", align: "center" },
   { id: "isPublic", label: "Công khai", align: "center" },
   { id: "action", label: "Thao Tác", align: "left" },
@@ -71,14 +71,14 @@ export default function QuestionBankTable(prop) {
 
   const handleDeleteRow = async (id) => {
     const response = await deleteByID(id);
-    console.log(response);
+
     if (response.status < 400) {
       setSelected([]);
-      await fetchQuiz();
-      enqueueSnackbar("response?.data?.message", { variant: "success" });
+      enqueueSnackbar(response?.data?.message || "Xóa thành công", { variant: "success" });
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
+    await fetchQuiz();
   };
 
   useEffect(() => {
@@ -96,23 +96,19 @@ export default function QuestionBankTable(prop) {
   };
 
   const switchToUpdate = (item) => {
-    // router.push({
-    //   pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
-    //   query: { questionBankId: item.id },
-    // });
-    if (item.questionstype == "MultiChoice") {
+    // if (item.questionstype == "MultiChoice") {
       router.push({
-        pathname: `/questionbank/multiChoice/[questionBankId]/edit`,
+        pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
         query: { questionBankId: item.id },
       });
-     
-    } if (item.questionstype == "TrueFalse") {
-      router.push({
-        pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
-        query: { questionBankId: item.id },
-      });
-    }
+    // } if (item.questionstype == "TrueFalse") {
+    //   router.push({
+    //     pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
+    //     query: { questionBankId: item.id },
+    //   });
+    // }
   }
+
   const handleShowDetails = (item) => {
     router.push({
       pathname: `/questionbank/${item.questionstype}/[questionBankId]/detail`,

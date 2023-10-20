@@ -2,14 +2,14 @@ import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import { Box, Container, Unstable_Grid2 as Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { OverviewBudget } from 'src/pages/home/overview/overview-budget';
-import { OverviewLatestOrders } from 'src/pages/home/overview/overview-latest-orders';
-import { OverviewLatestProducts } from 'src/pages/home/overview/overview-latest-products';
-import { OverviewSales } from 'src/pages/home/overview/overview-sales';
-import { OverviewTasksProgress } from 'src/pages/home/overview/overview-tasks-progress';
-import { OverviewTotalCustomers } from 'src/pages/home/overview/overview-total-customers';
-import { OverviewTotalProfit } from 'src/pages/home/overview/overview-total-profit';
-import { OverviewTraffic } from 'src/pages/home/overview/overview-traffic';
+import  OverviewBudget from 'src/pages/home/overview/overview-budget';
+import OverviewLatestOrders  from 'src/pages/home/overview/overview-latest-orders';
+import  OverviewLatestProducts  from 'src/pages/home/overview/overview-latest-products';
+import  OverviewSales  from 'src/pages/home/overview/overview-sales';
+import  OverviewTasksProgress  from 'src/pages/home/overview/overview-tasks-progress';
+import  OverviewTotalCustomers  from 'src/pages/home/overview/overview-total-customers';
+import  OverviewTotalProfit  from 'src/pages/home/overview/overview-total-profit';
+import  OverviewTraffic from 'src/pages/home/overview/overview-traffic';
 
 const now = new Date();
 

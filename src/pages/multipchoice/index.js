@@ -5,7 +5,7 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/materia
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 import { useRouter } from 'next/navigation';
-import MutipChoiceTable from './multipchoice_table';
+// import MutipChoiceTable from './multipchoice_table';
 
 const Page = () => {
   const router = useRouter();
@@ -59,7 +59,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <MutipChoiceTable />
+            {/* <MutipChoiceTable /> */}
           </Stack>
         </Container>
       </Box>

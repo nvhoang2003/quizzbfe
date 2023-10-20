@@ -78,19 +78,29 @@ export default function Form({ isEdit = false, currentLevel }) {
   ]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên không được trống"),
-    content: Yup.string().trim().required("Content không được để trống"),
+    name: Yup.string().trim().required("Tên không được trống").max(255, "Tên câu hỏi không đươc quá 255 kí tự"),
+    content: Yup.string().trim().required("Nội dung không được để trống").max(255, "Nội dung câu hỏi không đươc quá 255 kí tự"),
     generalfeedback: Yup.string()
       .trim()
-      .required("generalfeedback không được để trống"),
-
+      .required("Phản hồi chung không được để trống")
+      .max(1000, "Phản hồi không được quá 1000 kí tự"),
+    answer: Yup.array(
+      Yup.object({
+        answer: Yup.string().required("Câu trả lời không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
+        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
+      })
+    ),
     defaultMark: Yup.number()
+      .typeError("Điểm Bạn phải nhập vào điểm là một số")
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
       .required("generalfeedback không được để trống"),
 
-    categoryId: Yup.number().required("Vui lòng chọn category"),
+    categoryId: Yup.number()
+      .typeError("Vui lòng chọn danh mục")
+      .required("Vui lòng chọn category"),
   });
+
 
   const defaultValues = useMemo(
     () => ({
@@ -102,17 +112,19 @@ export default function Form({ isEdit = false, currentLevel }) {
       tagId: currentLevel?.tagId || "",
       answer: currentLevel?.answers || [],
       questionstype: "MultiChoice",
-      isPublic: currentLevel?.isPublic == 1 ? true : false,
+      isPublic: currentLevel?.isPublic == 0 ? false : true,
     }),
     [currentLevel]
   );
+
+  const { setError, clearErrors, formState: { errors } } = useForm();
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues,
   });
 
- 
+  console.log();
 
   const {
     reset,
@@ -178,9 +190,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
-  useEffect(() => {
-    console.log(tagChoose);
-  }, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -225,9 +235,12 @@ export default function Form({ isEdit = false, currentLevel }) {
       name: selectedValue,
     };
 
-    const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.name === selectedValue;
-    });
+    const isDuplicate = updatedInputs
+      .filter((element) => !element?.tags)
+      .some(
+        (input, i) =>
+          i !== index && selectedValue != "" && input.name === selectedValue
+      );
 
     if (!isDuplicate) {
       setValue(event.target.name, selectedValue);
@@ -236,8 +249,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
     }
   };
-  useEffect(() => {
-  }, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   const handleInputAnswerChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -271,56 +283,73 @@ export default function Form({ isEdit = false, currentLevel }) {
   useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
-    const newInput = { id: answerChoose.length + 1, answer: "", fraction: 0 };
+    const newInput = { id: answerChoose.length + 1, answer: "",feedback: "", fraction: 0 };
     setAnswerChoose([...answerChoose, newInput]);
   };
 
   const handleRemoveInputAnswer = (index) => {
     const updatedInputs = [...answerChoose];
     updatedInputs.splice(index, 1);
+    setValue("answer", updatedInputs);
     setAnswerChoose(updatedInputs);
   };
 
   const handleAddInputTag = () => {
     const newInput = { id: tagChoose.length + 1, tags: "" };
     setTagChoose([...tagChoose, newInput]);
-
   };
 
-
   const handleRemoveInputTag = (index) => {
-    const updatedInputs = tagChoose.filter((_, i) => i !== index);
+    const updatedInputs = [...tagChoose];
+    updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
   //allquestiontype
   async function createNew(data) {
+    clearErrors();
+    console.log("here");
     const transformData = {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: currentLevel?.authorId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "MultiChoice",
       answers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: answer?.fraction && answer.fraction != 0 ? parseFloat(answer.fraction) : 0,
+          fraction:
+            answer?.fraction && answer.fraction != 0
+              ? parseFloat(answer.fraction)
+              : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -334,7 +363,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Tạo Mới Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -342,27 +379,40 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   async function fetchUpdate(data) {
+    clearErrors();
+
     const transformData = {
       name: data.name,
       content: data.content,
       generalfeedback: data.generalfeedback,
       isPublic: data.isPublic ? 1 : 0,
       categoryId: data.categoryId,
-      authorId: 2,
+      authorId: currentLevel?.authorId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "MultiChoice",
       answers: data.answer.map((answer, index) => {
         return {
@@ -384,15 +434,26 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.errors;
+        snackbarUtils.error("Cập Nhật Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
     }
   }
 
+  const backBtnOnclick = () => {
+    push("/questionbank");
+  }
+
   const onSubmit = async (data) => {
-    console.log(data);
     if (!isEdit) {
       console.log("meno");
       createNew(data);
@@ -406,10 +467,10 @@ export default function Form({ isEdit = false, currentLevel }) {
     <Container maxWidth="100%">
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
-          <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
+          <Typography variant="h4" sx={{ textAlign: 'center', mb: 3 }}>
             {!isEdit
-              ? "Tạo mới MultiQuestionBank"
-              : "Cập nhật MultiQuestionBank"}
+              ? "Tạo mới Câu Hỏi"
+              : "Cập nhật Câu Hỏi"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -417,19 +478,19 @@ export default function Form({ isEdit = false, currentLevel }) {
           >
             <Stack alignItems="flex-end" spacing={1.5}>
               <Stack spacing={2} sx={{ width: 1 }}>
-                <RHFTextField name="name" label="Name" id="name" />
+                <RHFTextField name="name" label="Tên Câu Hỏi" id="name" />
 
-                <RHFTextField name="content" label="Content" id="content" />
+                <RHFTextField name="content" label="Nội Dung" id="content" />
 
                 <RHFTextField
                   name="generalfeedback"
-                  label="General Feedback"
+                  label="Phản Hồi Chung"
                   id="generalfeedback"
                 />
 
                 <RHFTextField
                   name="defaultMark"
-                  label="Default Mark"
+                  label="Điểm Mặc Định"
                   id="defaultMark"
                 />
                 <div
@@ -446,7 +507,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    QuestionType
+                    Loại Câu Hỏi
                   </span>
                   <RHFTextField
                     name="questionstype"
@@ -472,14 +533,14 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Category
+                    Danh Mục
                   </span>
                   <RHFSelect
                     name="categoryId"
                     placeholder="Category"
                     onChange={handleCateChange}
                   >
-                    <option value="">-- Select Category --</option>
+                    <option value="">Vui Lòng Chọn Danh Mục</option>
                     {!_.isEmpty(category) &&
                       category.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -503,7 +564,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       width: "200px",
                     }}
                   >
-                    Tag
+                    Từ Khóa
                   </span>
 
                   <Stack spacing={2} sx={{ width: 1 }}>
@@ -524,7 +585,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           }
                           disabled={!categoryId}
                         >
-                          <option value="">-- Select Tag --</option>
+                          <option value="">Vui Lòng Chọn Từ Khóa</option>
                           {!_.isEmpty(tags) &&
                             tags.map((option) => (
                               <option key={option.id} value={option.id}>
@@ -565,7 +626,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                     variant="h6"
                     sx={{ color: "text.disabled", mb: 3 }}
                   >
-                    Answers
+                    Đáp Án
                   </Typography>
                   <Stack spacing={2} sx={{ width: 1 }}>
                     {answerChoose.map((answerChooses, index) => (
@@ -587,8 +648,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                         >
                           <RHFTextField
                             key={`answer[${index}].answer`}
-                            name={`answer[${index}.answer]`}
-                            label="Answers Content"
+                            name={`answer[${index}.answer`}
+                            label="Nội Dung Đáp Án"
                             id={`answer[${index}].answer`}
                             value={answerChooses.answer}
                             onChange={(event) =>
@@ -598,7 +659,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                           <RHFTextField
                             key={`answer[${index}].feedback`}
                             name={`answer[${index}].feedback`}
-                            label="Feed Back"
+                            label="Phản hồi riêng với từng đáp án"
                             id={`answer[${index}].feedback`}
                             value={answerChooses.feedback ?? ''}
                             onChange={(event) =>
@@ -610,20 +671,22 @@ export default function Form({ isEdit = false, currentLevel }) {
                             id={`answer[${index}].fraction`}
                             name={`answer[${index}].fraction`}
                             value={answerChooses.fraction}
-                            style={{ width: "80px" }}
+                            style={{ width: "200px" }}
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
+                            error={errors.Answers}
+                            helperText={errors.Answers?.message}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option) => (
                                 <option key={option} value={option}>
-                                  {option}
+                                  {option.toFixed(4) * 100}%
                                 </option>
                               ))}
                           </RHFSelect>
+                          {/* <Typography color="error" className="right-item error-message auto-width" sx={{}}>{errors.Answers?.message}</Typography> */}
                         </Box>
-
                         {index === answerChoose.length - 1 && (
                           <Tooltip arrow placement="left" title="Add">
                             <IconButton
@@ -669,26 +732,25 @@ export default function Form({ isEdit = false, currentLevel }) {
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  reset(defaultValues);
-                }}
-              >
-                Xóa
-              </Button>
             </Stack>
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <Stack direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+            <Button
+              variant="outlined"
+              onClick={backBtnOnclick}
+              // color="dark"
+              sx={{ color: '#000000', backgroundColor: '#FFFFFF', borderColor: '#000000' }}
+            >
+              Trở Lại
+            </Button>
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isSubmitting}
             >
-              {!isEdit ? "Create New" : "Update"}
+              {!isEdit ? "Tạo Mới" : "Cập Nhật"}
             </LoadingButton>
           </Stack>
         </Card>

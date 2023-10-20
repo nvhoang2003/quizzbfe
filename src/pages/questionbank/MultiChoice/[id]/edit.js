@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
+import MultiChoiceForm from '@/sections/@dashboard/form/questionbank/multichoice/form';
 import { useRouter } from 'next/router';
-import { getQuestionBankByID, getTFQuestionBankByID } from '@/dataProvider/questionbankApi';
-import FormTrueFalseQuestionBank from '@/sections/@dashboard/form/questionbank/formTrueFalseQuestion';
+import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export default function Edit(props) {
   } = useRouter()
 
   async function fetchQuestionByID(id) {
-    const res = await getTFQuestionBankByID(id);
+    const res = await getQuestionBankByID(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -39,34 +39,25 @@ export default function Edit(props) {
       q.tags?.forEach(element => {
         transformData.tagId.push(element.id);
       });
+
       q.answers?.forEach(element => {
-        if (element.fraction === 1) {
-          transformData.answers.push({
-            feedback:element.feedback,
-            answer:element.content,
-          });
-        }
+        transformData.answers.push({
+          id: element.id,
+          answer: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId
+        });
       });
-
-      // q.answers?.forEach(element => {
-      //   transformData.answers.push({
-      //     id: element.id,
-      //     answer: element.content,
-      //     feedback: element.feedback,
-      //     fraction: element.fraction,
-      //     quizBankId: element.quizBankId,
-      //     questionId: element.questionId
-      //   });
-      // });
-
       
       setEditData(transformData);
       props.changeLastPath(transformData.name)
+
     } else {
       return res;
     }
   };
-  console.log(editData);
 
   useEffect(() => {
     if (id) {
@@ -77,7 +68,7 @@ export default function Edit(props) {
   return (
     <div>
       <Card sx={{ p: 3 }}>
-        <FormTrueFalseQuestionBank isEdit={true} currentLevel={editData} />
+        <MultiChoiceForm isEdit={true} currentLevel={editData} />
       </Card>
     </div>
   );

@@ -52,8 +52,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   const [answerChoose, setAnswerChoose] = useState([
     {
-      answer: ""
-    }
+      answer: "",
+    },
   ]);
 
   const [tagChoose, setTagChoose] = useState([
@@ -93,7 +93,11 @@ export default function Form({ isEdit = false, currentLevel }) {
     [currentLevel]
   );
 
-  const { setError, clearErrors, formState: { errors } } = useForm();
+  const {
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -130,7 +134,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => { }, [tags]);
+  useEffect(() => {}, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -206,9 +210,12 @@ export default function Form({ isEdit = false, currentLevel }) {
       tags: selectedValue,
     };
 
-    const isDuplicate = updatedInputs.some((input, i) => {
-      return i !== index && input.tags === selectedValue;
-    });
+    const isDuplicate = updatedInputs
+      .filter((element) => !element?.tags)
+      .some(
+        (input, i) =>
+          i !== index && selectedValue != "" && input.name === selectedValue
+      );
 
     if (!isDuplicate) {
       setValue(event.target.name, selectedValue);
@@ -233,8 +240,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     setAnswerChoose([...answerChoose, newInput]);
   };
 
-
-
   const handleAddInputTag = () => {
     const newInput = { id: tagChoose.length + 1, tags: "" };
     setTagChoose([...tagChoose, newInput]);
@@ -243,6 +248,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
+    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
   };
 
@@ -259,35 +265,51 @@ export default function Form({ isEdit = false, currentLevel }) {
       authorId: 0,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "DragAndDropIntoText",
       choice: data.choice.map((answer, index) => {
         return {
           position: index + 1,
           answer: {
             content: answer.answer,
-            fraction: answer?.fraction && answer.fraction != 0 ? parseInt(answer.fraction, 10) : 0,
+            fraction:
+              answer?.fraction && answer.fraction != 0
+                ? parseInt(answer.fraction, 10)
+                : 0,
             feedback: answer.feedback,
             quizBankId: 0,
             questionId: 0,
             id: 0,
-          }
+          },
         };
       }),
     };
 
-    transformData.choice = transformData.choice.filter(item => item.answer.content);
+    transformData.choice = transformData.choice.filter(
+      (item) => item.answer.content
+    );
 
     try {
       const res = await create(transformData);
@@ -323,35 +345,51 @@ export default function Form({ isEdit = false, currentLevel }) {
       authorId: currentLevel?.authorId,
       defaultMark: data.defaultMark,
       isShuffle: 1,
-      qbTags: data.tagId.filter((tag) => {
-        if (!tag || tag == undefined || tag == '') {
-          return false;
-        }
+      qbTags: data.tagId
+        .filter((tag) => {
+          if (!tag || tag == undefined || tag === "") {
+            return false;
+          }
 
-        return true;
-      }).map((tag) => {
-        return {
-          qbId: 0,
-          tagId: parseInt(tag, 10),
-        };
-      }),
+          if (
+            !tag.tags ||
+            tag.tags == undefined ||
+            tag.tags == NaN ||
+            tag.tags == ""
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .map((tag) => {
+          return {
+            qbId: 0,
+            tagId: parseInt(tag, 10),
+          };
+        }),
       questionstype: "DragAndDropIntoText",
       choice: data.choice.map((answer, index) => {
         return {
           position: index + 1,
           answer: {
             content: answer.answer,
-            fraction: answer?.fraction && answer.fraction != 0 ? parseInt(answer.fraction, 10) : 0,
+            fraction:
+              answer?.fraction && answer.fraction != 0
+                ? parseInt(answer.fraction, 10)
+                : 0,
             feedback: answer.feedback,
             quizBankId: 0,
             questionId: 0,
             id: 0,
-          }
+          },
         };
       }),
     };
 
-    transformData.choice = transformData.choice.filter(item => item.answer.content);
+    transformData.choice = transformData.choice.filter(
+      (item) => item.answer.content
+    );
 
     try {
       const res = await update(currentLevel.id, transformData);
@@ -375,7 +413,6 @@ export default function Form({ isEdit = false, currentLevel }) {
   }
 
   const onSubmit = async (data) => {
-
     if (!isEdit) {
       createNew(data);
     } else {
@@ -387,10 +424,11 @@ export default function Form({ isEdit = false, currentLevel }) {
     <Container maxWidth="100%">
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
-          <Typography variant="h4" sx={{ textAlign: 'center', fontWeight: 'bold', mb: 3 }}>
-            {!isEdit
-              ? "Tạo Mới Câu Hỏi"
-              : "Cập nhật Câu Hỏi"}
+          <Typography
+            variant="h4"
+            sx={{ textAlign: "center", fontWeight: "bold", mb: 3 }}
+          >
+            {!isEdit ? "Tạo Mới Câu Hỏi" : "Cập nhật Câu Hỏi"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -545,8 +583,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   </Stack>
                 </div>
 
-
-                <Stack sx={{ borderTop: 1, borderColor: 'grey.500' }}>
+                <Stack sx={{ borderTop: 1, borderColor: "grey.500" }}>
                   <Typography
                     variant="h6"
                     sx={{ color: "text.disabled", my: 3 }}
@@ -572,16 +609,15 @@ export default function Form({ isEdit = false, currentLevel }) {
                         >
                           Câu Trả Lời &#91;&#91;{index + 1}&#93;&#93;
                         </span>
-                        <Stack direction='row' spacing={2} sx={{ width: 1 }}>
+                        <Stack direction="row" spacing={2} sx={{ width: 1 }}>
                           <Box
                             sx={{
                               "& > :not(style)": { m: 1 },
-                              width: 1
+                              width: 1,
                             }}
                             noValidate
                             autoComplete="off"
                           >
-
                             <RHFTextField
                               key={`choice[${index}].answer`}
                               name={`choice[${index}].answer`}
@@ -645,7 +681,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           </Stack>
         </Card>
       </FormProvider>
-    </Container >
+    </Container>
   );
 }
 

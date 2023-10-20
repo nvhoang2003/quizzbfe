@@ -3,9 +3,9 @@ import { Card, Grid, Stack, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getQuestionBankByID, getTFQuestionBankByID } from '@/dataProvider/questionbankApi';
+import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
 import { Container } from 'postcss';
-import FormDetailTrueFalse from '@/sections/@dashboard/form/questionbank/formTrueFalseDetails';
+import FormDetailMultichoice from '@/sections/@dashboard/form/questionbank/multichoice/formMultichoiceDetails';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ export default function Details(props) {
   } = useRouter()
 
   async function fetchQuestionByID(id) {
-    const res = await getTFQuestionBankByID(id);
+    const res = await getQuestionBankByID(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -33,24 +33,23 @@ export default function Details(props) {
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
         tagId: [],
-        answers: [],
-        isPublic: q.isPublic,
-        authorId: q.authorId
+        answer_content: [],
+        isPublic: q.isPublic
       };
 
       q.tags?.forEach(element => {
         transformData.tagId.push(element.id);
       });
+
       q.answers?.forEach(element => {
-        // if (element.fraction === 1) {
-          transformData.answers.push({
-            id:element.id,
-            feedback:element.feedback,
-            answer:element.content,
-            fraction:element.fraction,
-            quizBankId: element.quizBankId
-          });
-        // }
+        transformData.answer_content.push({
+          id: element.id,
+          answer: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId
+        });
       });
       setEditData(transformData);
       props.changeLastPath(transformData.name)
@@ -58,6 +57,7 @@ export default function Details(props) {
       return res;
     }
   };
+
 
   useEffect(() => {
     if (id) {
@@ -68,7 +68,7 @@ export default function Details(props) {
   return (
     <div>
       <Card sx={{ p: 3 }}>
-        <FormDetailTrueFalse currentLevel={editData}/>
+        <FormDetailMultichoice currentLevel={editData}/>
       </Card>
     </div>
   );

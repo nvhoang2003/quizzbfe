@@ -12,19 +12,17 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import { Controller, useForm } from "react-hook-form";
 import FormProvider from "@/components/form/FormProvider";
-import MultiChoiceQuestion from "@/components/question-information/MultiChoiceQuestion";
-import OneChoiceQuestion from "@/components/question-information/OneChoiceQuestion";
-import ResultQuestion from "@/components/question-information/resultMultichoiceQuestion";
 import { useRouter } from "next/router";
-import TrueFalseQuestion from "@/components/question-information/TrueFalseQuestion";
-import ResultTruFalseQuestion from "@/components/question-information/resultTrueFalseQuestion";
+import ResultShortAnswerQuestion from "@/components/question-information/result-shortanswer-question";
+import ShortAnswerQuestion from "@/components/question-information/shortanswer-question";
 
 //---------------------------------------------------
 
-FormDetailTrueFalse.propTypes = {
+Detail.propTypes = {
   currentLevel: PropTypes.object,
+
 };
-export default function FormDetailTrueFalse({ currentLevel }) {
+export default function Detail({ currentLevel }) {
   const { push } = useRouter();
 
   const [answerResult, setAnswerResult] = useState([]);
@@ -42,7 +40,6 @@ export default function FormDetailTrueFalse({ currentLevel }) {
     formState: { isSubmitting },
   } = methods;
 
-  
   const restart = () => {
     window.location.reload(true);
 
@@ -71,11 +68,11 @@ export default function FormDetailTrueFalse({ currentLevel }) {
                 divider={<Divider variant="middle" />}
                 spacing={3}
               >
-                <TrueFalseQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />
+                <ShortAnswerQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />
               </Stack>
             </Card>
 
-            <ResultTruFalseQuestion questionResult={currentLevel} answerResult={answerResult} isSubmit={submit} />
+            <ResultShortAnswerQuestion questionResult={currentLevel} answerResult={answerResult} isSubmit={submit} />
 
           </Card>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mt: 3 }}>
@@ -84,7 +81,7 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               disabled={!submit}
               onClick={() => restart()}
             >
-              Start again
+              Làm Lại
             </LoadingButton>
 
             <LoadingButton
@@ -93,21 +90,18 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               loading={isSubmitting}
               disabled={submit}
             >
-              Submit and finish
+              Kiểm Tra Đáp Án
             </LoadingButton>
 
             <LoadingButton
               variant="contained"
               onClick={() => close()}
             >
-              Close preview
+              Trở Về
             </LoadingButton>
           </Stack>
         </Stack>
       </FormProvider>
-     
     </Container>
   );
 }
-
-FormDetailTrueFalse.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
