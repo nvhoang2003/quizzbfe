@@ -62,11 +62,6 @@ function deleteQb(id) {
 
 export {
   getAllQuestionbank,
-//truefalse
-//TrueFalseQuestionBank/updateTrueFalseQuestionBank/
-  getAllQuestionbank,
-  //   getCateByID,
-  //   updateCateByID,
   getQuestionBankById,
   deleteByID,
   create,
