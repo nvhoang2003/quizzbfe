@@ -7,6 +7,7 @@ import { keyframes } from "@emotion/react";
 import { Box } from "@mui/material";
 import { Flex } from "@chakra-ui/react";
 
+//-----------------------------------------------------
 const boxShadowBorder =
   "0 0 0 calc(1px / var(--scale-x, 1)) rgba(63, 63, 68, 0.05)";
 const boxShadowCommon =
@@ -27,17 +28,17 @@ const pop = keyframes({
 const wrapperDragOverlay = (dragOverlay) =>
   dragOverlay
     ? {
-        "--scale": 1.05,
-        "--box-shadow": boxShadow,
-        "--box-shadow-picked-up": {
-          "--box-shadow-picked-up": [
-            boxShadowBorder,
-            "15px 15px 15px 15px rgba(34, 33, 81, 0.01)",
-            "15px 15px 15px 15px rgba(34, 33, 81, 0.25)"
-          ].toString()
-        },
-        zIndex: 999
-      }
+      "--scale": 1.05,
+      "--box-shadow": boxShadow,
+      "--box-shadow-picked-up": {
+        "--box-shadow-picked-up": [
+          boxShadowBorder,
+          "15px 15px 15px 15px rgba(34, 33, 81, 0.01)",
+          "15px 15px 15px 15px rgba(34, 33, 81, 0.25)"
+        ].toString()
+      },
+      zIndex: 999
+    }
     : {};
 
 function getItemStyles({ dragging, dragOverlay }) {
@@ -89,7 +90,8 @@ export const Item = React.memo(
           transformOrigin="top left"
           style={{
             transform: CSS.Transform.toString(transform),
-            transition
+            transition,
+            
           }}
           sx={{
             touchAction: "manipulation",
@@ -99,19 +101,22 @@ export const Item = React.memo(
           ref={ref}
         >
           <Flex
+            border="solid 0.8"
+            padding="10px"
             pos="relative"
             grow="1"
             align="center"
             justify="space-between"
             color="black"
             px="3"
-            // boxShadow={isDisplayingAlertIcon ? "none" : boxShadow}
+            boxShadow={isDisplayingAlertIcon ? "none" : boxShadow}
             outline="none"
             whiteSpace="nowrap"
             rounded="sm"
             cursor="grab"
+            
             sx={{
-              WebkitTapHighlightColor: "transparent", 
+              WebkitTapHighlightColor: "transparent",
 
               "&:focus-visible": {
                 boxShadow: "outline",

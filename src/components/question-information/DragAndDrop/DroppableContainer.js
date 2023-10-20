@@ -40,7 +40,7 @@ export default function DroppableContainer({
       {children.length ? (
         children
       ) : (
-        <Flex align="center" h="full">
+        <Flex align="center" h="full" sx={{border: 'solid 1px'}}>
           &nbsp;
         </Flex>
       )}

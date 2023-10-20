@@ -29,9 +29,8 @@ export default function WordBank({ taskId, items }) {
             display: "grid",
             gridAutoRows: "max-content",
             gridTemplateColumns: "repeat(2, 1fr)",
-            gridGap: "10px",
-            border: "none",
-            margin: "0"
+            gridGap: "30px" ,
+            
           }}
         >
           {items[WORD_BANK].items.map((value) => {

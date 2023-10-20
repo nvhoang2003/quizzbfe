@@ -31,34 +31,11 @@ export default function FormDetailMultichoice(props) {
   const methods = useForm({
   });
 
-  // const results = currentLevel?.content?.split(/\[\[\d\]\]/);
-
   const {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-
-  // export default function QuestionContent({ text }) {
-  //   const parts = text?.split(/\[\[\d\]\]/);
-  //   console.log(parts);
-
-  //   const regex = /\[\[(.*?)\]\]/g;
-  //   const matches = text.match(regex);
-
-  //   const values = matches.map(match => match.replace(/\[\[(.*?)\]\]/g, '$1'));
-
-  //   return (
-  //     <Stack direction='row' className='center-item'>
-  //       {parts?.map((part, index) => (
-  //         <React.Fragment key={index}>
-  //           {part}
-  //           {index < parts.length - 1 && <Blank id={values[index]} />}
-  //         </React.Fragment>
-  //       ))}
-  //     </Stack>
-  //   )
-  // }
 
   useEffect(() => {
     const array = [];
@@ -66,8 +43,6 @@ export default function FormDetailMultichoice(props) {
     const regex = /\[\[.*?\]\]/g;
     const text = currentLevel.content;
     const results = text?.split(regex);
-    // const results = text?.split(/\[\[\d\]\]/);
-
     const result = text?.match(/\[\[(\d+)\]\]/g)?.map(match => match.replace(/\[|\]/g, ''));
 
     if (result) {
@@ -81,7 +56,6 @@ export default function FormDetailMultichoice(props) {
     setContent(array)
   }, [currentLevel]);
 
-  console.log(content);
 
   useEffect(() => {
     setCorrect([]);
@@ -110,8 +84,6 @@ export default function FormDetailMultichoice(props) {
   }, [currentLevel, number]);
 
   useEffect(() => {
-    // console.log(correct);
-    // console.log(wrong);
   }, [correct, wrong]);
 
   const restart = () => {
@@ -128,8 +100,6 @@ export default function FormDetailMultichoice(props) {
 
   useEffect(() => {
   }, [submit]);
-  console.log(content);
-
 
   return (
     <Container maxWidth="100%">
@@ -153,21 +123,9 @@ export default function FormDetailMultichoice(props) {
                   {content?.map((item, index) => (
                     <React.Fragment key={index}>
                       {item}
-                      <Blank solution={correct[index]} key={index} />
+                      {index < content.length - 1 && <Blank solution={correct[index]} key={index} />}
                     </React.Fragment>
                   ))}
-
-                      {/* {content[0]}
-                      <Blank solution={correct[0]} key={0} />
-                      {content[1]}
-                      <Blank solution={correct[1]} key={1} />
-                      {content[2]} */}
-                   
-
-
-
-
-
                 </DragAndDropQuestion>
               </Stack>
             }

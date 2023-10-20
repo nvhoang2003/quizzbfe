@@ -25,12 +25,17 @@ import { SolutionGetter, WORD_BANK } from "@/utils/drag-and-drop";
 import { Card, Stack } from "@mui/material";
 
 export function Blank({ solution }) {
-  return <span></span>;
+  return <span style={{
+    border: "solid",
+  }}>
+
+  </span>;
 }
 
 const parseItemsFromChildren = (children, wrongAnswers, isTaskComplete) => {
+  const childrenArray = children.flatMap((element) => element.props.children);
   const solutionGetter = new SolutionGetter();
-  const childrenWithBlanks = React.Children.toArray(children).map(
+  const childrenWithBlanks = React.Children.toArray(childrenArray).map(
     (child, index) => {
       if (child.props?.solution) {
         const { solution } = child.props;
@@ -68,6 +73,7 @@ const parseItemsFromChildren = (children, wrongAnswers, isTaskComplete) => {
   return [blanks, childrenWithBlanks];
 };
 
+
 export default function Dnd({
   taskId,
   children,
@@ -103,7 +109,6 @@ export default function Dnd({
       setItems(defaultItems);
     }
   }, [defaultItems]);
-  console.log(defaultItems);
 
   const allBlanksEmpty = useMemo(
     () =>
@@ -225,71 +230,74 @@ export default function Dnd({
       </Flex>
       <Card sx={{ p: 5 }}>
         <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        onDragCancel={onDragCancel}
-      >
-        <Flex direction="column" alignItems="flex-start">
-          <div>
-            {childrenWithBlanks.map((child, index) => {
-              const { solutions, id } = child;
-              // console.log(items[id]);
-              // need a blank for children that have a 'solution'
-              if (solutions) {
-                const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
-                return (
-                  <>
-                    {" "}
-                    <DroppableContainer
-                      key={id}
-                      id={id}
-                      items={blankItems}
-                      isCorrect={isBlankCorrect}
-                      allBlanksEmpty={allBlanksEmpty}
-                      style={{
-                        height: "40px"
-                      }}
-                    >
-                      {blankItems.map((value) => {
-                        return (
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          onDragCancel={onDragCancel}
+        >
+          <Flex key={1} direction="column" alignItems="flex-start">
+            <div>
+              {childrenWithBlanks.map((child, index) => {
+                const { solutions, id } = child;
+                // console.log(items[id]);
+                // need a blank for children that have a 'solution'
+                if (solutions) {
+                  const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
+                  console.log(isCorrect);
+
+                  return (
+                    <React.Fragment key={index}>
+                      {" "}
+                      <DroppableContainer
+                        key={id}
+                        id={id}
+                        items={blankItems}
+                        isCorrect={isBlankCorrect}
+                        allBlanksEmpty={allBlanksEmpty}
+                        style={{
+                          height: "40px"
+                        }}
+                      >
+                        {blankItems.map((value) => {
+                          // return (
                           <SortableItem
                             key={`sortable-item--${value}`}
                             id={value}
                             taskId={taskId}
                             isCorrect={isBlankCorrect}
                           />
-                        );
-                      })}
-                    </DroppableContainer>{" "}
-                  </>
-                );
-              }
-              return <Fragment key={index}>{child}</Fragment>;
-            })}
-          </div>
+                          // );
+                        })}
+                      </DroppableContainer>
+                      {" "}
+                    </React.Fragment>
+                  );
+                }
+                return <Fragment key={index}>{child}</Fragment>;
+              })}
+            </div>
 
-          <div style={{paddingTop:'25px'}}>
-            {showWordBank && <WordBank taskId={taskId} items={items} />}
-          </div>
-          
-        </Flex>
-        <DragOverlay>
-          {activeId && (
-            <>
-              <Global styles={{ body: { cursor: "grabbing" } }} />
-              <Item value={activeId} dragOverlay />
-            </>
-          )}
-        </DragOverlay>
+            <div style={{ paddingTop: '25px' }}>
+              {showWordBank && <WordBank taskId={taskId} items={items} />}
+            </div>
+
+          </Flex>
+          <DragOverlay>
+            {activeId && (
+              <>
+                <Global styles={{ body: { cursor: "grabbing" } }} />
+                <Item value={activeId} dragOverlay />
+              </>
+            )}
+          </DragOverlay>
 
 
 
-      </DndContext>
+        </DndContext>
       </Card>
 
-      
+
 
       <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mt: 3 }}>
         <Submission
