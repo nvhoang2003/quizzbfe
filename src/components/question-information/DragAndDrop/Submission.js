@@ -26,8 +26,6 @@ export default function Buttons({
   setIsCorrect,
   setItems,
   setHasSubmitted,
-  failureMessage,
-  successMessage
 }) {
   const saveTask = useLocalStorage(taskId)[1];
   const [trials, setTrials] = useState(0);
@@ -75,9 +73,9 @@ export default function Buttons({
 
     saveTask(isCorrect ? new Date() : null);
 
-    if (isCorrect) {
-      confetti();
-    }
+    // if (isCorrect) {
+    //   confetti();
+    // }
   };
 
   const reset = () => {
@@ -88,26 +86,14 @@ export default function Buttons({
     setSolutionShown(false);
   };
 
-  const restart = () => {
-    window.location.reload(true);
-  }
 
   const close = () => {
     push("/questionbank");
   }
 
-  const showSolution = () => {
-    setItems(getCorrectAnswers(items));
-    setIsCorrect(true);
-    setHasSubmitted(true);
-    setSolutionShown(true);
-    saveTask(new Date());
-    confetti();
-  };
+ 
 
   return (
-
-
     <>
       <Stack direction="column"
         justifyContent="center"
@@ -115,45 +101,11 @@ export default function Buttons({
         spacing={2}>
 
 
-        {hasSubmitted && (
-          <Alert status={isCorrect ? "success" : "error"} mt="3">
-            {/* <AlertIcon/> */}
-            <AlertTitle>
-              {isCorrect ? (
-                solutionShown ? (
-                  <>
-                    {" "}
-                    <CheckCircleIcon/>
-                    <strong>See correct answer above</strong> {successMessage}
-                  </>
-                ) : (
-                  <>
-                  <CheckCircleIcon/>
-                    <strong>Correct.</strong> {successMessage}
-                  </>
-                )
-              ) : (
-                <>
-                <ErrorIcon/>
-                  <strong>Try again.</strong> {failureMessage}
-                </>
-              )}
-            </AlertTitle>
-          </Alert>
-        )}
-
 
         <ButtonGroup mt="3">
-          <LoadingButton
-            onClick={restart}
-            variant="contained"
-          >
-            ReStart
-          </LoadingButton>
 
           {(trials > 0 || hasSubmitted) && !allBlanksEmpty && (
             <LoadingButton
-              rightIcon={<FiRotateCcw />}
               onClick={reset}
               variant="contained"
             >
@@ -172,16 +124,6 @@ export default function Buttons({
           </LoadingButton>
 
 
-          {trials >= 3 && !solutionShown && (
-            <LoadingButton
-              colorScheme="green"
-              onClick={() => showSolution()}
-              variant="contained"
-            >
-              Show solution
-            </LoadingButton>
-          )}
-
           <LoadingButton
             variant="contained"
             onClick={() => close()}
@@ -199,8 +141,6 @@ export default function Buttons({
 
 Buttons.propTypes = {
   taskId: PropTypes.string.isRequired,
-  successMessage: PropTypes.string.isRequired,
-  failureMessage: PropTypes.string.isRequired,
   items: PropTypes.object.isRequired,
   hasSubmitted: PropTypes.bool.isRequired,
   isCorrect: PropTypes.bool.isRequired,

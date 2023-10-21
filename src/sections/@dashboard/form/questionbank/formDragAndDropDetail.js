@@ -90,10 +90,6 @@ export default function FormDetailMultichoice(props) {
     window.location.reload(true);
   }
 
-  const close = () => {
-    push("/questionbank");
-  }
-
   const onSubmit = async () => {
     setSubmit(true);
   };
@@ -118,8 +114,7 @@ export default function FormDetailMultichoice(props) {
                   taskId="dnd-1"
                   title={currentLevel?.name}
                   wrongAnswers={wrong}
-                >
-
+                >                  
                   {content?.map((item, index) => (
                     <React.Fragment key={index}>
                       {item}

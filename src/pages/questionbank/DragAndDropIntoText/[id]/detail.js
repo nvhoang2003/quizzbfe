@@ -1,5 +1,5 @@
 import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
-import { getQuestionBankByID } from '@/dataProvider/questionbankApi';
+import { getQuestionBankByID, getQuestionBankById } from '@/dataProvider/questionbankApi';
 import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/formDragAndDropDetail';
 import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -14,8 +14,7 @@ export default function DragAndDropDetail() {
   } = useRouter();
 
   async function fetchQuestionByID(id) {
-    const res = await getQuestionBankByID(id);
-    console.log(res);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -45,7 +44,6 @@ export default function DragAndDropDetail() {
           questionId: element.questionId
         });
       });
-      console.log(transformData);
       setData(transformData);
     } else {
       return res;

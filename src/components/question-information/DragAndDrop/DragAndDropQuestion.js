@@ -27,7 +27,9 @@ import { Card, Stack } from "@mui/material";
 export function Blank({ solution }) {
   return <span style={{
     border: "solid",
-  }}>
+  }}
+
+  >
 
   </span>;
 }
@@ -79,10 +81,8 @@ export default function Dnd({
   children,
   wrongAnswers = [],
   title = "Drag 'n' Drop",
-  successMessage = "Nicely done!",
-  failureMessage = "Review the video or read the course to find the right information."
 }) {
-  const [isTaskComplete] = useLocalStorage(taskId);
+  const [isTaskComplete] = [] ;
   const [isCorrect, setIsCorrect] = useState(
     isTaskComplete && isTaskComplete.length ? true : false
   );
@@ -226,7 +226,7 @@ export default function Dnd({
         mb="2"
       >
         <Box mr="2" as={RiDragDropLine} fontSize="xl" />
-        <Text>{title}</Text>
+        <Text><strong>{title}</strong></Text>
       </Flex>
       <Card sx={{ p: 5 }}>
         <DndContext
@@ -240,11 +240,8 @@ export default function Dnd({
             <div>
               {childrenWithBlanks.map((child, index) => {
                 const { solutions, id } = child;
-                // console.log(items[id]);
-                // need a blank for children that have a 'solution'
                 if (solutions) {
                   const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
-                  console.log(isCorrect);
 
                   return (
                     <React.Fragment key={index}>
@@ -260,14 +257,14 @@ export default function Dnd({
                         }}
                       >
                         {blankItems.map((value) => {
-                          // return (
-                          <SortableItem
-                            key={`sortable-item--${value}`}
-                            id={value}
-                            taskId={taskId}
-                            isCorrect={isBlankCorrect}
-                          />
-                          // );
+                          return (
+                            <SortableItem
+                              key={`sortable-item--${value}`}
+                              id={value}
+                              taskId={taskId}
+                              isCorrect={isBlankCorrect}
+                            />
+                          );
                         })}
                       </DroppableContainer>
                       {" "}
@@ -305,8 +302,8 @@ export default function Dnd({
           isCorrect={isCorrect}
           items={items}
           hasSubmitted={hasSubmitted}
-          failureMessage={failureMessage}
-          successMessage={successMessage}
+          // failureMessage={failureMessage}
+          // successMessage={successMessage}
           setIsCorrect={setIsCorrect}
           setItems={setItems}
           reset={onDragCancel}
@@ -322,8 +319,6 @@ Dnd.propTypes = {
   taskId: PropTypes.string.isRequired,
   children: PropTypes.node,
   wrongAnswers: PropTypes.array,
-  successMessage: PropTypes.string,
   title: PropTypes.string,
-  failureMessage: PropTypes.string,
   items: PropTypes.object
 };

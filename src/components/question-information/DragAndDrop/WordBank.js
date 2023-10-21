@@ -12,8 +12,7 @@ export default function WordBank({ taskId, items }) {
   return (
     <Stack spacing={4} >
       <Text
-        fontSize="md" // make slightly smaller than other text
-        color="gray.600"
+        fontSize="md" 
       >
         Drag items from the box to the blanks above
       </Text>
@@ -30,7 +29,6 @@ export default function WordBank({ taskId, items }) {
             gridAutoRows: "max-content",
             gridTemplateColumns: "repeat(2, 1fr)",
             gridGap: "30px" ,
-            
           }}
         >
           {items[WORD_BANK].items.map((value) => {

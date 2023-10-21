@@ -11,15 +11,18 @@ export default function DroppableContainer({
   allBlanksEmpty,
   style
 }) {
+
+
   const { over, isOver, setNodeRef } = useDroppable({
     id
   });
   const isOverContainer = isOver || (over ? items.includes(over.id) : false);
 
+
   let backgroundColor = null;
 
   if (isOverContainer) {
-    backgroundColor = "gray";
+    // backgroundColor = "gray";
   } else if (!allBlanksEmpty && typeof isCorrect === "boolean") {
     backgroundColor = isCorrect ? "#C2F8C2" : "#EEADAD";
   }
@@ -40,12 +43,13 @@ export default function DroppableContainer({
       {children.length ? (
         children
       ) : (
-        <Flex align="center" h="full" sx={{border: 'solid 1px'}}>
+        <Flex align="center" h="full" sx={{ border: 'solid 1px', borderRadius: '5px', height: '30px' }}>
           &nbsp;
         </Flex>
       )}
     </Box>
   );
+
 }
 
 DroppableContainer.propTypes = {
