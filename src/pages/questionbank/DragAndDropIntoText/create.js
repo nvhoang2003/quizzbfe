@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Card } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import Form from '@/sections/@dashboard/form/questionbank/drag-and-drop-form';
+import Form from '@/sections/@dashboard/form/questionbank/dragDrops/drag-and-drop-form';
 // ----------------------------------------------------------------------
 
 NewForm.propTypes = {
