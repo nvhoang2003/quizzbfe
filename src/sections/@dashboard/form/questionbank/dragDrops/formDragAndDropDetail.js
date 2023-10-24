@@ -18,7 +18,7 @@ import DragAndDropQuestion, { Blank } from "@/components/question-information/Dr
 //---------------------------------------------------
 
 
-export default function FormDetailMultichoice(props) {
+export default function FormDetailDragAndDrop(props) {
   const { currentLevel } = props;
   const { push } = useRouter();
   const [number, setNumber] = useState([]);
@@ -100,6 +100,8 @@ export default function FormDetailMultichoice(props) {
 
   useEffect(() => {
   }, [submit]);
+  console.log(`content: ${content}`);
+  console.log(`correct: ${correct}`);
 
   return (
     <Container maxWidth="100%">
@@ -111,7 +113,7 @@ export default function FormDetailMultichoice(props) {
             </Typography>
             {(content.length > 0 && correct.length > 0) &&
               <Stack
-                divider={<Divider variant="middle" />}//flexItem sx={{ borderStyle: "dashed" }}  //, backgroundColor: '#EEFCEE'
+                divider={<Divider variant="middle" />}
                 spacing={3}
               >
                 <DragAndDropQuestion
@@ -137,6 +139,6 @@ export default function FormDetailMultichoice(props) {
   );
 }
 
-FormDetailMultichoice.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+FormDetailDragAndDrop.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 
