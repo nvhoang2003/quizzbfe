@@ -64,6 +64,7 @@ const boxShadow = `${boxShadowBorder}, ${boxShadowCommon}`;
 //   }
 // }
 
+
 export const Item = React.memo(
   React.forwardRef(
     (
@@ -77,12 +78,12 @@ export const Item = React.memo(
         transform,
         value,
         isCorrect,
+        hasSubmitted,
         ...props
       },
       ref
     ) => {
       const isDisplayingAlertIcon = typeof isCorrect === "boolean";
-
       return (
         <Flex
           justifySelf="center"
@@ -101,6 +102,7 @@ export const Item = React.memo(
           ref={ref}
         >
           <Flex
+
             // height='30px'
             // padding="10px"
             pos="relative"
@@ -163,5 +165,6 @@ Item.propTypes = {
   transition: PropTypes.string,
   transform: PropTypes.object,
   value: PropTypes.node,
-  isCorrect: PropTypes.bool
+  isCorrect: PropTypes.bool,
+  hasSubmitted: PropTypes.bool
 };

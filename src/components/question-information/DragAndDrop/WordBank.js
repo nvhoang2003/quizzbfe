@@ -8,7 +8,7 @@ import { WORD_BANK } from "@/utils/drag-and-drop";
 import { Box, Stack } from "@mui/material";
 import { Text } from "@chakra-ui/react";
 
-export default function WordBank({ taskId, items }) {
+export default function WordBank({hasSubmitted, taskId, items }) {
   return (
     <Stack spacing={4} >
       <Text
@@ -32,7 +32,7 @@ export default function WordBank({ taskId, items }) {
           }}
         >
           {items[WORD_BANK].items.map((value) => {
-            return <SortableItem key={value} id={value} taskId={taskId} />;
+            return <SortableItem hasSubmitted={hasSubmitted} key={value} id={value} taskId={taskId} />;
           })}
         </DroppableContainer>
       </SortableContext>

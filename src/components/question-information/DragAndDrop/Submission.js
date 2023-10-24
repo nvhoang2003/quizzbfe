@@ -41,37 +41,37 @@ export default function Buttons({
   );
 
   const checkAnswers = () => {
-    let isCorrect = true;
-    const checkedBlanks = Object.entries(items).reduce((acc, [key, value]) => {
-      if (key !== WORD_BANK) {
-        const isBlankCorrect = value.items.some((item) =>
-          value.solutions.includes(item)
-        );
+      let isCorrect = true;
+      const checkedBlanks = Object.entries(items).reduce((acc, [key, value]) => {
+        if (key !== WORD_BANK) {
+          const isBlankCorrect = value.items.some((item) =>
+            value.solutions.includes(item)
+          );
 
-        acc[key] = {
-          ...value,
-          isCorrect: isBlankCorrect
-        };
+          acc[key] = {
+            ...value,
+            isCorrect: isBlankCorrect
+          };
 
-        // if at least one blank is incorrect, the whole activity is incorrect
-        // need to update FillInTheBlanksInner `isCorrect` state
-        if (!isBlankCorrect) {
-          isCorrect = isBlankCorrect;
+          // if at least one blank is incorrect, the whole activity is incorrect
+          // need to update FillInTheBlanksInner `isCorrect` state
+          if (!isBlankCorrect) {
+            isCorrect = isBlankCorrect;
+          }
+        } else {
+          acc[key] = { ...value, isCorrect: null };
         }
-      } else {
-        acc[key] = { ...value, isCorrect: null };
-      }
 
-      return acc;
-    }, {});
+        return acc;
+      }, {});
+      setIsCorrect(isCorrect);
+      setItems(checkedBlanks);
+      setTrials(isCorrect ? 0 : (prev) => prev + 1);
+      setHasSubmitted(true);
+      setSolutionShown(false);
 
-    setIsCorrect(isCorrect);
-    setItems(checkedBlanks);
-    setTrials(isCorrect ? 0 : (prev) => prev + 1);
-    setHasSubmitted(true);
-    setSolutionShown(false);
+      saveTask(isCorrect ? new Date() : null);
 
-    saveTask(isCorrect ? new Date() : null);
 
     // if (isCorrect) {
     //   confetti();
@@ -91,7 +91,7 @@ export default function Buttons({
     push("/questionbank");
   }
 
- 
+
 
   return (
     <>
@@ -104,18 +104,19 @@ export default function Buttons({
 
         <ButtonGroup mt="3">
 
-          {(trials > 0 || hasSubmitted) && !allBlanksEmpty && (
-            <LoadingButton
-              onClick={reset}
-              variant="contained"
-            >
-              Reset
-            </LoadingButton>
-          )}
+          {/* {(trials > 0 || hasSubmitted) && !allBlanksEmpty && ( */}
+          <LoadingButton
+            onClick={reset}
+            variant="contained"
+            disabled={!hasSubmitted}
+          >
+            Reset
+          </LoadingButton>
+          {/* )} */}
 
 
           <LoadingButton
-            disabled={allBlanksEmpty || isCorrect}
+            disabled={hasSubmitted}
             onClick={checkAnswers}
             ref={submitButtonRef}
             variant="contained"

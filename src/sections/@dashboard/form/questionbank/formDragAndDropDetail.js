@@ -26,7 +26,7 @@ export default function FormDetailMultichoice(props) {
   const [correct, setCorrect] = useState([]);
   const [content, setContent] = useState([]);
 
-  const [submit, setSubmit] = useState(false);
+  // const [submit, setSubmit] = useState(false);
 
   const methods = useForm({
   });
@@ -94,8 +94,9 @@ export default function FormDetailMultichoice(props) {
     setSubmit(true);
   };
 
-  useEffect(() => {
-  }, [submit]);
+  // useEffect(() => {
+  // }, [submit]);
+
 
   return (
     <Container maxWidth="100%">
@@ -114,6 +115,9 @@ export default function FormDetailMultichoice(props) {
                   taskId="dnd-1"
                   title={currentLevel?.name}
                   wrongAnswers={wrong}
+                  correct = {correct}
+                  // submit={submit}
+                  // setSubmit={setSubmit}
                 >                  
                   {content?.map((item, index) => (
                     <React.Fragment key={index}>

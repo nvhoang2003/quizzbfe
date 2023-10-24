@@ -32,8 +32,8 @@ import RHFRadioGroup from "@/components/form/RHFRadioGroup";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { create, update } from "@/dataProvider/multipchoiceApi";
 import { id } from "date-fns/locale";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -110,7 +110,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
       tagId: currentLevel?.tagId || "",
-      answer: currentLevel?.answers || [],
+      quizbankAnswers: currentLevel?.answers || [],
       questionstype: "MultiChoice",
       isPublic: currentLevel?.isPublic == 0 ? false : true,
     }),
@@ -309,7 +309,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   //allquestiontype
   async function createNew(data) {
     clearErrors();
-    console.log("here");
+    console.log(data);
     const transformData = {
       name: data.name,
       content: data.content,
@@ -343,7 +343,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "MultiChoice",
-      answers: data.answer.map((answer, index) => {
+      quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
           fraction:
@@ -358,7 +358,8 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     try {
-      const res = await create(transformData);
+      console.log(transformData);
+      const res = await createQb(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -414,7 +415,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "MultiChoice",
-      answers: data.answer.map((answer, index) => {
+      quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
           fraction: answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) :0,
@@ -429,7 +430,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     console.log(transformData);
 
     try {
-      const res = await update(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");

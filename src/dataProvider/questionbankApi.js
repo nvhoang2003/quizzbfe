@@ -28,6 +28,7 @@ function deleteQb(id) {
   return deleteApi(path + `/DeleteQuesstionbank/${id}`);
 }
 
+
 export {
   getAllQuestionbank,
   getQuestionBankById,

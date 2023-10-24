@@ -9,7 +9,8 @@ export default function DroppableContainer({
   items,
   isCorrect,
   allBlanksEmpty,
-  style
+  style,
+  hasSubmitted
 }) {
 
 
@@ -25,6 +26,8 @@ export default function DroppableContainer({
     // backgroundColor = "gray";
   } else if (!allBlanksEmpty && typeof isCorrect === "boolean") {
     backgroundColor = isCorrect ? "#C2F8C2" : "#EEADAD";
+  }else if( allBlanksEmpty && typeof isCorrect === "undefined" || typeof isCorrect === "boolean" ){
+    backgroundColor = "#EEADAD";
   }
 
   return (
@@ -49,7 +52,6 @@ export default function DroppableContainer({
       )}
     </Box>
   );
-
 }
 
 DroppableContainer.propTypes = {
