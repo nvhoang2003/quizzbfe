@@ -1,5 +1,4 @@
-import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
-import { getQuestionBankByID, getQuestionBankById } from '@/dataProvider/questionbankApi';
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/dragDrops/formDragAndDropDetail';
 import { Card } from '@mui/material';
 import { useRouter } from 'next/router';

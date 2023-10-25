@@ -10,7 +10,7 @@ import { Card, IconButton, Table, TableContainer, Tooltip } from "@mui/material"
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { deleteByID} from "@/dataProvider/questionbankApi";
+import { deleteTag } from "@/dataProvider/tagApi";
 import TagTableRows from "./TagTableRow";
 import { getAllTags } from "@/dataProvider/tagApi";
 //--------------------------------------------------------------
@@ -64,7 +64,7 @@ export default function TagTable(prop) {
   );
 
   const handleDeleteRow = async (id) => {
-    const response = await deleteByID(id);
+    const response = await deleteTag(id);
 
     if (response.status < 400) {
       setSelected([]);
