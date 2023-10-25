@@ -26,7 +26,7 @@ export default function FormDetailDragAndDrop(props) {
   const [correct, setCorrect] = useState([]);
   const [content, setContent] = useState([]);
 
-  const [submit, setSubmit] = useState(false);
+  // const [submit, setSubmit] = useState(false);
 
   const methods = useForm({
   });
@@ -90,18 +90,13 @@ export default function FormDetailDragAndDrop(props) {
     window.location.reload(true);
   }
 
-  const close = () => {
-    push("/questionbank");
-  }
-
   const onSubmit = async () => {
     setSubmit(true);
   };
 
-  useEffect(() => {
-  }, [submit]);
-  console.log(`content: ${content}`);
-  console.log(`correct: ${correct}`);
+  // useEffect(() => {
+  // }, [submit]);
+
 
   return (
     <Container maxWidth="100%">
@@ -120,8 +115,10 @@ export default function FormDetailDragAndDrop(props) {
                   taskId="dnd-1"
                   title={currentLevel?.name}
                   wrongAnswers={wrong}
-                >
-
+                  correct = {correct}
+                  // submit={submit}
+                  // setSubmit={setSubmit}
+                >                  
                   {content?.map((item, index) => (
                     <React.Fragment key={index}>
                       {item}

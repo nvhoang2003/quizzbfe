@@ -14,55 +14,56 @@ const boxShadowCommon =
   "0 1px calc(3px / var(--scale-x, 1)) 0 rgba(34, 33, 81, 0.15)";
 const boxShadow = `${boxShadowBorder}, ${boxShadowCommon}`;
 
-const pop = keyframes({
-  from: {
-    transform: "scale(1)",
-    boxShadow: "var(--box-shadow)"
-  },
-  to: {
-    transform: "scale(var(--scale))",
-    boxShadow: "var(--box-shadow-picked-up)"
-  }
-});
+// const pop = keyframes({
+//   from: {
+//     transform: "scale(1)",
+//     boxShadow: "var(--box-shadow)"
+//   },
+//   to: {
+//     transform: "scale(var(--scale))",
+//     boxShadow: "var(--box-shadow-picked-up)"
+//   }
+// });
 
-const wrapperDragOverlay = (dragOverlay) =>
-  dragOverlay
-    ? {
-      "--scale": 1.05,
-      "--box-shadow": boxShadow,
-      "--box-shadow-picked-up": {
-        "--box-shadow-picked-up": [
-          boxShadowBorder,
-          "15px 15px 15px 15px rgba(34, 33, 81, 0.01)",
-          "15px 15px 15px 15px rgba(34, 33, 81, 0.25)"
-        ].toString()
-      },
-      zIndex: 999
-    }
-    : {};
+// const wrapperDragOverlay = (dragOverlay) =>
+//   dragOverlay
+//     ? {
+//       "--scale": 1.05,
+//       "--box-shadow": boxShadow,
+//       "--box-shadow-picked-up": {
+//         "--box-shadow-picked-up": [
+//           boxShadowBorder,
+//           "15px 15px 15px 15px rgba(34, 33, 81, 0.01)",
+//           "15px 15px 15px 15px rgba(34, 33, 81, 0.25)"
+//         ].toString()
+//       },
+//       zIndex: 999
+//     }
+//     : {};
 
-function getItemStyles({ dragging, dragOverlay }) {
-  if (dragOverlay) {
-    return {
-      cursor: "inherit",
-      animation: `${pop} 200ms cubic-bezier(0.18, 0.67, 0.6, 1.22)`,
-      transform: "scale(var(--scale))",
-      boxShadow: "var(--box-shadow-picked-up)",
-      opacity: 1
-    };
-  }
+// function getItemStyles({ dragging, dragOverlay }) {
+//   if (dragOverlay) {
+//     return {
+//       cursor: "inherit",
+//       animation: `${pop} 200ms cubic-bezier(0.18, 0.67, 0.6, 1.22)`,
+//       transform: "scale(var(--scale))",
+//       boxShadow: "var(--box-shadow-picked-up)",
+//       opacity: 1
+//     };
+//   }
 
-  if (dragging) {
-    return {
-      opacity: "var(--dragging-opacity, 0.25)",
-      zIndex: 0,
+//   if (dragging) {
+//     return {
+//       opacity: "var(--dragging-opacity, 0.25)",
+//       zIndex: 0,
 
-      "&:focus": {
-        boxShadow
-      }
-    };
-  }
-}
+//       "&:focus": {
+//         boxShadow
+//       }
+//     };
+//   }
+// }
+
 
 export const Item = React.memo(
   React.forwardRef(
@@ -77,34 +78,36 @@ export const Item = React.memo(
         transform,
         value,
         isCorrect,
+        hasSubmitted,
         ...props
       },
       ref
     ) => {
       const isDisplayingAlertIcon = typeof isCorrect === "boolean";
-
       return (
         <Flex
           justifySelf="center"
           w="full"
-          transformOrigin="top left"
-          style={{
-            transform: CSS.Transform.toString(transform),
-            transition,
-            
-          }}
-          sx={{
-            touchAction: "manipulation",
-            ...wrapperDragOverlay(dragOverlay),
-            height: 8
-          }}
+          // transformOrigin="top left"
+          // style={{
+          //   transform: CSS.Transform.toString(transform),
+          //   // transition,
+
+          // }}
+          // sx={{
+          //   touchAction: "manipulation",
+          //   // ...wrapperDragOverlay(dragOverlay),
+          //   height: 8
+          // }}
           ref={ref}
         >
           <Flex
-            border="solid 0.8"
-            padding="10px"
+
+            // height='30px'
+            // padding="10px"
             pos="relative"
             grow="1"
+            textAlign='center'
             align="center"
             justify="space-between"
             color="black"
@@ -114,18 +117,18 @@ export const Item = React.memo(
             whiteSpace="nowrap"
             rounded="sm"
             cursor="grab"
-            
+            // border='solid'
+
             sx={{
-              WebkitTapHighlightColor: "transparent",
+              // WebkitTapHighlightColor: "transparent",
 
               "&:focus-visible": {
                 boxShadow: "outline",
                 touchAction: "none",
                 userSelect: "none",
-                WebkitUserSelect: "none"
+                WebkitUserSelect: "none",
               },
 
-              ...getItemStyles({ dragging, dragOverlay }),
               ...style
             }}
             css={({ theme }) => ({
@@ -162,5 +165,6 @@ Item.propTypes = {
   transition: PropTypes.string,
   transform: PropTypes.object,
   value: PropTypes.node,
-  isCorrect: PropTypes.bool
+  isCorrect: PropTypes.bool,
+  hasSubmitted: PropTypes.bool
 };

@@ -5,7 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 
 const SORTABLE_TRANSITION_DURATION = 250;
 
-export default function SortableItem({ id, taskId, isCorrect }) {
+export default function SortableItem({ id, taskId, isCorrect, hasSubmitted }) {
   const {
     setNodeRef,
     listeners,
@@ -30,6 +30,7 @@ export default function SortableItem({ id, taskId, isCorrect }) {
       transform={transform}
       listeners={listeners}
       isCorrect={isCorrect}
+      hasSubmitted={hasSubmitted}
     />
   );
 }
