@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
 import { enqueueSnackbar } from "notistack";
-import { deleteByID, deleteQb, getAllQuestionbank } from "@/dataProvider/questionbankApi";
+import { deleteQb, getAllQuestionbank } from "@/dataProvider/questionbankApi";
 import QuestionBankTableRows from "./QuestionBankTableRow";
 import { Iconify } from '@iconify/react';
 import { selectClasses } from "@mui/base";
