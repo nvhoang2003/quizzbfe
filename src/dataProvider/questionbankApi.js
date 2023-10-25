@@ -67,4 +67,7 @@ export {
   create,
   getQuestionType,
   getQuestionBankByID,
+  createQb,
+  updateQb,
+  deleteQb
 }
