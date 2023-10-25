@@ -99,7 +99,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
       authorId: currentLevel?.authorid || 0,
-      tagId: currentLevel?.tagId || "",
+      tagId: currentLevel?.tagId || [],
       matchSubs: currentLevel?.matchSubQuestionBanks
         ? currentLevel.matchSubQuestionBanks
         : [],
@@ -119,6 +119,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     watch,
     control,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -205,6 +206,19 @@ export default function Form({ isEdit = false, currentLevel }) {
     setCategoryId(parseInt(event.target.value));
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      setValue(`tagId[${index}]`, "");
+    })
+
+    setTagChoose([
+      {
+        id: 1,
+        name: "",
+      },
+    ]);
   };
 
   const handleInputTagsChange = (index, event) => {
@@ -227,6 +241,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTagChoose(updatedInputs);
     } else {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
+      setValue(event.target.name, "");
     }
   };
   useEffect(() => {}, [tagChoose]);
@@ -270,15 +285,26 @@ export default function Form({ isEdit = false, currentLevel }) {
   };
 
   const handleAddInputTag = () => {
-    const newInput = { id: tagChoose.length + 1, tags: "" };
+    const newInput = { id: tagChoose.length + 1, name: "" };
     setTagChoose([...tagChoose, newInput]);
   };
 
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
-    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
+
+    updatedInputs.map((item, idx) => {
+      setValue(`tagId[${idx}]`, item?.name);
+    })
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      if(index === listTags.length - 1){
+        setValue(`tagId[${index}]`, "");
+      }
+    });
   };
 
   const convertToRequestData = (data) => {

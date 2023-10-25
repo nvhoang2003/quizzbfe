@@ -227,7 +227,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     const listTags = getValues("tagId");
 
     listTags.map((item, index) => {
-      setValue(`tagId[${index}]`, {});
+      setValue(`tagId[${index}]`, "");
     })
 
     setTagChoose([
