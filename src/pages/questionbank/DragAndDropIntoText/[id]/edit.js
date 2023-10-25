@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import Form from '@/sections/@dashboard/form/questionbank/dragDrops/drag-and-drop-form';
 import { useRouter } from 'next/router';
-import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function Edit(props) {
   } = useRouter()
 
   async function fetchQuestionByID(id) {
-    const res = await getDDQuestionBankByID(id);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -31,11 +31,17 @@ export default function Edit(props) {
         authorId: q.authorId
       };
 
-      q.tags?.forEach(element => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
         transformData.tagId.push(element.id);
       });
 
-      q.answers?.forEach(element => {
+      q.quizbankAnswers?.forEach(element => {
         transformData.answers.push({
           id: element.id,
           answer: element.content,

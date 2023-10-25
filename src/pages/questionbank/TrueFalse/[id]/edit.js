@@ -3,7 +3,7 @@ import { Card, Grid } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getQuestionBankByID, getTFQuestionBankByID } from '@/dataProvider/questionbankApi';
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 import FormTrueFalseQuestionBank from '@/sections/@dashboard/form/questionbank/trueFalse/formTrueFalseQuestion';
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export default function Edit(props) {
   } = useRouter()
 
   async function fetchQuestionByID(id) {
-    const res = await getTFQuestionBankByID(id);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -35,29 +35,26 @@ export default function Edit(props) {
         authorId: q.authorId
       };
 
-      q.tags?.forEach(element => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
         transformData.tagId.push(element.id);
       });
-      q.answers?.forEach(element => {
-        if (element.fraction === 1) {
-          transformData.answers.push({
-            feedback:element.feedback,
-            answer:element.content,
-          });
-        }
+
+      q.quizbankAnswers?.forEach((element) => {
+        transformData.answers.push({
+          id: element.id,
+          content: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId,
+        });
       });
-
-      // q.answers?.forEach(element => {
-      //   transformData.answers.push({
-      //     id: element.id,
-      //     answer: element.content,
-      //     feedback: element.feedback,
-      //     fraction: element.fraction,
-      //     quizBankId: element.quizBankId,
-      //     questionId: element.questionId
-      //   });
-      // });
-
       
       setEditData(transformData);
       props.changeLastPath(transformData.name)

@@ -32,7 +32,7 @@ import RHFSwitch from "@/components/form/RHFSwitch";
 import RHFTextField from "@/components/form/RHFTextField";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { create, update } from "@/dataProvider/dragAndDropApi";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 import { id } from "date-fns/locale";
 //---------------------------------------------------
 
@@ -85,7 +85,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: currentLevel?.generalfeedback || "",
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
-      tagId: currentLevel?.tagId || "",
+      tagId: currentLevel?.tagId || [],
       choice: currentLevel?.answers || [],
       questionstype: "DragAndDropIntoText",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
@@ -109,6 +109,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     watch,
     control,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -134,7 +135,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => {}, [tags]);
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -200,6 +201,19 @@ export default function Form({ isEdit = false, currentLevel }) {
     setCategoryId(parseInt(event.target.value));
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      setValue(`tagId[${index}]`, "");
+    })
+
+    setTagChoose([
+      {
+        id: 1,
+        name: "",
+      },
+    ]);
   };
 
   const handleInputTagsChange = (index, event) => {
@@ -207,7 +221,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     const updatedInputs = [...tagChoose];
     updatedInputs[index] = {
       ...updatedInputs[index],
-      tags: selectedValue,
+      name: selectedValue,
     };
 
     const isDuplicate = updatedInputs
@@ -222,6 +236,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTagChoose(updatedInputs);
     } else {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
+      setValue(event.target.name, "");
     }
   };
 
@@ -241,15 +256,26 @@ export default function Form({ isEdit = false, currentLevel }) {
   };
 
   const handleAddInputTag = () => {
-    const newInput = { id: tagChoose.length + 1, tags: "" };
+    const newInput = { id: tagChoose.length + 1, name: "" };
     setTagChoose([...tagChoose, newInput]);
   };
 
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
-    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
+
+    updatedInputs.map((item, idx) => {
+      setValue(`tagId[${idx}]`, item?.name);
+    })
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      if (index === listTags.length - 1) {
+        setValue(`tagId[${index}]`, "");
+      }
+    });
   };
 
   //allquestiontype
@@ -271,15 +297,6 @@ export default function Form({ isEdit = false, currentLevel }) {
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -289,36 +306,27 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "DragAndDropIntoText",
-      choice: data.choice.map((answer, index) => {
+      quizbankAnswers: data.choice.map((answer, index) => {
         return {
           position: index + 1,
-          answer: {
-            content: answer.answer,
-            fraction:
-              answer?.fraction && answer.fraction != 0
-                ? parseInt(answer.fraction, 10)
-                : 0,
-            feedback: answer.feedback,
-            quizBankId: 0,
-            questionId: 0,
-            id: 0,
-          },
+          content: answer.answer,
+          fraction: 0,
+          feedback: answer.feedback,
+          quizBankId: 0,
+          questionId: 0,
+          id: 0,
         };
       }),
     };
 
-    transformData.choice = transformData.choice.filter(
-      (item) => item.answer.content
-    );
-
     try {
-      const res = await create(transformData);
+      const res = await createQb(transformData);
 
-      if (res.status < 400) {
-        snackbarUtils.success(res.data.message);
+      if (res.statusCode < 400) {
+        snackbarUtils.success("Tạo Mới Thành Công");
         push("/questionbank");
       } else {
-        const responseData = res.errors;
+        const responseData = res.data;
         snackbarUtils.error("Tạo Mới Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
@@ -351,15 +359,6 @@ export default function Form({ isEdit = false, currentLevel }) {
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -369,30 +368,25 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "DragAndDropIntoText",
-      choice: data.choice.map((answer, index) => {
+      quizbankAnswers: data.choice.map((answer, index) => {
         return {
           position: index + 1,
-          answer: {
-            content: answer.answer,
-            fraction:
-              answer?.fraction && answer.fraction != 0
-                ? parseInt(answer.fraction, 10)
-                : 0,
-            feedback: answer.feedback,
-            quizBankId: 0,
-            questionId: 0,
-            id: 0,
-          },
+          content: answer.answer,
+          fraction: 0,
+          feedback: answer.feedback,
+          quizBankId: 0,
+          questionId: 0,
+          id: 0,
         };
       }),
     };
 
-    transformData.choice = transformData.choice.filter(
+    transformData.quizbankAnswers = transformData.quizbankAnswers.filter(
       (item) => item.answer.content
     );
 
     try {
-      const res = await update(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -442,8 +436,8 @@ export default function Form({ isEdit = false, currentLevel }) {
                   name="content"
                   label="Nội dung"
                   id="content"
-                  error={errors.Content || errors.Choice}
-                  helperText={errors.Content?.message || errors.Choice?.message}
+                  isError={errors.content || errors.Choice}
+                  errorMessage={errors.content?.message || errors.Choice?.message}
                 />
 
                 <RHFTextField
@@ -477,7 +471,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                     name="questionstype"
                     id="questionstype"
                     value="DragAndDropIntoText"
-                    disabled
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </div>
 
