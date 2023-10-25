@@ -109,8 +109,8 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: currentLevel?.generalfeedback || "",
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
-      tagId: currentLevel?.tagId || "",
-      quizbankAnswers: currentLevel?.answers || [],
+      tagId: currentLevel?.tagId || [],
+      answer: currentLevel?.answers || [],
       questionstype: "MultiChoice",
       isPublic: currentLevel?.isPublic == 0 ? false : true,
     }),
@@ -124,13 +124,12 @@ export default function Form({ isEdit = false, currentLevel }) {
     defaultValues,
   });
 
-  console.log();
-
   const {
     reset,
     watch,
     control,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -225,6 +224,18 @@ export default function Form({ isEdit = false, currentLevel }) {
     setCategoryId(parseInt(event.target.value));
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      setValue(`tagId[${index}]`, "");
+    })
+
+    setTagChoose([
+      {
+        id: 1,
+        name: "",
+      },
+    ]);
   };
 
   const handleInputTagsChange = (index, event) => {
@@ -247,6 +258,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTagChoose(updatedInputs);
     } else {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
+      setValue(event.target.name, "");
     }
   };
   useEffect(() => { }, [tagChoose]);
@@ -283,7 +295,7 @@ export default function Form({ isEdit = false, currentLevel }) {
   useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
-    const newInput = { id: answerChoose.length + 1, answer: "",feedback: "", fraction: 0 };
+    const newInput = { id: answerChoose.length + 1, answer: "", feedback: "", fraction: 0 };
     setAnswerChoose([...answerChoose, newInput]);
   };
 
@@ -295,21 +307,31 @@ export default function Form({ isEdit = false, currentLevel }) {
   };
 
   const handleAddInputTag = () => {
-    const newInput = { id: tagChoose.length + 1, tags: "" };
+    const newInput = { id: tagChoose.length + 1, name: "" };
     setTagChoose([...tagChoose, newInput]);
   };
 
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
-    setValue("tagId", updatedInputs);
+
     setTagChoose(updatedInputs);
+    updatedInputs.map((item, idx) => {
+      setValue(`tagId[${idx}]`, item?.name);
+    })
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      if(index === listTags.length - 1){
+        setValue(`tagId[${index}]`, "");
+      }
+    });
   };
 
   //allquestiontype
   async function createNew(data) {
     clearErrors();
-    console.log(data);
     const transformData = {
       name: data.name,
       content: data.content,
@@ -322,15 +344,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       qbTags: data.tagId
         .filter((tag) => {
           if (!tag || tag == undefined || tag === "") {
-            return false;
-          }
-
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
             return false;
           }
 
@@ -358,7 +371,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     try {
-      console.log(transformData);
       const res = await createQb(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
@@ -397,15 +409,6 @@ export default function Form({ isEdit = false, currentLevel }) {
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -418,7 +421,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
-          fraction: answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) :0,
+          fraction: answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) : 0,
           feedback: answer.feedback,
           quizBankId: 0,
           questionId: 0,
@@ -427,8 +430,6 @@ export default function Form({ isEdit = false, currentLevel }) {
         //answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) :
       }),
     };
-    console.log(transformData);
-
     try {
       const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
@@ -686,7 +687,6 @@ export default function Form({ isEdit = false, currentLevel }) {
                                 </option>
                               ))}
                           </RHFSelect>
-                          {/* <Typography color="error" className="right-item error-message auto-width" sx={{}}>{errors.Answers?.message}</Typography> */}
                         </Box>
                         {index === answerChoose.length - 1 && (
                           <Tooltip arrow placement="left" title="Add">

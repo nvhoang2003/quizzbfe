@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { React, useEffect, useState } from 'react';
 import MultiChoiceForm from '@/sections/@dashboard/form/questionbank/multichoice/form';
 import { useRouter } from 'next/router';
-import { getQuestionBankByID, getQuestionBankById } from '@/dataProvider/questionbankApi';
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +36,13 @@ export default function Edit(props) {
         authorId: q.authorId
       };
 
-      q.tags?.forEach(element => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
         transformData.tagId.push(element.id);
       });
 

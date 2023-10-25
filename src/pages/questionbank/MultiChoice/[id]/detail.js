@@ -37,7 +37,13 @@ export default function Details(props) {
         isPublic: q.isPublic
       };
 
-      q.tags?.forEach(element => {
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
         transformData.tagId.push(element.id);
       });
 

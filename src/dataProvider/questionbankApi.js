@@ -33,6 +33,7 @@ export {
   getAllQuestionbank,
   getQuestionBankById,
   getQuestionType,
+  // getQuestionBankByID,
   createQb,
   updateQb,
   deleteQb

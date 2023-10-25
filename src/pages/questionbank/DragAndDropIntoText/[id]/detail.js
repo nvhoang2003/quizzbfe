@@ -1,6 +1,6 @@
 import { getDDQuestionBankByID } from '@/dataProvider/dragAndDropApi';
 import { getQuestionBankByID, getQuestionBankById } from '@/dataProvider/questionbankApi';
-import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/formDragAndDropDetail';
+import FormDetailDragAndDrop from '@/sections/@dashboard/form/questionbank/dragDrops/formDragAndDropDetail';
 import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
 import { React, useEffect, useState } from 'react'
@@ -24,15 +24,21 @@ export default function DragAndDropDetail() {
         content: q.content,
         defaultMark: q.defaultMark,
         categoryId: q.categoryId,
-        // tagId: [],
+        tagId: [],
         answers: [],
         isPublic: q.isPublic,
         authorId: q.authorId
       };
 
-      // q.tags?.forEach(element => {
-      //   transformData.tagId.push(element.id);
-      // });
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
+        transformData.tagId.push(element.id);
+      });
 
       q.quizbankAnswers?.forEach(element => {
         transformData.answers.push({

@@ -35,9 +35,7 @@ import RHFRadioGroup from "@/components/form/RHFRadioGroup";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { create, update } from "@/dataProvider/multipchoiceApi";
-import { id } from "date-fns/locale";
-import { createTFQestionBank, updateTFQuestionBank } from "@/dataProvider/questionbankApi";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 FormTrueFalseQuestionBank.propTypes = {
@@ -92,8 +90,8 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       generalfeedback: currentLevel?.generalfeedback || "",
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
-      tagId: currentLevel?.tagId || "",
-      answer: currentLevel?.answers == 'True' ? true : false || null,
+      tagId: currentLevel?.tagId || [],
+      answer: {answer_truefalse : currentLevel?.answers == 'True' ? true : false || null},
       questionstype: "TrueFalse",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
@@ -110,6 +108,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     watch,
     control,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -227,6 +226,19 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     setCategoryId(parseInt(event.target.value));
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      setValue(`tagId[${index}]`, "");
+    })
+
+    setTagChoose([
+      {
+        id: 1,
+        name: "",
+      },
+    ]);
   };
 
   const handleInputTagsChange = (index, event) => {
@@ -247,8 +259,8 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       setValue(event.target.name, selectedValue);
       setTagChoose(updatedInputs);
     } else {
-      setValue(event.target.name, null)
       snackbarUtils.warning("Bạn nên chọn một tag khác");
+      setValue(event.target.name, "");
     }
 
   };
@@ -274,15 +286,26 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
 
   const handleAddInputTag = () => {
-    const newInput = { id: tagChoose.length + 1, tags: "" };
+    const newInput = { id: tagChoose.length + 1, name: "" };
     setTagChoose([...tagChoose, newInput]);
   };
 
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
-    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
+
+    updatedInputs.map((item, idx) => {
+      setValue(`tagId[${idx}]`, item?.name);
+    })
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      if(index === listTags.length - 1){
+        setValue(`tagId[${index}]`, "");
+      }
+    });
   };
 
   //allquestiontype
@@ -301,15 +324,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -319,11 +333,10 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           };
         }),
       questionstype: "TrueFalse",
-      answers: [],
       rightAnswer: data.answer?.answer_truefalse === "true" ? true : false,
     };
     try {
-      const res = await createTFQestionBank(transformData);
+      const res = await createQb(transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -351,15 +364,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -369,13 +373,12 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           };
         }),
       questionstype: "TrueFalse",
-      answers: [],
       rightAnswer: data.answer.answer_truefalse === "false" ? false : true,
       authorId: currentLevel?.authorId
     };
 
     try {
-      const res = await updateTFQuestionBank(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData);
       if (res.status < 400) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");

@@ -108,7 +108,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       generalfeedback: currentLevel?.generalfeedback || "",
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
-      tagId: currentLevel?.tagId || "",
+      tagId: currentLevel?.tagId || [],
       answer: currentLevel?.answers || [],
       questionstype: "ShortAnswer",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
@@ -126,6 +126,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     watch,
     control,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -222,6 +223,19 @@ export default function Form({ isEdit = false, currentLevel }) {
     setCategoryId(parseInt(event.target.value));
     setValue(event.target.name, event.target.value);
     setReRender({ [event.target.name]: event.target.value });
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      setValue(`tagId[${index}]`, "");
+    })
+
+    setTagChoose([
+      {
+        id: 1,
+        name: "",
+      },
+    ]);
   };
 
   const handleInputTagsChange = (index, event) => {
@@ -244,6 +258,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTagChoose(updatedInputs);
     } else {
       snackbarUtils.warning("Bạn nên chọn một tag khác");
+      setValue(event.target.name, "");
     }
   };
 
@@ -296,15 +311,25 @@ export default function Form({ isEdit = false, currentLevel }) {
   };
 
   const handleAddInputTag = () => {
-    const newInput = { id: tagChoose.length + 1, tags: "" };
+    const newInput = { id: tagChoose.length + 1, name: "" };
     setTagChoose([...tagChoose, newInput]);
   };
 
   const handleRemoveInputTag = (index) => {
     const updatedInputs = [...tagChoose];
     updatedInputs.splice(index, 1);
-    setValue("tagId", updatedInputs);
     setTagChoose(updatedInputs);
+    updatedInputs.map((item, idx) => {
+      setValue(`tagId[${idx}]`, item?.name);
+    })
+
+    const listTags = getValues("tagId");
+
+    listTags.map((item, index) => {
+      if (index === listTags.length - 1) {
+        setValue(`tagId[${index}]`, "");
+      }
+    });
   };
 
   //allquestiontype
@@ -323,15 +348,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       qbTags: data.tagId
         .filter((tag) => {
           if (!tag || tag == undefined || tag === "") {
-            return false;
-          }
-
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
             return false;
           }
 
@@ -361,7 +377,6 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await createQb(transformData);
-      console.log(res);
       if (res.status < 400) {
         snackbarUtils.success("Tạo mới thành công");
         push("/questionbank");
@@ -399,15 +414,6 @@ export default function Form({ isEdit = false, currentLevel }) {
             return false;
           }
 
-          if (
-            !tag.tags ||
-            tag.tags == undefined ||
-            tag.tags == NaN ||
-            tag.tags == ""
-          ) {
-            return false;
-          }
-
           return true;
         })
         .map((tag) => {
@@ -433,7 +439,6 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     console.log(transformData);
-
     try {
       const res = await updateQb(currentLevel.id, transformData);
       console.log(res);
@@ -441,17 +446,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         snackbarUtils.success("Cập Nhật Thành Công");
         push("/questionbank");
       } else {
-      const responseData = res.data;
-      snackbarUtils.error("Cập Nhật Thất Bại");
+        const responseData = res.data;
+        snackbarUtils.error("Cập Nhật Thất Bại");
 
-      Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
-        setError(fieldKey, {
-          type: "manual",
-          message: errorMessage,
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
         });
-      });
-
-      console.log(errors);
       }
     } catch (error) {
       console.log(error);

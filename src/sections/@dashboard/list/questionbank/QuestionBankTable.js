@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
 import { enqueueSnackbar } from "notistack";
-import { deleteByID, getAllQuestionbank } from "@/dataProvider/questionbankApi";
+import { deleteByID, deleteQb, getAllQuestionbank } from "@/dataProvider/questionbankApi";
 import QuestionBankTableRows from "./QuestionBankTableRow";
 import { Iconify } from '@iconify/react';
 import { selectClasses } from "@mui/base";
@@ -70,7 +70,7 @@ export default function QuestionBankTable(prop) {
   );
 
   const handleDeleteRow = async (id) => {
-    const response = await deleteByID(id);
+    const response = await deleteQb(id);
 
     if (response.status < 400) {
       setSelected([]);

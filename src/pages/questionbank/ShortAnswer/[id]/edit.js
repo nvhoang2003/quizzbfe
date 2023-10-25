@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { React, useEffect, useState } from "react";
 import ShortAnswerForm from "@/sections/@dashboard/form/questionbank/shortAnswer/form";
 import { useRouter } from "next/router";
-import { getById } from "@/dataProvider/questionbankApi";
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function Edit(props) {
   } = useRouter();
 
   async function fetchQuestionByID(id) {
-    const res = await getById(id);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -36,7 +36,7 @@ export default function Edit(props) {
         }
 
         return true;
-      }).map((element) => {
+      }).forEach(element => {
         transformData.tagId.push(element.id);
       });
 
