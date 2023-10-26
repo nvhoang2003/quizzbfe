@@ -34,6 +34,7 @@ import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { id } from "date-fns/locale";
 import { createQb, updateQb } from "@/dataProvider/questionbankApi";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -324,7 +325,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     const listTags = getValues("tagId");
 
     listTags.map((item, index) => {
-      if(index === listTags.length - 1){
+      if (index === listTags.length - 1) {
         setValue(`tagId[${index}]`, "");
       }
     });
@@ -489,6 +490,7 @@ export default function Form({ isEdit = false, currentLevel }) {
 
                 <RHFTextField name="content" label="Nội Dung" id="content" />
 
+               
                 <RHFTextField
                   name="generalfeedback"
                   label="Phản Hồi Chung"

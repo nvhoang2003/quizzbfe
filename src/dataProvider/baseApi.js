@@ -123,12 +123,19 @@ const postApi = async (url, payload, file) => {
   }
 };
 
-const putApi = async (url, payload) => {
+const putApi = async (url, payload, file) => {
   const token = getLocalStorage("access_token");
   try {
     const res = await instance.put(`/${url}`, payload, {
       headers: {
         Authorization: token ? `Bearer ${token}` : "no-author",
+        "Content-Type": file
+          ? "multipart/form-data"
+          : "application/json; charset=utf-8",
+        "Access-Control-Allow-Headers":
+          "Content-Type, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, X-File-Name",
+        "Access-Control-Allow-Methods": "PUT",
+        "Access-Control-Allow-Origin": "*",
       },
     });
 
