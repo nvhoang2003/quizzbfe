@@ -68,8 +68,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     content: Yup.string().trim().required("Content không được để trống"),
     generalfeedback: Yup.string()
       .trim()
-      .required("generalfeedback không được để trống"),
-
+      .max(1000, "Phản hồi không được quá 1000 kí tự"),
     defaultMark: Yup.number()
       .min(1, "Giá trị phải lớn hơn hoặc bằng 1")
       .max(100, "Giá trị phải nhỏ hơn hoặc bằng 100")
@@ -322,7 +321,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     try {
       const res = await createQb(transformData);
 
-      if (res.statusCode < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success("Tạo Mới Thành Công");
         push("/questionbank");
       } else {
@@ -387,12 +386,12 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
         snackbarUtils.error("Cập Nhật Thất Bại");
-        const responseData = res.errors;
+        const responseData = res.data;
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
           setError(fieldKey, {

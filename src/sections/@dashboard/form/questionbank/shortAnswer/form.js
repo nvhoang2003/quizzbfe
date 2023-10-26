@@ -377,11 +377,11 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await createQb(transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success("Tạo mới thành công");
         push("/questionbank");
       } else {
-        const responseData = res.errors;
+        const responseData = res.data;
         snackbarUtils.error("Tạo Mới Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
@@ -442,13 +442,12 @@ export default function Form({ isEdit = false, currentLevel }) {
     try {
       const res = await updateQb(currentLevel.id, transformData);
       console.log(res);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success("Cập Nhật Thành Công");
         push("/questionbank");
       } else {
         const responseData = res.data;
         snackbarUtils.error("Cập Nhật Thất Bại");
-
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
           setError(fieldKey, {
             type: "manual",
@@ -662,6 +661,10 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
+
+                            isError={errors.Answer}
+                            errorMessage={errors.Answer?.message}
+
                           />
                           <RHFTextField
                             key={`answer[${index}].feedback`}
@@ -672,6 +675,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }
+                            isError={errors.Answer}
                           />
                           <RHFSelect
                             key={`answer[${index}].fraction`}
@@ -683,7 +687,6 @@ export default function Form({ isEdit = false, currentLevel }) {
                               handleFractionChange(index, event)
                             }
                             error={errors.Answer}
-                            helperText={errors.Answer?.message}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option, index) => (

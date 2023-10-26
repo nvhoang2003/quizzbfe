@@ -145,7 +145,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setTags([]);
     }
   }, [categoryId]);
-  useEffect(() => {}, [tags]);
+  useEffect(() => { }, [tags]);
 
   async function fetchTagChoose(currentLevel) {
     if (currentLevel !== "undefined") {
@@ -171,7 +171,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
     return;
   }
-  useEffect(() => {}, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   useEffect(() => {
     if (isEdit && currentLevel) {
@@ -244,7 +244,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setValue(event.target.name, "");
     }
   };
-  useEffect(() => {}, [tagChoose]);
+  useEffect(() => { }, [tagChoose]);
 
   const handleQuestionTextChange = (index, event) => {
     const updatedInputs = [...answerChoose];
@@ -265,7 +265,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     setValue(event.target.name, event.target.value);
     setAnswerChoose(updatedInputs);
   };
-  useEffect(() => {}, [answerChoose]);
+  useEffect(() => { }, [answerChoose]);
 
   const handleAddInputAnswer = () => {
     const newInput = {
@@ -301,7 +301,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     const listTags = getValues("tagId");
 
     listTags.map((item, index) => {
-      if(index === listTags.length - 1){
+      if (index === listTags.length - 1) {
         setValue(`tagId[${index}]`, "");
       }
     });
@@ -349,11 +349,11 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await createQb(transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res?.data?.message || "Tạo Mới Thành Công");
         push("/questionbank");
       } else {
-        const responseData = res.errors;
+        const responseData = res.data;
         snackbarUtils.error("Tạo Mới Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
@@ -373,12 +373,12 @@ export default function Form({ isEdit = false, currentLevel }) {
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
-      if (res.status < 400) {
-        snackbarUtils.success(res?.data?.message || "Sửa Thành Công");
+      if (res.data.status === true) {
+        snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        const responseData = res.errors;
-        snackbarUtils.error("Sửa Thất Bại");
+        const responseData = res.data;
+        snackbarUtils.error("Cập Nhật Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
           setError(fieldKey, {
@@ -391,10 +391,14 @@ export default function Form({ isEdit = false, currentLevel }) {
       console.log(error);
     }
   }
+  const backBtnOnclick = () => {
+    push("/questionbank");
+  }
 
   const onSubmit = async (data) => {
     clearErrors();
     if (!isEdit) {
+      console.log(data);
       createNew(data);
     } else {
       fetchUpdate(data);
@@ -590,6 +594,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleQuestionTextChange(index, event)
                             }
+                            isError={errors.Answer}
+                            errorMessage={errors.Answer?.message}
+
                           />
                           <RHFTextField
                             key={`matchSubs[${index}].answerText`}
@@ -600,6 +607,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleAnswerTextChange(index, event)
                             }
+                            isError={errors.Answer}
                           />
                         </Box>
 
@@ -655,26 +663,25 @@ export default function Form({ isEdit = false, currentLevel }) {
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  reset(defaultValues);
-                }}
-              >
-                Xóa
-              </Button>
             </Stack>
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <Stack direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+            <Button
+              variant="outlined"
+              onClick={backBtnOnclick}
+              // color="dark"
+              sx={{ color: '#000000', backgroundColor: '#FFFFFF', borderColor: '#000000' }}
+            >
+              Trở Lại
+            </Button>
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isSubmitting}
             >
-              {!isEdit ? "Create New" : "Update"}
+              {!isEdit ? "Tạo Mới" : "Cập Nhật"}
             </LoadingButton>
           </Stack>
         </Card>

@@ -220,8 +220,8 @@ export default function Dnd({
   const onDragCancel = () => {
     setActiveId(null);
   };
-  const cardBackground = isCorrect ? 'green' : 'red';
-  const colorScheme = !hasSubmitted ? "blue" : isCorrect ? "green" : "red";
+  const cardBackground = isCorrect ? '#c8e6c9' : '#FCEEEE';
+  const colorScheme = !hasSubmitted ? "blue" : isCorrect ? "#c8e6c9" : "#FCEEEE";
   const showWordBank = !hasSubmitted || !isCorrect;
   const isDisabled = true;
   return (

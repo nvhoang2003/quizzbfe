@@ -91,12 +91,13 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       defaultMark: currentLevel?.defaultMark || "",
       categoryId: currentLevel?.categoryId || "",
       tagId: currentLevel?.tagId || [],
-      answer: {answer_truefalse : currentLevel?.answers == 'True' ? true : false || null},
+      answer: { answer_truefalse: currentLevel?.answers == 'True' ? true : false || null },
       questionstype: "TrueFalse",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
     [currentLevel]
   );
+  const { setError, clearErrors, formState: { errors } } = useForm();
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -302,7 +303,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     const listTags = getValues("tagId");
 
     listTags.map((item, index) => {
-      if(index === listTags.length - 1){
+      if (index === listTags.length - 1) {
         setValue(`tagId[${index}]`, "");
       }
     });
@@ -310,6 +311,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
   //allquestiontype
   async function createNew(data) {
+    clearErrors();
     const transformData = {
       name: data.name,
       content: data.content,
@@ -337,11 +339,19 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     };
     try {
       const res = await createQb(transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        console.log(res.message);
+        const responseData = res.data;
+        snackbarUtils.error("Tạo Mới Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       console.log(error);
@@ -349,7 +359,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   }
 
   async function fetchUpdate(data) {
-
+    clearErrors();
     const transformData = {
       name: data.name,
       content: data.content,
@@ -379,11 +389,19 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
     try {
       const res = await updateQb(currentLevel.id, transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        snackbarUtils.success(res.message);
+        const responseData = res.data;
+        snackbarUtils.error("Cập Nhật Thất Bại");
+
+        Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
+          setError(fieldKey, {
+            type: "manual",
+            message: errorMessage,
+          });
+        });
       }
     } catch (error) {
       snackbarUtils.success(error);
@@ -616,9 +634,9 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           </Stack>
           <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
-          <Stack  direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
+          <Stack direction="row" className="right-item" sx={{ mt: 3 }} spacing={3}>
             <Button
-              variant="outlined" 
+              variant="outlined"
               onClick={backBtnOnclick}
               // color="dark"
               sx={{ color: '#2A2D76', backgroundColor: '#FFFFFF', borderColor: '#2A2D76' }}

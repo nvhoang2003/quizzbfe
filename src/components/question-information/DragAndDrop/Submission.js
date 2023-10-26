@@ -110,7 +110,7 @@ export default function Buttons({
             variant="contained"
             disabled={!hasSubmitted}
           >
-            Reset
+             Làm Lại
           </LoadingButton>
           {/* )} */}
 
@@ -121,7 +121,7 @@ export default function Buttons({
             ref={submitButtonRef}
             variant="contained"
           >
-            Submit
+             Kiểm Tra Đáp Án
           </LoadingButton>
 
 
@@ -129,7 +129,7 @@ export default function Buttons({
             variant="contained"
             onClick={() => close()}
           >
-            Close preview
+            Trở Về
           </LoadingButton>
         </ButtonGroup>
 
