@@ -1,4 +1,4 @@
-import { getById } from "@/dataProvider/questionbankApi";
+import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 import FormDetailShortAnswer from "@/sections/@dashboard/form/questionbank/shortAnswer/detail";
 import { Card } from "@mui/material";
 import { useRouter } from "next/router";
@@ -12,7 +12,7 @@ export default function Details(props) {
   } = useRouter();
 
   async function fetchQuestionByID(id) {
-    const res = await getById(id);
+    const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {

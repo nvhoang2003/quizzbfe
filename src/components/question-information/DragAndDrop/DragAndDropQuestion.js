@@ -27,7 +27,9 @@ import { Card, Stack } from "@mui/material";
 export function Blank({ solution }) {
   return <span style={{
     border: "solid",
-  }}>
+  }}
+
+  >
 
   </span>;
 }
@@ -78,11 +80,13 @@ export default function Dnd({
   taskId,
   children,
   wrongAnswers = [],
-  title = "Drag 'n' Drop",
-  successMessage = "Nicely done!",
-  failureMessage = "Review the video or read the course to find the right information."
+  title,
+  correct = []
+  // submit,
+  // setSubmit
+
 }) {
-  const [isTaskComplete] = useLocalStorage(taskId);
+  const [isTaskComplete] = [];
   const [isCorrect, setIsCorrect] = useState(
     isTaskComplete && isTaskComplete.length ? true : false
   );
@@ -108,6 +112,9 @@ export default function Dnd({
     if (defaultItems) {
       setItems(defaultItems);
     }
+    // if(hasSubmitted){
+    //   setSubmit(hasSubmitted);
+    // }
   }, [defaultItems]);
 
   const allBlanksEmpty = useMemo(
@@ -213,10 +220,10 @@ export default function Dnd({
   const onDragCancel = () => {
     setActiveId(null);
   };
-
+  const cardBackground = isCorrect ? 'green' : 'red';
   const colorScheme = !hasSubmitted ? "blue" : isCorrect ? "green" : "red";
   const showWordBank = !hasSubmitted || !isCorrect;
-
+  const isDisabled = true;
   return (
     <Box pl="4" py="1" maxW="960px" mx="auto">
       <Flex
@@ -226,76 +233,109 @@ export default function Dnd({
         mb="2"
       >
         <Box mr="2" as={RiDragDropLine} fontSize="xl" />
-        <Text>{title}</Text>
+        <Text><strong>{title}</strong></Text>
       </Flex>
-      <Card sx={{ p: 5 }}>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          onDragCancel={onDragCancel}
-        >
-          <Flex key={1} direction="column" alignItems="flex-start">
-            <div>
-              {childrenWithBlanks.map((child, index) => {
-                const { solutions, id } = child;
-                // console.log(items[id]);
-                // need a blank for children that have a 'solution'
-                if (solutions) {
-                  const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
-                  console.log(isCorrect);
+      <Stack spacing={2}>
+        <Card sx={{ p: 5 }}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDragCancel={onDragCancel}
+          >
+            <Flex key={1} direction="column" alignItems="flex-start">
+              <div>
+                {childrenWithBlanks.map((child, index) => {
+                  const { solutions, id } = child;
+                  if (solutions) {
+                    const { items: blankItems, isCorrect: isBlankCorrect } = items[id];
 
-                  return (
-                    <React.Fragment key={index}>
-                      {" "}
-                      <DroppableContainer
-                        key={id}
-                        id={id}
-                        items={blankItems}
-                        isCorrect={isBlankCorrect}
-                        allBlanksEmpty={allBlanksEmpty}
-                        style={{
-                          height: "40px"
-                        }}
-                      >
-                        {blankItems.map((value) => {
-                          // return (
-                          <SortableItem
-                            key={`sortable-item--${value}`}
-                            id={value}
-                            taskId={taskId}
-                            isCorrect={isBlankCorrect}
-                          />
-                          // );
-                        })}
-                      </DroppableContainer>
-                      {" "}
-                    </React.Fragment>
-                  );
-                }
-                return <Fragment key={index}>{child}</Fragment>;
-              })}
-            </div>
+                    return (
+                      <React.Fragment key={index} >
+                        {" "}
+                        <DroppableContainer
+                          key={id}
+                          id={id}
+                          items={blankItems}
+                          isCorrect={isBlankCorrect}
+                          allBlanksEmpty={allBlanksEmpty}
+                          style={{
+                            height: "40px"
+                          }}
+                          hasSubmitted={hasSubmitted}
+                        >
+                          {blankItems.map((value) => {
+                            return (
+                              <SortableItem
+                                key={`sortable-item--${value}`}
+                                id={value}
+                                taskId={taskId}
+                                isCorrect={isBlankCorrect}
+                                hasSubmitted={hasSubmitted}
+                              />
+                            );
+                          })}
+                        </DroppableContainer>
+                        {" "}
+                      </React.Fragment>
+                    );
+                  }
+                  return <Fragment key={index}>{child}</Fragment>;
+                })}
+              </div>
 
-            <div style={{ paddingTop: '25px' }}>
-              {showWordBank && <WordBank taskId={taskId} items={items} />}
-            </div>
+              <div style={{ paddingTop: '25px' }}>
+                {showWordBank && <WordBank hasSubmitted={hasSubmitted} taskId={taskId} items={items} />}
+              </div>
 
-          </Flex>
-          <DragOverlay>
-            {activeId && (
-              <>
-                <Global styles={{ body: { cursor: "grabbing" } }} />
-                <Item value={activeId} dragOverlay />
-              </>
+            </Flex>
+            <DragOverlay>
+              {activeId && (
+                <>
+                  {/* <Global styles={{ body: { cursor: isDisabled ? "not-allowed" : "grabbing" } }} />
+                  <Item value={activeId} dragOverlay isdisabled={isDisabled} /> */}
+                  <Global styles={{ body: { cursor: "grabbing" } }} />
+                  <Item value={activeId} dragOverlay />
+                </>
+              )}
+            </DragOverlay>
+
+
+
+          </DndContext>
+        </Card>
+
+        {hasSubmitted === true ? (
+          <Card sx={{ p: 5, background: cardBackground }}>
+            {isCorrect === true ? (
+              <React.Fragment>
+                <span>Bạn đã trả lời đúng: </span>
+                <br />
+                <span>Đáp án của câu hỏi là : </span>
+                {correct?.map((item, index) => (
+                  <React.Fragment key={index}>
+                    &nbsp;<br /><span>{item}</span>
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <span>Bạn đã trả lời sai: </span>
+                <br />
+                <span>Đáp án của câu hỏi là : </span>
+                {correct?.map((item, index) => (
+                  <React.Fragment key={index}>
+                    &nbsp;<br /><span>{item}</span>
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
             )}
-          </DragOverlay>
+          </Card>
+        ) : null}
+      </Stack>
 
 
-
-        </DndContext>
-      </Card>
 
 
 
@@ -305,8 +345,6 @@ export default function Dnd({
           isCorrect={isCorrect}
           items={items}
           hasSubmitted={hasSubmitted}
-          failureMessage={failureMessage}
-          successMessage={successMessage}
           setIsCorrect={setIsCorrect}
           setItems={setItems}
           reset={onDragCancel}
@@ -322,8 +360,6 @@ Dnd.propTypes = {
   taskId: PropTypes.string.isRequired,
   children: PropTypes.node,
   wrongAnswers: PropTypes.array,
-  successMessage: PropTypes.string,
   title: PropTypes.string,
-  failureMessage: PropTypes.string,
   items: PropTypes.object
 };

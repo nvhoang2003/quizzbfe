@@ -14,7 +14,6 @@ export default function DragAndDropDetail() {
 
   async function fetchQuestionByID(id) {
     const res = await getQuestionBankById(id);
-    console.log(res);
     if (res.status < 400) {
       const q = res.data.data;
       const transformData = {
@@ -50,7 +49,6 @@ export default function DragAndDropDetail() {
           questionId: element.questionId
         });
       });
-      console.log(transformData);
       setData(transformData);
     } else {
       return res;

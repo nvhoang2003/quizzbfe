@@ -9,27 +9,21 @@ import TableBodyCustom from "@/components/table/TableBodyCustom";
 import { Card, IconButton, Table, TableContainer, Tooltip } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
 import { enqueueSnackbar } from "notistack";
-import { deleteQb, getAllQuestionbank } from "@/dataProvider/questionbankApi";
-import QuestionBankTableRows from "./QuestionBankTableRow";
-import { Iconify } from '@iconify/react';
-import { selectClasses } from "@mui/base";
-import snackbarUtils from "@/utils/snackbar-utils";
+import { deleteTag } from "@/dataProvider/tagApi";
+import TagTableRows from "./TagTableRow";
+import { getAllTags } from "@/dataProvider/tagApi";
 //--------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "center" },
   { id: "name", label: "Tên câu hỏi", align: "center" },
-  { id: "questionstype", label: "Dạng câu hỏi", align: "center" },
-  { id: "authorName", label: "Tên Tác Giả", align: "center" },
-  { id: "tags", label: "Từ khóa", align: "center" },
-  { id: "categoryName", label: "Loại câu hỏi", align: "center" },
-  { id: "isPublic", label: "Công khai", align: "center" },
+  { id: "description", label: "Mô tả ", align: "center" },
+  { id: "categoryId", label: "Loại câu hỏi", align: "center" },
   { id: "action", label: "Thao Tác", align: "left" },
 ];
 
-export default function QuestionBankTable(prop) {
+export default function TagTable(prop) {
 
   const {
     dense,
@@ -49,7 +43,7 @@ export default function QuestionBankTable(prop) {
     onChangeRowsPerPage,
   } = useTable();
 
-  const { filter, setFilter, listQuiz, setListQuiz, selectItem, setSelectItem } = prop;
+  const { filter, setFilter, list, setList, selectItem, setSelectItem } = prop;
   const [selected, setSelected] = useState([]);
   const [selectedAll, setSelctedAll] = useState(false);
   const router = useRouter();
@@ -70,7 +64,7 @@ export default function QuestionBankTable(prop) {
   );
 
   const handleDeleteRow = async (id) => {
-    const response = await deleteQb(id);
+    const response = await deleteTag(id);
 
     if (response.status < 400) {
       setSelected([]);
@@ -78,29 +72,33 @@ export default function QuestionBankTable(prop) {
     } else {
       enqueueSnackbar("Action error", { variant: "error" });
     }
-    await fetchQuiz();
+    // await fetchQuiz();
   };
 
   useEffect(() => {
-    fetchQuiz();
+    fetchTags();
   }, [filter]);
 
-  const fetchQuiz = async () => {
-    const res = await getAllQuestionbank(filter);
+  async function fetchTags() {
+    const res = await getAllTags(filter);
     if (res.status < 400) {
-      setPaging(JSON.parse(res.headers["x-pagination"]));
-      setListQuiz(res.data.data);
-    } else {
-      console.log(res.message);
+      const transformData = res.data.data.map((tag) => {
+        return {
+          name: tag.name,
+          id: tag.id,
+          description: tag.description
+        };
+      });
+      setList(transformData);
     }
-  };
+  }
 
   const switchToUpdate = (item) => {
     // if (item.questionstype == "MultiChoice") {
-      router.push({
-        pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
-        query: { questionBankId: item.id },
-      });
+    router.push({
+      pathname: `/questionbank/${item.questionstype}/[questionBankId]/edit`,
+      query: { questionBankId: item.id },
+    });
     // } if (item.questionstype == "TrueFalse") {
     //   router.push({
     //     pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
@@ -145,37 +143,37 @@ export default function QuestionBankTable(prop) {
   return (
     <Card sx={{ p: 4 }}>
       <TableContainer sx={{ position: "relative", overflow: "unset", paddingBottom: "25px" }}>
-        <TableSelectedAction
+        {/* <TableSelectedAction
           dense={dense}
           numSelected={selected.length}
           onSelectAllRows={(checked) => onSelectAllRows(
             checked,
             listQuiz.map((row) => row.id)
           )}
-        />
+        /> */}
         <Scrollbar >
           <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: '100%' }}>
             <TableHeadCustom
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={listQuiz.length}
-              numSelected={selected.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  listQuiz.map((row) => row.id)
-                )}
+              rowCount={list.length}
+              // numSelected={selected.length}
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     list.map((row) => row.id)
+              //   )}
             />
             <TableBodyCustom
               dense={dense}
               page={page}
               rowsPerPage={rowsPerPage}
-              listItem={listQuiz}
+              listItem={list}
               notFoundMessage={"Không có câu hỏi tương tự"}
             >
-              {listQuiz?.map((item, index) => (
-                <QuestionBankTableRows
+              {list?.map((item, index) => (
+                <TagTableRows
                   key={index}
                   row={item}
                   selected={selected.includes(item.id)}

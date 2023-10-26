@@ -32,8 +32,8 @@ import RHFRadioGroup from "@/components/form/RHFRadioGroup";
 import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
-import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 import { id } from "date-fns/locale";
+import { createQb, updateQb } from "@/dataProvider/questionbankApi";
 //---------------------------------------------------
 
 Form.propTypes = {
