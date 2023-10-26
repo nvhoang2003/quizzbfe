@@ -373,7 +373,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     try {
-      const res = await createQb(transformData);
+      const res = await createQb(transformData, 1);
       if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");

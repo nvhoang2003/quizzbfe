@@ -16,8 +16,8 @@ function getQuestionBankById(id) {
   return getApi( path+`/getQuestionBankById/${id}`);
 }
 
-function createQb(qb) {
-  return postApi(path + `/CreateNewQuesstion`,qb);
+function createQb(qb, file) {
+  return postApi(path + `/CreateNewQuesstion`,qb, file);
 }
 
 function updateQb(id, qb) {
