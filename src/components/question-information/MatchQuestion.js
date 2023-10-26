@@ -24,7 +24,15 @@ export default function MatchQuestion(props) {
   });
   const [oneSubQuestionPoint, setOneSubQuestionPoint] = useState(0);
 
-
+  const shuffleArray = (arr) => {
+    let newArr = [];
+    while(arr.length) {
+        let randomIndex = Math.floor(Math.random() * arr.length);
+        newArr.push(arr[randomIndex]);
+        arr.splice(randomIndex, 1);
+    }
+    return newArr;
+  }
 
   console.log(oneSubQuestionPoint);
 
@@ -63,7 +71,7 @@ export default function MatchQuestion(props) {
   useEffect(() => {
     if (question?.matchSubQuestionBanks?.length > 0) {
       setListSubQuestion(question.matchSubQuestionBanks.map((item) => item.questionText).filter((item) => item !== ""));
-      setListSubAnswer(question.matchSubQuestionBanks.map((item) => item.answerText));
+      setListSubAnswer(shuffleArray(question.matchSubQuestionBanks.map((item) => item.answerText)));
       // setListRightResult(question.matchSubQuestionBanks);
       setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestionBanks.filter((item) => item.questionText !== "").length);
       setMatchAnswerChoose(question.matchSubQuestionBanks.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
