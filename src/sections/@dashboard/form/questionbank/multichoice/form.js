@@ -117,6 +117,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     [currentLevel]
   );
 
+  //Can co
   const { setError, clearErrors, formState: { errors } } = useForm();
 
   const methods = useForm({
@@ -331,6 +332,7 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   //allquestiontype
   async function createNew(data) {
+    //can co
     clearErrors();
     const transformData = {
       name: data.name,
@@ -372,11 +374,12 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
     try {
       const res = await createQb(transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        const responseData = res.errors;
+        //can them
+        const responseData = res.data;
         snackbarUtils.error("Tạo Mới Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
@@ -389,9 +392,10 @@ export default function Form({ isEdit = false, currentLevel }) {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async function fetchUpdate(data) {
+    //can co
     clearErrors();
 
     const transformData = {
@@ -432,11 +436,12 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
     try {
       const res = await updateQb(currentLevel.id, transformData);
-      if (res.status < 400) {
+      if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
       } else {
-        const responseData = res.errors;
+        //can co
+        const responseData = res.data;
         snackbarUtils.error("Cập Nhật Thất Bại");
 
         Object.entries(responseData).forEach(([fieldKey, errorMessage]) => {
@@ -657,6 +662,9 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleInputAnswerChange(index, event)
                             }
+                            //can co
+                            isError={errors.Answer}
+                            errorMessage={errors.Answer?.message}
                           />
                           <RHFTextField
                             key={`answer[${index}].feedback`}
@@ -667,6 +675,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFeedbackChange(index, event)
                             }
+                            isError={errors.Answer}
                           />
                           <RHFSelect
                             key={`answer[${index}].fraction`}
@@ -677,8 +686,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                             onChange={(event) =>
                               handleFractionChange(index, event)
                             }
-                            error={errors.Answers}
-                            helperText={errors.Answers?.message}
+                            isError={errors.Answer}
                           >
                             {!_.isEmpty(fraction) &&
                               fraction.map((option) => (

@@ -11,7 +11,7 @@ RHFSelect.propTypes = {
   children: PropTypes.node,
 };
 // children,
-export default function RHFSelect({ name, children,...other }) {
+export default function RHFSelect({ name, isError, errorMessage, children,...other }) {
   const { control } = useFormContext();
 
   return (
@@ -24,8 +24,8 @@ export default function RHFSelect({ name, children,...other }) {
           select
           fullWidth
           SelectProps={{ native: true }}
-          error={!!error}
-          helperText={error?.message}
+          error={!!error || isError}
+          helperText={error?.message || errorMessage}
               {...other} 
         >
           {children}
