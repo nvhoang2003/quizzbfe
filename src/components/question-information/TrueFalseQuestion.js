@@ -7,6 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 export default function TrueFalseQuestion(props) {
   const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
 
+  console.log(question);
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
@@ -55,6 +56,7 @@ export default function TrueFalseQuestion(props) {
     }}>
       <Box sx={{ py: 3, }}>
         <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.content}</Typography>
+        {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"

@@ -32,6 +32,8 @@ import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { createQb, updateQb } from "@/dataProvider/questionbankApi";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -74,6 +76,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       tags: "",
     },
   ]);
+  const [imageUrl, setImageUrl] = useState();
 
   const { setError, clearErrors, formState: { errors } } = useForm();
 
@@ -195,6 +198,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setCategoryId(currentLevel?.categoryId);
       fetchTagChoose(currentLevel);
       reset(defaultValues);
+      setImageUrl( currentLevel?.imageUrl);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -360,6 +364,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "ShortAnswer",
+      imageFile: data.imageFile,
       quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.content,
@@ -376,7 +381,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
 
     try {
-      const res = await createQb(transformData);
+      const res = await createQb(transformData,1);
       if (res.data.status === true) {
         snackbarUtils.success("Tạo mới thành công");
         push("/questionbank");
@@ -423,6 +428,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "ShortAnswer",
+      imageFile: data.imageFile,
       quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.content,
@@ -438,9 +444,8 @@ export default function Form({ isEdit = false, currentLevel }) {
         //answer?.fraction !== undefined && answer?.fraction !== 0 ? parseFloat(answer.fraction) :
       }),
     };
-    console.log(transformData);
     try {
-      const res = await updateQb(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData,1);
       console.log(res);
       if (res.data.status === true) {
         snackbarUtils.success("Cập Nhật Thành Công");
@@ -472,6 +477,20 @@ export default function Form({ isEdit = false, currentLevel }) {
     }
   };
 
+
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImageUrl(reader.result);
+    };
+    setValue(event.target.name, event.target.files[0]);
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <Container maxWidth="100%">
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -488,6 +507,20 @@ export default function Form({ isEdit = false, currentLevel }) {
                 <RHFTextField name="name" label="Tên câu hỏi" id="name" />
 
                 <RHFTextField name="content" label="Nội dung" id="content" />
+                <label htmlFor="upload-image">
+                  <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                    Upload
+                  </Button>
+                  <input
+                    id="upload-image"
+                    name="imageFile"
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                </label>
+                {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="300" width="300" />}
 
                 <RHFTextField
                   name="generalfeedback"

@@ -51,7 +51,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   const [category, setCategory] = useState([]);
   const [tags, setTags] = useState([]);
   const [reRender, setReRender] = useState([]);
-
+  const [imageUrl, setImageUrl] = useState();
   const [answerChoose, setAnswerChoose] = useState(
     {
       feedback: "",
@@ -95,10 +95,13 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       answer: { answer_truefalse: currentLevel?.answers == 'True' ? true : false || null },
       questionstype: "TrueFalse",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
+      // imageUrl: currentLevel?.imageUrl || null
     }),
     [currentLevel]
   );
   const { setError, clearErrors, formState: { errors } } = useForm();
+
+  
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -129,7 +132,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
   async function fetchAlltags(cateId) {
     const res = await getTagByCategory(cateId);
-    console.log("sahgdjsad" + res);
     if (res.status < 400) {
       const transformData = res.data.data.map((tag) => {
         return {
@@ -137,7 +139,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           tags: tag.name,
         };
       });
-      console.log(transformData);
       setTags([...transformData]);
     } else {
       return res;
@@ -186,6 +187,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
     if (isEdit && currentLevel) {
       setCategoryId(currentLevel?.categoryId);
       reset(defaultValues);
+      setImageUrl(currentLevel?.imageUrl);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -420,7 +422,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       fetchUpdate(data);
     }
   };
-  const [imageUrl, setImageUrl] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];

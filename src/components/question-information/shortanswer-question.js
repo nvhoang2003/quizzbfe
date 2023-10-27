@@ -44,6 +44,7 @@ export default function ShortAnswerQuestion(props) {
         <Typography sx={{ fontWeight: "bold" }}>
           Câu Hỏi {numberQuestion}: {question?.content}
         </Typography>
+        {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
 
         <div style={{ display: "flex", alignItems: "center" }}>
           <Typography

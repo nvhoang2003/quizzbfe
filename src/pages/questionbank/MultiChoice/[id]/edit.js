@@ -23,6 +23,7 @@ export default function Edit(props) {
     const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
+      console.log(q);
       const transformData = {
         id: q.id,
         name: q.name,
@@ -33,7 +34,8 @@ export default function Edit(props) {
         tagId: [],
         answers: [],
         isPublic: q.isPublic,
-        authorId: q.authorId
+        authorId: q.authorId,
+        imageUrl:q.imageUrl
       };
 
       q.tags?.filter((tag) => {
