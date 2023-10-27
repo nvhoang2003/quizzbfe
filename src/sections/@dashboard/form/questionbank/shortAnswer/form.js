@@ -85,12 +85,12 @@ export default function Form({ isEdit = false, currentLevel }) {
     content: Yup.string().trim().required("Nội dung không được để trống").max(255, "Nội dung câu hỏi không đươc quá 255 kí tự"),
     generalfeedback: Yup.string()
       .trim()
-      .required("Phản hồi chung không được để trống")
-      .max(1000, "Phản hồi không được quá 1000 kí tự"),
+      .max(1000, "Phản hồi không được quá 1000 kí tự")
+      .notRequired(),
     answer: Yup.array(
       Yup.object({
         content: Yup.string().required("Thông tin không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
-        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
+        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự").notRequired(),
       })
     ),
     defaultMark: Yup.number()
@@ -198,7 +198,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       setCategoryId(currentLevel?.categoryId);
       fetchTagChoose(currentLevel);
       reset(defaultValues);
-      setImageUrl( currentLevel?.imageUrl);
+      setImageUrl(currentLevel?.imageUrl);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -381,7 +381,7 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
 
     try {
-      const res = await createQb(transformData,1);
+      const res = await createQb(transformData, 1);
       if (res.data.status === true) {
         snackbarUtils.success("Tạo mới thành công");
         push("/questionbank");
@@ -445,7 +445,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     try {
-      const res = await updateQb(currentLevel.id, transformData,1);
+      const res = await updateQb(currentLevel.id, transformData, 1);
       console.log(res);
       if (res.data.status === true) {
         snackbarUtils.success("Cập Nhật Thành Công");
