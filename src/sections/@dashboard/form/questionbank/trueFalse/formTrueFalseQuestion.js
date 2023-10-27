@@ -36,6 +36,7 @@ import RHFSwitch from "@/components/form/RHFSwitch";
 import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { createQb, updateQb } from "@/dataProvider/questionbankApi";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 //---------------------------------------------------
 
 FormTrueFalseQuestionBank.propTypes = {
@@ -335,10 +336,11 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           };
         }),
       questionstype: "TrueFalse",
+      imageFile: data.imageFile,
       rightAnswer: data.answer?.answer_truefalse === "true" ? true : false,
     };
     try {
-      const res = await createQb(transformData);
+      const res = await createQb(transformData, 1);
       if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -383,12 +385,14 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
           };
         }),
       questionstype: "TrueFalse",
+      imageFile: data.imageFile,
       rightAnswer: data.answer.answer_truefalse === "false" ? false : true,
       authorId: currentLevel?.authorId
     };
+    console.log(transformData);
 
     try {
-      const res = await updateQb(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData, 1);
       if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -409,11 +413,25 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   }
 
   const onSubmit = async (data) => {
+    console.log(data);
     if (!isEdit) {
       createNew(data);
     } else {
       fetchUpdate(data);
     }
+  };
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImageUrl(reader.result);
+    };
+    setValue(event.target.name, event.target.files[0]);
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -434,7 +452,20 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                 <RHFTextField name="name" label="Tên câu hỏi" id="name" />
 
                 <RHFTextField name="content" label="Đề bài " id="content" />
-
+                <label htmlFor="upload-image">
+                  <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                    Upload
+                  </Button>
+                  <input
+                    id="upload-image"
+                    name="imageFile"
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                </label>
+                {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="300" width="300" />}
                 <RHFTextField
                   name="generalfeedback"
                   label="Phản hồi chung"

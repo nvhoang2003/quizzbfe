@@ -20,8 +20,8 @@ function createQb(qb, file) {
   return postApi(path + `/CreateNewQuesstion`,qb, file);
 }
 
-function updateQb(id, qb) {
-  return putApi(path + `/UpdateQuesstionbank/${id}`,qb);
+function updateQb(id, qb, file) {
+  return putApi(path + `/UpdateQuesstionbank/${id}`,qb, file);
 }
 
 function deleteQb(id) {
