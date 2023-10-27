@@ -46,6 +46,7 @@ export default function OneChoiceQuestion(props) {
     }}>
       <Box sx={{ py: 3, }}>
         <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi: {question?.content}</Typography>
+        {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"

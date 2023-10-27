@@ -90,7 +90,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     answer: Yup.array(
       Yup.object({
         answer: Yup.string().required("Câu trả lời không được trống").max(255, "Nội dung câu trả lời không đươc quá 255 kí tự"),
-        feedback: Yup.string().max(1000, "Phản hồi không đươc quá 1000 kí tự"),
       })
     ),
     defaultMark: Yup.number()

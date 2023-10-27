@@ -12,7 +12,6 @@ export default function MatchQuestion(props) {
     setAnswerResult,
     isSubmit
   } = props;
-  console.log(question);
   const [matchAnswerChoose, setMatchAnswerChoose] = useState();
   const [listSubQuestion, setListSubQuestion] = useState();
   const [listSubAnswer, setListSubAnswer] = useState();
@@ -26,10 +25,10 @@ export default function MatchQuestion(props) {
 
   const shuffleArray = (arr) => {
     let newArr = [];
-    while(arr.length) {
-        let randomIndex = Math.floor(Math.random() * arr.length);
-        newArr.push(arr[randomIndex]);
-        arr.splice(randomIndex, 1);
+    while (arr.length) {
+      let randomIndex = Math.floor(Math.random() * arr.length);
+      newArr.push(arr[randomIndex]);
+      arr.splice(randomIndex, 1);
     }
     return newArr;
   }
@@ -67,6 +66,7 @@ export default function MatchQuestion(props) {
       answer: [...newMatch],
     })
   }
+  console.log(question);
 
   useEffect(() => {
     if (question?.matchSubQuestionBanks?.length > 0) {
@@ -98,20 +98,28 @@ export default function MatchQuestion(props) {
           <Stack direction="row" spacing={3} key={quesIndex} sx={{ my: 3 }}>
             <Typography sx={{ fontWeight: 'bold', m: 3 }}>{subQuestion}</Typography>
 
-            <FormControl sx={{ minWidth: 120 }}>
-              <Select
-                id={subQuestion}
-                label="Câu trả lời"
-                onChange={(event) => handleSelectChange(event, subQuestion)}
-                value={matchAnswerChoose?.filter((item) => item.questionText === subQuestion)?.map((item) => item.answerText) || ' '}
-                disabled={isSubmit}
-              >
-                <MenuItem value="" name="answer">Vui lòng chọn câu trả lời</MenuItem>
-                {listSubAnswer?.map((subAnswer, answerIndex) => (
-                  <MenuItem key={answerIndex} value={subAnswer} name="answer">{subAnswer}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {subQuestion && subQuestion !== null && (
+              <>
+                <FormControl sx={{ minWidth: 120 }}>
+                  <Select
+                    id={subQuestion}
+                    label="Câu trả lời"
+                    onChange={(event) => handleSelectChange(event, subQuestion)}
+                    value={matchAnswerChoose?.filter((item) => item.questionText === subQuestion)?.map((item) => item.answerText) || ' '}
+                    disabled={isSubmit}
+                  >
+
+                    <MenuItem value="" name="answer">Vui lòng chọn câu trả lời</MenuItem>
+                    {listSubAnswer?.map((subAnswer, answerIndex) => (
+                      <MenuItem key={answerIndex} value={subAnswer} name="answer">{subAnswer}</MenuItem>
+                    ))}
+
+
+
+                  </Select>
+                </FormControl>
+              </>
+            )}
           </Stack>
         ))}
       </Box>
