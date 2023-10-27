@@ -391,6 +391,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       rightAnswer: data.answer.answer_truefalse === "false" ? false : true,
       authorId: currentLevel?.authorId
     };
+    console.log(transformData);
 
     try {
       const res = await updateQb(currentLevel.id, transformData, 1);
@@ -414,11 +415,25 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   }
 
   const onSubmit = async (data) => {
+    console.log(data);
     if (!isEdit) {
       createNew(data);
     } else {
       fetchUpdate(data);
     }
+  };
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImageUrl(reader.result);
+    };
+    setValue(event.target.name, event.target.files[0]);
+
+    reader.readAsDataURL(file);
   };
 
 
