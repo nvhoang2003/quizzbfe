@@ -496,7 +496,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ color: "text.disabled", mb: 3 }}>
-            {!isEdit ? "Tạo mới" : "Cập nhật"} câu hỏi
+            {!isEdit ? "Tạo Mới" : "Cập Nhật"} Câu Hỏi Điền Đáp Án
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -533,7 +533,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   label="Điểm mặc định"
                   id="defaultMark"
                 />
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -556,7 +556,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       readOnly: true,
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div
                   style={{

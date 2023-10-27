@@ -27,11 +27,11 @@ import { enqueueSnackbar } from "notistack";
 
 
 const links = [
-  { label: 'Multichoice', href: '/questionbank/MultiChoice/create' },
-  { label: 'ShortAnswer', href: '/questionbank/ShortAnswer/create' },
-  { label: 'DragAndDrop', href: '/questionbank/DragAndDropIntoText/create' },
-  { label: 'Matching', href: '/questionbank/Match/create' },
-  { label: 'TrueFalse', href: '/questionbank/TrueFalse/create' },
+  { label: 'Chọn Đáp Án', href: '/questionbank/MultiChoice/create' },
+  { label: 'Điền Đáp Án', href: '/questionbank/ShortAnswer/create' },
+  { label: 'Di Chuyển Đáp Án', href: '/questionbank/DragAndDropIntoText/create' },
+  { label: 'Ghép Đôi', href: '/questionbank/Match/create' },
+  { label: 'Đúng Sai', href: '/questionbank/TrueFalse/create' },
 ];
 
 const item = styled(Paper)(({ theme }) => ({

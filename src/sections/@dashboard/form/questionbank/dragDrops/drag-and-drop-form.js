@@ -421,7 +421,7 @@ export default function Form({ isEdit = false, currentLevel }) {
             variant="h4"
             sx={{ textAlign: "center", fontWeight: "bold", mb: 3 }}
           >
-            {!isEdit ? "Tạo Mới Câu Hỏi" : "Cập nhật Câu Hỏi"}
+            {!isEdit ? "Tạo Mới Câu Hỏi Di Chuyển Đáp Án" : "Cập nhật Câu Hỏi Di Chuyển Đáp Án"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -450,7 +450,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   label="Điểm"
                   id="defaultMark"
                 />
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -474,7 +474,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       readOnly: true,
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div
                   style={{

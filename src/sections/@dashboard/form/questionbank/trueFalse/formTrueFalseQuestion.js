@@ -478,7 +478,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                   label="Điểm mặc định"
                   id="defaultMark"
                 />
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -502,7 +502,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
                       readOnly: true,
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div
                   style={{

@@ -495,8 +495,8 @@ export default function Form({ isEdit = false, currentLevel }) {
         <Card sx={{ p: 5 }}>
           <Typography variant="h4" sx={{ textAlign: 'center', mb: 3 }}>
             {!isEdit
-              ? "Tạo mới Câu Hỏi"
-              : "Cập nhật Câu Hỏi"}
+              ? "Tạo Mới Câu Hỏi Chọn Đáp Án"
+              : "Cập Nhật Câu Hỏi Chọn Đáp Án"}
           </Typography>
           <Stack
             divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
@@ -534,7 +534,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                   label="Điểm Mặc Định"
                   id="defaultMark"
                 />
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -558,7 +558,7 @@ export default function Form({ isEdit = false, currentLevel }) {
                       readOnly: true,
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div
                   style={{
