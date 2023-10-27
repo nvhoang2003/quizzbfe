@@ -34,7 +34,8 @@ export default function Details(props) {
         categoryId: q.categoryId,
         tagId: [],
         answer_content: [],
-        isPublic: q.isPublic
+        isPublic: q.isPublic,
+        imageUrl:q.imageUrl
       };
 
       q.tags?.filter((tag) => {

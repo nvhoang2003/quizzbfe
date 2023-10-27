@@ -34,7 +34,8 @@ import { getTagByCategory } from "@/dataProvider/tagApi";
 import RHFSelect from "@/components/form/RHFSelect";
 import { id } from "date-fns/locale";
 import { createQb, updateQb } from "@/dataProvider/questionbankApi";
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 //---------------------------------------------------
 
 Form.propTypes = {
@@ -77,6 +78,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       name: "",
     },
   ]);
+  const [imageUrl, setImageUrl] = useState();
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required("Tên không được trống").max(255, "Tên câu hỏi không đươc quá 255 kí tự"),
@@ -195,9 +197,11 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   useEffect(() => {
     if (isEdit && currentLevel) {
+      console.log(currentLevel);
       setCategoryId(currentLevel?.categoryId);
       fetchTagChoose(currentLevel);
       reset(defaultValues);
+      setImageUrl(currentLevel.imageUrl);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -359,6 +363,7 @@ export default function Form({ isEdit = false, currentLevel }) {
           };
         }),
       questionstype: "MultiChoice",
+      imageFile: data.imageFile,
       quizbankAnswers: data.answer.map((answer, index) => {
         return {
           content: answer.answer,
@@ -436,7 +441,7 @@ export default function Form({ isEdit = false, currentLevel }) {
       }),
     };
     try {
-      const res = await updateQb(currentLevel.id, transformData);
+      const res = await updateQb(currentLevel.id, transformData, 1);
       if (res.data.status === true) {
         snackbarUtils.success(res.data.message);
         push("/questionbank");
@@ -470,6 +475,18 @@ export default function Form({ isEdit = false, currentLevel }) {
       fetchUpdate(data);
     }
   };
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImageUrl(reader.result);
+    };
+    setValue(event.target.name, event.target.files[0]);
+
+    reader.readAsDataURL(file);
+  };
+
 
   return (
     <Container maxWidth="100%">
@@ -490,7 +507,21 @@ export default function Form({ isEdit = false, currentLevel }) {
 
                 <RHFTextField name="content" label="Nội Dung" id="content" />
 
-               
+                <label htmlFor="upload-image">
+                  <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                    Upload
+                  </Button>
+                  <input
+                    id="upload-image"
+                    name="imageFile"
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                </label>
+                {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="300" width="300" />}
+
                 <RHFTextField
                   name="generalfeedback"
                   label="Phản Hồi Chung"

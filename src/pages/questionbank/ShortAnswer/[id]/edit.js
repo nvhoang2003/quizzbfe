@@ -28,6 +28,7 @@ export default function Edit(props) {
         tagId: [],
         answers: [],
         isPublic: q.isPublic,
+        imageUrl:q.imageUrl
       };
 
       q.tags?.filter((tag) => {

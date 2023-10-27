@@ -25,6 +25,7 @@ export default function Details(props) {
         tagId: [],
         answers: [],
         isPublic: q.isPublic,
+        imageUrl: q.imageUrl
       };
 
       q.tags?.filter((tag) => {
