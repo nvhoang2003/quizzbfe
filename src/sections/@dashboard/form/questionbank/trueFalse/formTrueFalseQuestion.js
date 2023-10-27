@@ -422,20 +422,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       fetchUpdate(data);
     }
   };
-  const [imageUrl, setImageUrl] = useState(null);
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImageUrl(reader.result);
-    };
-    setValue(event.target.name, event.target.files[0]);
-
-    reader.readAsDataURL(file);
-  };
-
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
