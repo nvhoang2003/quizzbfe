@@ -427,6 +427,7 @@ export default function Form({ isEdit = false, currentLevel }) {
             tagId: parseInt(tag, 10),
           };
         }),
+      imageFile: data.imageFile,
       questionstype: "MultiChoice",
       quizbankAnswers: data.answer.map((answer, index) => {
         return {
