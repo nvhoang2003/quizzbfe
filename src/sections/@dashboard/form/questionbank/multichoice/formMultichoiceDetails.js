@@ -25,7 +25,7 @@ FormDetailMultichoice.propTypes = {
 };
 export default function FormDetailMultichoice({ currentLevel }) {
   const { push } = useRouter();
-
+  console.log(currentLevel);
   const [answerResult, setAnswerResult] = useState([]);
   const [submit, setSubmit] = useState(false);
 

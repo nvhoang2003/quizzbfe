@@ -49,7 +49,7 @@ export default function ShortAnswerQuestion(props) {
         <div style={{ display: "flex", alignItems: "center" }}>
           <Typography
             className={"fw-semibold"}
-            sx={{ fontSize: "0.8rem", mr: 2 }}
+            sx={{  mr: 2 }}//fontSize: "0.8rem",
           >
             Câu trả lời:
           </Typography>

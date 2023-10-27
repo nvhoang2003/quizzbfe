@@ -100,6 +100,7 @@ export default function MultiChoiceQuestion(props) {
       <Box sx={{ py: 3, width: 1 }} alignItems='center'>
         <Stack alignItems="flex-start" sx={{ paddingLeft: "50px" }}>
           <Typography variant="h5" >Câu Hỏi {numberQuestion}: {question?.content}</Typography>
+          {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
           <Typography sx={{ paddingLeft: "20px" }} variant="subtitle2">Chọn Nhiều Đáp Án</Typography>
         </Stack>
 
