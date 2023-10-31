@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Card, Grid } from "@mui/material";
+import { Card } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { React, useEffect, useState } from "react";
 import MatchingForm from '@/sections/@dashboard/form/questionbank/matching/form';
@@ -7,11 +7,6 @@ import { useRouter } from "next/router";
 import { getQuestionBankById } from "@/dataProvider/questionbankApi";
 
 // ----------------------------------------------------------------------
-
-Edit.propTypes = {
-  isEdit: PropTypes.bool,
-  currentLevel: PropTypes.object,
-};
 
 export default function Edit(props) {
   const [editData, setEditData] = useState({});
