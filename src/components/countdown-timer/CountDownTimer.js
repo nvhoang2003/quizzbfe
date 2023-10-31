@@ -11,7 +11,7 @@ function CountdownTimer({ initialTime, question, sum }) {
     query: { id }
   } = useRouter();
 
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+  const [timeLeft, setTimeLeft] = useState(initialTime * 60);
   const [openConfirm, setOpenConfirm] = useState(true);
   const router = useRouter();
 

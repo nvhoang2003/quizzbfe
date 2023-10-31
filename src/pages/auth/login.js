@@ -50,12 +50,12 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await auth.signIn(values.username, values.password);
-
+        console.log(response);
         if (response.status < 400) {
           if (continueUrl && continueUrl != null && continueUrl != "") {
             router.push(continueUrl);
           } else {
-            router.push("/");
+            router.push("/home/client");
           }
         } else {
           setMessage(response.response?.data?.title);

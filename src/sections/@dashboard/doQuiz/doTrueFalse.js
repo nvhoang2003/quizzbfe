@@ -4,10 +4,9 @@ import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 //----------------------------------------------------------------------
 
-export default function TrueFalseQuestion(props) {
+export default function DoTrueFalse(props) {
   const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
 
-  console.log(question);
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
@@ -34,15 +33,15 @@ export default function TrueFalseQuestion(props) {
   useEffect(() => {
     const answerChoosen = listQuestionResult.filter(item => item.questionId === question.question?.id);
     {
-      answerResult.id === "undefined" ? setIdAnswerChoose(answerResult.id) :
+      answerResult?.id === "undefined" ? setIdAnswerChoose(answerResult.id) :
 
         setIdAnswerChoose(answerChoosen[0]?.answer?.id);
     }
   }, [question]);
 
   useEffect(() => {
-    setAnswerResult(questionResult);
-  }, [questionResult]);
+    setAnswerResult(idAnswerChoose);
+  }, [answerResult]);
 
 
   return (
@@ -55,7 +54,7 @@ export default function TrueFalseQuestion(props) {
       width: 1
     }}>
       <Box sx={{ py: 3, }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.content}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>Câu hỏi {numberQuestion} : {question?.content}</Typography>
         {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
@@ -65,14 +64,14 @@ export default function TrueFalseQuestion(props) {
           name="radio-buttons-group"
           sx={{ py: 3 }}
         >
-          {question?.answers?.map((item, index) => (
+          {question?.questionAnswers?.map((item, index) => (
             <FormControlLabel
               value={item?.id}
               key={index}
               control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
               label={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="body1">{item?.answer}</Typography>
+                  <Typography variant="body1">{item?.content}</Typography>
                   {isSubmit === true &&
                     idAnswerChoose == item.id &&
                     questionResult.answer && (

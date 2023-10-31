@@ -1,10 +1,9 @@
 import React from 'react'
 import { Box, FormControl, MenuItem, Select, Typography, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
-import DoneIcon from '@mui/icons-material/Done';
-import ClearIcon from '@mui/icons-material/Clear';
+//----------------------------------------------------
 
-export default function MatchQuestion(props) {
+export default function DoMatch(props) {
   const {
     question,
     numberQuestion,
@@ -33,7 +32,6 @@ export default function MatchQuestion(props) {
     return newArr;
   }
 
-  console.log(oneSubQuestionPoint);
 
   const handleSelectChange = (event, subQuestion) => {
     const chooseAnswer = {
@@ -49,7 +47,6 @@ export default function MatchQuestion(props) {
   };
 
   const checkRightAnswer = (newMatch) => {
-    console.log(newMatch);
     var response = true;
     var mark = 0;
     newMatch?.map(oneMatch => {
@@ -67,21 +64,25 @@ export default function MatchQuestion(props) {
       answer: [...newMatch],
     })
   }
-  console.log(question);
 
   useEffect(() => {
-    if (question?.matchSubQuestionBanks?.length > 0) {
-      setListSubQuestion(question.matchSubQuestionBanks.map((item) => item.questionText).filter((item) => item !== ""));
-      setListSubAnswer(shuffleArray(question.matchSubQuestionBanks.map((item) => item.answerText)));
+    if (question?.matchSubQuestions?.length > 0) {
+      setListSubQuestion(question.matchSubQuestions.map((item) => item.questionText).filter((item) => item !== ""));
+      setListSubAnswer(shuffleArray(question.matchSubQuestions.map((item) => item.answerText)));
       // setListRightResult(question.matchSubQuestionBanks);
-      setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestionBanks.filter((item) => item.questionText !== "" && item?.questionText).length);
-      setMatchAnswerChoose(question.matchSubQuestionBanks.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
+      setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestions.filter((item) => item.questionText !== "" && item?.questionText).length);
+      setMatchAnswerChoose(question.matchSubQuestions.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
     }
   }, [question]);
 
   useEffect(() => {
-    setAnswerResult(questionResult);
+    if (questionResult) {
+      answerResult?.push(questionResult);
+    }
+
   }, [questionResult, answerResult]);
+
+
 
   return (
     <Box sx={{
@@ -93,11 +94,10 @@ export default function MatchQuestion(props) {
       width: 1
     }}>
       <Box sx={{ py: 3, }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.content}</Typography>
 
         {listSubQuestion?.map((subQuestion, quesIndex) => (
           <Stack direction="row" spacing={3} key={quesIndex} sx={{ my: 3 }}>
-            <Typography sx={{ fontWeight: 'bold', m: 3 }}>{subQuestion}</Typography>
+            <Typography sx={{ fontWeight: 'bold', m: 3 }}> {subQuestion}</Typography>
 
             {subQuestion && subQuestion !== null && (
               <>

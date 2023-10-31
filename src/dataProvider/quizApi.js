@@ -1,7 +1,7 @@
 import { deleteApi, getApi, postApi } from "@/dataProvider/baseApi";
 
 const quizPath = "Quizz";
-
+///Quizz/getListAllQuizz
 const quizApiPath = {
   quizPath: quizPath,
   getListQuizz: quizPath + "/getListAllQuizz",
@@ -11,8 +11,11 @@ const quizApiPath = {
   addQuestion: quizPath + "/AddQuestion",
   deleteQuizById: quizPath + "/deleteQuiz"
 }
-
+// params: {
+//   courseId: courseId
+// }
 function getAllQuiz(params) {
+  console.log(params);
   return getApi(quizApiPath.getListQuizz, params);
 }
 

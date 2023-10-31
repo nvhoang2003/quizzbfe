@@ -1,6 +1,8 @@
 import { deleteApi, getApi, postApi, putApi } from "@/dataProvider/baseApi";
 const listPath = 'getListQuestion';
 const multi = 'MultiQuestion';
+const path = 'Question';
+//Question/AddMultiQuestions
 ///getListQuestion/DeleteQuestion/56
 
 
@@ -9,7 +11,7 @@ function getAllQuestion(params) {
 }
 
 function addMultiQuestions(qb){
-  return postApi(listPath + `/AddMultiQuestions`,qb);
+  return postApi(path + `/AddMultiQuestions`,qb);
 }
 
 function getMultiById(id){

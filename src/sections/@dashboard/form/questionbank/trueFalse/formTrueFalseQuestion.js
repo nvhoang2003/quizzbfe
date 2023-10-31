@@ -101,7 +101,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   );
   const { setError, clearErrors, formState: { errors } } = useForm();
 
-  
+
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -170,11 +170,17 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         currentLevel?.answers !== "undefined"
       ) {
         currentLevel?.answers?.forEach((element) => {
-          const ans = {
-            feedback: element.feedback === null ? "" : element.feedback,
-            answer_truefalse: element.answer == "True" ? true : false,
-          };
+          if (element.fraction === 1) {
+            console.log("kldj");
+            console.log(element);
+            const ans = {
+              feedback: element.feedback === null ? "" : element.feedback,
+              answer_truefalse: element.content == "Đúng" ? "true" : "false",
+            };
+
+            
           setAnswerChoose(ans);
+          }
         });
       }
     }
@@ -364,6 +370,7 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
   async function fetchUpdate(data) {
     clearErrors();
+    console.log(data);
     const transformData = {
       name: data.name,
       content: data.content,
@@ -434,6 +441,8 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
     reader.readAsDataURL(file);
   };
+
+  console.log(answerChoose);
 
   return (
     <Container maxWidth="100%">
