@@ -13,7 +13,7 @@ function getListResponseForPeopleDoQuiz (params) {
 }
 
 function getResponseByID(id){
-  return getApi(quỉzesponseApiPath.getQuizzResponse + `/ ${id}`);
+  return getApi(quỉzesponseApiPath.getQuizzResponse + `/${id}`);
 }
 
 export {
