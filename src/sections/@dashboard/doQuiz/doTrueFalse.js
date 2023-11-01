@@ -1,47 +1,19 @@
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import DoneIcon from '@mui/icons-material/Done';
-import ClearIcon from '@mui/icons-material/Clear';
 //----------------------------------------------------------------------
 
 export default function DoTrueFalse(props) {
-  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
-
-  const [questionResult, setQuestionResult] = useState({
-    mark: 0,
-    status: '',
-    questionId: 0,
-    answer: null,
-    fraction: 0,
-  });
-
-  const [idAnswerChoose, setIdAnswerChoose] = useState();
-
-  const listQuestionResult = useState([]);
-
+  const { question, numberQuestion, answerResult, setAnswerResult } = props;
+  const [questionResult, setQuestionResult] = useState();
   const handleChange = (event, item) => {
-
-    setQuestionResult({
-      mark: item.fraction,
-      status: item.fraction == 1 ? 'Đúng' : 'Sai',
-      questionId: question.question?.id,
-      answer: item.answer,
-      fraction: item.fraction
-    })
-  }
-
-  useEffect(() => {
-    const answerChoosen = listQuestionResult.filter(item => item.questionId === question.question?.id);
-    {
-      answerResult?.id === "undefined" ? setIdAnswerChoose(answerResult.id) :
-
-        setIdAnswerChoose(answerChoosen[0]?.answer?.id);
+    var newListAnswer = answerResult.filter(item => item.questionId !== question.id);
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      idAnswerChoosen: [item.id]
     }
-  }, [question]);
-
-  useEffect(() => {
-    setAnswerResult(idAnswerChoose);
-  }, [answerResult]);
+    ]);
+  }
 
 
   return (
@@ -59,8 +31,8 @@ export default function DoTrueFalse(props) {
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
-          value={idAnswerChoose || ''}
-          onChange={(event, value) => setIdAnswerChoose(value)}
+          value={questionResult || ''}
+          onChange={(event, value) => setQuestionResult(value)}
           name="radio-buttons-group"
           sx={{ py: 3 }}
         >
@@ -68,22 +40,10 @@ export default function DoTrueFalse(props) {
             <FormControlLabel
               value={item?.id}
               key={index}
-              control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
+              control={<Radio onChange={(event) => handleChange(event, item)} />}
               label={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="body1">{item?.content}</Typography>
-                  {isSubmit === true &&
-                    idAnswerChoose == item.id &&
-                    questionResult.answer && (
-                      <span>
-                        {item.fraction === questionResult.fraction && questionResult.fraction === 1 ? (
-                          <span key={index}><DoneIcon color='success' /></span>
-                        ) : (
-                          <span key={index}> <ClearIcon color='error' /></span>
-                        )}
-                      </span>
-                    )
-                  }
                 </div>
               }
 

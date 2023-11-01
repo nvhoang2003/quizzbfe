@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 export default function DoMultiChoice(props) {
 
   const { question, numberQuestion, answerResult, setAnswerResult, isSubmit} = props;
-  console.log(question);
+  // console.log(question);
   // setAnswerResult([]);
   const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const [questionResult, setQuestionResult] = useState({
@@ -56,15 +56,17 @@ export default function DoMultiChoice(props) {
       })
       setListIdSelected(listIdSelected.filter(checkbox => checkbox !== item.id));
     }
+    var newListAnswer = answerResult?.filter(item => item.questionId !== question.id) || [];
+
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      idAnswerChoosen: listIdSelected
+    }
+    ]);
 
   }
-  useEffect(() => {
-    // if (questionResult) {
-    //   // setAnswerResult(prevAnswerResult => [...prevAnswerResult, questionResult]);
-    // }
-    setAnswerResult(listIdSelected);
-  }, [questionResult, answerResult]);
-
+  
   useEffect(() => {
     if (question, listQuestionResult) {
       const answer = listQuestionResult?.filter(item => item.questionId == question?.id);
@@ -101,7 +103,7 @@ export default function DoMultiChoice(props) {
     >
       <Box sx={{ py: 3, width: 1 }} alignItems='center'>
         <Stack alignItems="flex-start" sx={{ paddingLeft: "50px" }}>
-          <Typography variant="h5" >Câu hỏi {numberQuestion} : {question?.content}</Typography>
+          <Typography variant="h6" >Câu hỏi {numberQuestion} : {question?.content}</Typography>
           {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
           <Typography sx={{ paddingLeft: "20px" }} variant="subtitle2">Chọn Nhiều Đáp Án</Typography>
         </Stack>

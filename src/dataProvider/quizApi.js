@@ -11,11 +11,12 @@ const quizApiPath = {
   addQuestion: quizPath + "/AddQuestion",
   deleteQuizById: quizPath + "/deleteQuiz"
 }
+///api/Score/SubmitQuizz
 // params: {
 //   courseId: courseId
 // }
+
 function getAllQuiz(params) {
-  console.log(params);
   return getApi(quizApiPath.getListQuizz, params);
 }
 
@@ -23,8 +24,8 @@ function getQuizForTestID(id){
   return getApi(quizPath + `/getQuizForTest/${id}`);
 }
 
-function submitQuiz(id, params){
-  return postApi(`Score/SubmitQuizz/${id}`, params);
+function submitQuiz(params){
+  return postApi(`Score/SubmitQuizz`, params);
 }
 
 function getQuizById(quizId) {

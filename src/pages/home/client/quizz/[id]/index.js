@@ -5,6 +5,7 @@ import OverviewQuizz from "../../overview/overview-quizz";
 import { useRouter } from "next/router";
 import { getAllQuiz } from "@/dataProvider/quizApi";
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import { getAll } from "@/dataProvider/quizAccess";
 
 //----------------------------------------------------------
 
@@ -17,13 +18,10 @@ const Quizz = (props) => {
   
   const [paging, setPaging] = useState();
   const [list, setList] = useState([]);
-//api/Quizz/getListAllQuizz?courseId=5
 
   const fetchQuiz = async (id) => {
-    const res = await getAllQuiz();
-    console.log(res);
+    const res = await getAll(id);
     if (res.status < 400) {
-      setPaging(JSON.parse(res.headers["x-pagination"]));
       setList(res.data.data);
     } else {
       console.log(res.message);
@@ -35,7 +33,7 @@ const Quizz = (props) => {
       fetchQuiz(id);
     }
   }, [id]);
-  
+
   return (
     <>
       <Head>
@@ -55,19 +53,10 @@ const Quizz = (props) => {
             direction={{ xs: 'column', sm: 'row' }}
             spacing={{ xs: 2, sm: 4, md: 6 }}
           >
-            {/* {
-              list.map((list, index) => {
-                return ( */}
-                  {/* <React.Fragment key={index}> */}
-                    <OverviewQuizz
-                      products={list}
-                      sx={{ height: '100%' }}
-                    />
-                  {/* </React.Fragment> */}
-                {/* );
-              })
-            } */}
-
+            <OverviewQuizz
+              products={list}
+              sx={{ height: '100%' }}
+            />
           </Stack>
         </Container>
       </Box>

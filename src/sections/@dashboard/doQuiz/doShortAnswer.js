@@ -14,19 +14,17 @@ import ClearIcon from "@mui/icons-material/Clear";
 export default function DoShortAnswer(props) {
   const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
   const handleChangeAnswer = (event) => {
-    const checkStatus = question.questionAnswers.find(
-      (answer) =>
-        answer.fraction > 0 &&
-        answer.content.trim().toLowerCase() ===
-        event.target.value.trim().toLowerCase()
-    );
 
-    // setAnswerResult([{
-    //   status: !!checkStatus,
-    //   content: event.target.value,
-    // }]);
-    setAnswerResult(prevAnswerResult => [...prevAnswerResult, event.target.value]);
+    var newListAnswer = answerResult?.filter(item => item.questionId !== question.id);
+
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      shortAnswerChoosen: event.target.value
+    }
+    ]);
   };
+
   return (
     <Box
       sx={{
@@ -40,7 +38,7 @@ export default function DoShortAnswer(props) {
     >
       <Box sx={{ py: 3 }}>
         <Typography sx={{ fontWeight: "bold" }}>
-         Câu hỏi {numberQuestion} : {question?.content}
+          Câu hỏi {numberQuestion} : {question?.content}
         </Typography>
         {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
 
@@ -56,7 +54,7 @@ export default function DoShortAnswer(props) {
             size="small"
             onChange={(event) => handleChangeAnswer(event)}
           />
-          {isSubmit === true && (
+          {/* {isSubmit === true && (
             <span>
               {answerResult.status ? (
                 <span>
@@ -69,7 +67,7 @@ export default function DoShortAnswer(props) {
                 </span>
               )}
             </span>
-          )}
+          )} */}
         </div>
       </Box>
     </Box>

@@ -22,11 +22,8 @@ import { useRouter } from 'next/navigation';
 export default function OverviewQuizz(props) {
   const { products, sx } = props;
   const { push } = useRouter();
-  console.log(products);
-  //check time
 
   const handleClick = (id) => {
-    // console.log(id);
     push(`/testquiz/${id}`);
   }
 
@@ -37,14 +34,12 @@ export default function OverviewQuizz(props) {
       <List>
         {products?.map((product, index) => {
           const hasDivider = index < products.length - 1;
-          // const ago = formatDistanceToNow(product.updateDate);
 
           return (
             <ListItem
               divider={hasDivider}
               key={product.id}
-              onClick={() => handleClick(product.id)}
-            // onClick={handleClick(product.courseid)}
+              onClick={() => handleClick(product.quizAccess?.id)}
             >
               <ListItemAvatar>
                 {
@@ -73,7 +68,7 @@ export default function OverviewQuizz(props) {
                 }
               </ListItemAvatar>
               <ListItemText
-                primary={product.name}
+                primary={product.courseName}
                 primaryTypographyProps={{ variant: 'subtitle1' }}
                 secondaryTypographyProps={{ variant: 'body2' }}
               />

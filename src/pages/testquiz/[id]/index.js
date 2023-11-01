@@ -39,7 +39,7 @@ const TestQuiz = (props) => {
   const [truefalse, setTruefalse] = useState([]);
   const [match, setMatch] = useState([]);
   const [drag, setDrag] = useState([]);
-
+  const [quizSubmit, setQuizSubmit] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -66,26 +66,23 @@ const TestQuiz = (props) => {
 
   const listQuestionResult = useSelector(state => state.quizResult.value);
 
-  const handleSubmitConfirm = async (id) => {
-    const resultForSend = listQuestionResult.map(obj => {
-      const newObj = { ...obj }; // Tạo một đối tượng mới sao chép từ đối tượng hiện có
-
-      newObj.answer = JSON.stringify(obj.answer); // Gán giá trị mới cho thuộc tính answer của đối tượng mới
-
-      return newObj;
-    });
-
+  const handleSubmitConfirm = async () => {
+    const number =parseInt(id);
+    const transformData = {
+      accessId: 17,
+      quizId: data?.quiz?.id,
+      listQuestionSubmit: quizSubmit
+    }
     try {
-      const res = await submitQuiz(id, resultForSend);
-      console.log(res);
-      router.push(`/ortherpage/${id}`);
+      const res = await submitQuiz(transformData);
+      if (res.data.status === true) {
+         router.push(`/ortherpage/` + id);
+      }
+
     } catch (error) {
-      console.log(error);
+
     }
 
-    // const res = await submitQuiz(id, resultForSend);
-    // console.log(res);
-    // router.push(`/ortherpage/` + id);
   }
 
   async function fetchQuizByID() {
@@ -101,7 +98,7 @@ const TestQuiz = (props) => {
       props.changeInfo(transformData.userDoQuizz, transformData.courseName, transformData.quiz?.name);
       setSumValue(transformData.questionReults.length);
       setTimeLimit(transformData?.quiz?.timeLimit);
-      setEndValue(sumValue > 10 ? 10 : sumValue);
+      // setEndValue(sumValue > 10 ? 10 : sumValue);
       setData(transformData);
     } else {
       return res;
@@ -109,33 +106,26 @@ const TestQuiz = (props) => {
   };
 
   useEffect(() => {
-    if (curent > endValue) {
-      setEndValue(endValue + 10 > sumValue ? sumValue : endValue + 10);
-      setStartValue(startValue + 10 > sumValue ? startValue : startValue + 10);
-    }
+    setCurrent(quizSubmit?.length);
+    // if (curent > endValue) {
+    //   setEndValue(endValue + 10 > sumValue ? sumValue : endValue + 10);
+    //   setStartValue(startValue + 10 > sumValue ? startValue : startValue + 10);
+    // }
 
-    if (curent < startValue) {
-      setEndValue(endValue - 10 < 1 ? endValue : endValue - (endValue % 10 == 0 ? 10 : endValue % 10));
-      setStartValue(startValue - 10 < 1 ? 1 : startValue - 10);
-    }
-    if (data.questionReults) {
-      setCurrentQuestion(data?.questionReults[curent - 1]);
-    }
-  }, [curent, data]);
+    // if (curent < startValue) {
+    //   setEndValue(endValue - 10 < 1 ? endValue : endValue - (endValue % 10 == 0 ? 10 : endValue % 10));
+    //   setStartValue(startValue - 10 < 1 ? 1 : startValue - 10);
+    // }
+    // if (data.questionReults) {
+    //   setCurrentQuestion(data?.questionReults[curent - 1]);
+    // }
+  }, [curent, quizSubmit]);
 
   useEffect(() => {
     if (id) {
       fetchQuizByID(id);
     }
   }, [id, sumValue]);
-
-  const onSubmit = async (data) => {
-   console.log(shortAnswer);
-   console.log(multiChoice);
-   console.log(truefalse);
-   console.log(drag);
-   console.log(match);
-  };
 
   return (
     <>
@@ -150,7 +140,7 @@ const TestQuiz = (props) => {
         }}
       >
         <Container maxWidth="xl">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(handleOpenConfirm)}>
             <Stack spacing={3}>
               <Stack
                 display="flex"
@@ -170,13 +160,6 @@ const TestQuiz = (props) => {
 
                 </Typography>
               </Stack>
-              {/* <Stack
-              flexWrap="wrap"
-              direction="row"
-              className='center-item'
-            >
-              <PaginationQuestion startValue={startValue} endValue={endValue} currentValue={curent} changeCurrentValue={setNewCurrentValue} sumValue={sumValue} />
-            </Stack> */}
               <Stack
                 className='center-item'
                 spacing={3}
@@ -189,13 +172,13 @@ const TestQuiz = (props) => {
                   {data?.questionReults && data.questionReults.map((item, index) => {
                     switch (item.questionsType) {
                       case 'ShortAnswer':
-                        return <DoShortQuestion key={index} currentLevel={item} shortAnswer={shortAnswer} setShortAnswer={setShortAnswer} number={index + 1} />;
+                        return <DoShortQuestion key={index} currentLevel={item} quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit} number={index + 1} />;
                       case 'Match':
-                        return <DoMatchQuestion key={index} currentLevel={item} match={match} setMatch={setMatch} number={index + 1} />;
+                        return <DoMatchQuestion key={index} currentLevel={item} quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit} number={index + 1} />;
                       case 'TrueFalse':
-                        return <DoTrueFalseQuestion key={index} currentLevel={item} truefalse={truefalse} setTruefalse={setTruefalse} number={index + 1} />;
+                        return <DoTrueFalseQuestion key={index} currentLevel={item} quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit} number={index + 1} />;
                       case 'MultiChoice':
-                        return <DoMultiChoiceQuestion key={index} currentLevel={item} multiChoice={multiChoice} setMultiChoice={setMultiChoice} number={index + 1} />;
+                        return <DoMultiChoiceQuestion key={index} currentLevel={item} quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit} number={index + 1} />;
                       case 'DragAndDropIntoText':
                         return <DoDragAndDropQuestion key={index} currentLevel={item} drag={drag} setDrag={setDrag} numbers={index + 1} />;
                       default:

@@ -20,7 +20,7 @@ import DoShortAnswer from "./doShortAnswer";
 //---------------------------------------------------
 
 export default function DoShortQuestion(props) {
-  const { currentLevel, shortAnswer, setShortAnswer,number } = props
+  const { currentLevel, quizSubmit, setQuizSubmit,number } = props
 
   const [submit, setSubmit] = useState(false);
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function DoShortQuestion(props) {
             divider={<Divider variant="middle" />}
             spacing={3}
           >
-            <DoShortAnswer question={currentLevel} numberQuestion={number} answerResult={shortAnswer} setAnswerResult={setShortAnswer} isSubmit={submit} />
+            <DoShortAnswer question={currentLevel} numberQuestion={number} answerResult={quizSubmit} setAnswerResult={setQuizSubmit} isSubmit={submit} />
           </Stack>
         </Card>
       </Stack>

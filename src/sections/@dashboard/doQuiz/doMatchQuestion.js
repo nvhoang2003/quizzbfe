@@ -24,7 +24,8 @@ import DoMatch from "./doMatch";
 // };
 
 export default function DoMatchQuestion(props) {
-  const{currentLevel, match, setMatch , number} = props;
+  //quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit}
+  const{currentLevel, quizSubmit, setQuizSubmit , number} = props;
   const { push } = useRouter();
   const [submit, setSubmit] = useState(false);
 
@@ -68,8 +69,8 @@ export default function DoMatchQuestion(props) {
               <DoMatch
                 question={currentLevel}
                 numberQuestion={number}
-                answerResult={match}
-                setAnswerResult={setMatch}
+                answerResult={quizSubmit}
+                setAnswerResult={setQuizSubmit}
                 isSubmit={submit}
               />
             </Stack>

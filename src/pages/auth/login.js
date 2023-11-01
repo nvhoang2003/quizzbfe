@@ -50,8 +50,8 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await auth.signIn(values.username, values.password);
-        console.log(response);
         if (response.status < 400) {
+          localStorage.setItem("userId", response.data.userId);
           if (continueUrl && continueUrl != null && continueUrl != "") {
             router.push(continueUrl);
           } else {

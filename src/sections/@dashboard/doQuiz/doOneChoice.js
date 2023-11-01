@@ -19,22 +19,19 @@ export default function DoOneChoice(props) {
   const listQuestionResult = useState([]);
 
   const handleChange = (event, item) => {
-    setQuestionResult({
-      mark: item.fraction,
-      status: item.fraction == 1 ? 'Đúng' : 'Sai',
-      questionId: question.question?.id,
-      answer: item,
-    })
+    var newListAnswer = answerResult?.filter(item => item.questionId !== question.id);
+
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      idAnswerChoosen: [item.id]
+    }
+    ]);
   }
   useEffect(() => {
     const answerChoosen = listQuestionResult.filter(item => item.questionId === question.question?.id);
     setIdAnswerChoose(answerChoosen[0]?.answer?.id);
   }, [question]);
-
-  useEffect(() => {
-    setAnswerResult(idAnswerChoose);
-    // setAnswerResult(prevAnswerResult => [...prevAnswerResult, questionResult]);
-  }, [questionResult]);
 
   return (
     <Box sx={{

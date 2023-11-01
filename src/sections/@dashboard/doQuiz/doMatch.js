@@ -11,15 +11,11 @@ export default function DoMatch(props) {
     setAnswerResult,
     isSubmit
   } = props;
+
   const [matchAnswerChoose, setMatchAnswerChoose] = useState();
   const [listSubQuestion, setListSubQuestion] = useState();
   const [listSubAnswer, setListSubAnswer] = useState();
-  const [questionResult, setQuestionResult] = useState({
-    mark: 0,
-    status: 'Đúng',
-    questionId: 0,
-    answer: [],
-  });
+
   const [oneSubQuestionPoint, setOneSubQuestionPoint] = useState(0);
 
   const shuffleArray = (arr) => {
@@ -38,8 +34,7 @@ export default function DoMatch(props) {
       questionText: subQuestion,
       answerText: event.target.value
     };
-
-    const matchRemove = matchAnswerChoose.filter((question) => question.questionText !== subQuestion);
+    const matchRemove = matchAnswerChoose.filter((question) => question.questionText !== subQuestion && question.questionText !== null);
     const newMatch = [...matchRemove, chooseAnswer];
     setMatchAnswerChoose(newMatch);
 
@@ -47,42 +42,26 @@ export default function DoMatch(props) {
   };
 
   const checkRightAnswer = (newMatch) => {
-    var response = true;
-    var mark = 0;
-    newMatch?.map(oneMatch => {
-      if (question?.matchSubQuestionBanks?.find((rightAnswer) => rightAnswer.questionText === oneMatch.questionText && rightAnswer.answerText === oneMatch.answerText)) {
-        mark += oneSubQuestionPoint;
-      }
-    })
+    var newListAnswer = answerResult.filter(item => item.questionId !== question.id);
 
-    const status = mark == question?.defaultMark ? "Đúng" : "Sai";
-
-    setQuestionResult({
-      mark: mark,
-      status: status,
-      questionId: question?.id,
-      answer: [...newMatch],
-    })
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      matchSubQuestionChoosen: [
+        ...newMatch
+      ]
+    }
+    ]);
   }
 
   useEffect(() => {
     if (question?.matchSubQuestions?.length > 0) {
       setListSubQuestion(question.matchSubQuestions.map((item) => item.questionText).filter((item) => item !== ""));
       setListSubAnswer(shuffleArray(question.matchSubQuestions.map((item) => item.answerText)));
-      // setListRightResult(question.matchSubQuestionBanks);
       setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestions.filter((item) => item.questionText !== "" && item?.questionText).length);
       setMatchAnswerChoose(question.matchSubQuestions.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
     }
   }, [question]);
-
-  useEffect(() => {
-    if (questionResult) {
-      answerResult?.push(questionResult);
-    }
-
-  }, [questionResult, answerResult]);
-
-
 
   return (
     <Box sx={{
