@@ -5,11 +5,7 @@ import Countdown from "react-countdown";
 
 //----------------------------------------------------------------
 
-function CountdownTimer({
-  deadline,
-  //  completedCompoment,
-  localVaraiableName,
-}) {
+function CountdownTimer({ deadline, completedCompoment, localVaraiableName }) {
   const [data, setData] = useState({ date: Date.now(), delay: deadline });
   const [wantedDelay, setWantedDelay] = useState(deadline);
 
@@ -32,17 +28,16 @@ function CountdownTimer({
   };
 
   const renderer = ({ hours, minutes, seconds, completed }) => {
-    console.log(completed);
     if (completed) {
-      return <>Do quiz timeout</>;
+      return <>{completedCompoment && completedCompoment}</>;
     } else {
-      console.log(formatTime(hours, minutes, seconds));
       return <>{formatTime(hours, minutes, seconds)}</>;
     }
   };
 
   useEffect(() => {
     const savedDate = localStorage.getItem(localVaraiableName);
+
     if (savedDate != null && !isNaN(savedDate)) {
       const currentTime = Date.now();
       const delta = parseInt(savedDate, 10) - currentTime;
@@ -56,12 +51,29 @@ function CountdownTimer({
     }
   }, []);
 
-  return <Countdown date={data.date + data.delay} renderer={renderer} />;
+  return (
+    <Countdown
+      date={data.date + data.delay}
+      renderer={renderer}
+      onStart={(delta) => {
+        //Save the end date
+        if (localStorage.getItem(localVaraiableName) == null)
+          localStorage.setItem(
+            localVaraiableName,
+            JSON.stringify(data.date + data.delay)
+          );
+      }}
+      onComplete={() => {
+        if (localStorage.getItem(localVaraiableName) != null)
+          localStorage.removeItem(localVaraiableName);
+      }}
+    />
+  );
 }
 
 CountdownTimer.propTypes = {
   deadline: PropTypes.number,
-  // completedCompoment: PropTypes.node,
+  completedCompoment: PropTypes.node,
   localVaraiableName: PropTypes.string,
 };
 
