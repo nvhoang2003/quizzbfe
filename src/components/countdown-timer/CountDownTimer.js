@@ -1,84 +1,68 @@
-import { Box, Button, Dialog, DialogContent, Grid, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import ConfirmDialogQuestion from '../confirm-dialog/ConfirmDialogQuestion';
-import { useRouter } from 'next/router';
-
+import { Stack } from "@mui/material";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import Countdown from "react-countdown";
 
 //----------------------------------------------------------------
 
-function CountdownTimer({ initialTime, question, sum }) {
-  const {
-    query: { id }
-  } = useRouter();
+function CountdownTimer({
+  deadline,
+  //  completedCompoment,
+  localVaraiableName,
+}) {
+  const [data, setData] = useState({ date: Date.now(), delay: deadline });
+  const [wantedDelay, setWantedDelay] = useState(deadline);
 
-  const [timeLeft, setTimeLeft] = useState(initialTime * 60);
-  const [openConfirm, setOpenConfirm] = useState(true);
-  const router = useRouter();
+  const formatTime = (hours, minutes, seconds) => {
+    const displayHours = hours.toString().length == 1 ? "0" + hours : hours;
+    const displayMinutes =
+      minutes.toString().length == 1 ? "0" + minutes : minutes;
+    const displaySeconds =
+      seconds.toString().length == 1 ? "0" + seconds : seconds;
 
-  const handleCloseConfirm = (event, reason) => {
-    if (reason !== 'backdropClick') {
-      setOpenConfirm(true);
+    return minutes <= 5 ? (
+      <>
+        {displayHours}:{displayMinutes}:{displaySeconds}
+      </>
+    ) : (
+      <>
+        {displayHours}:{displayMinutes}:{displaySeconds}
+      </>
+    );
+  };
+
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    console.log(completed);
+    if (completed) {
+      return <>Do quiz timeout</>;
+    } else {
+      console.log(formatTime(hours, minutes, seconds));
+      return <>{formatTime(hours, minutes, seconds)}</>;
     }
   };
-  const handleSubmit = () => {
-    router.push(`/ortherpage/` + id);
-
-  }
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setInterval(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
+    const savedDate = localStorage.getItem(localVaraiableName);
+    if (savedDate != null && !isNaN(savedDate)) {
+      const currentTime = Date.now();
+      const delta = parseInt(savedDate, 10) - currentTime;
 
-      return () => clearInterval(timerId);
+      if (delta > wantedDelay) {
+        if (localStorage.getItem(localVaraiableName).length > 0)
+          localStorage.removeItem(localVaraiableName);
+      } else {
+        setData({ date: currentTime, delay: delta });
+      }
     }
-  }, [timeLeft]);
+  }, []);
 
-  const formatTime = (time) => {
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
-
-    const displayHours = hours.toString().length == 1 ? "0" + hours : hours;
-    const displayMinutes = minutes.toString().length == 1 ? "0" + minutes : minutes;
-    const displaySeconds = seconds.toString().length == 1 ? "0" + seconds : seconds;
-
-    return minutes <= 5 ?
-      <>{displayHours}:{displayMinutes}:{displaySeconds}</>
-      : <>{displayHours}:{displayMinutes}:{displaySeconds}</>;
-  };
-
-  return (
-    <div>
-      {timeLeft > 0 ? (
-        <>{formatTime(timeLeft)}</>
-      ) : (
-
-        <ConfirmDialogQuestion
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          title=""
-          content={
-            <h3>
-              Đã hết giờ bạn đã làm được {question}/ {sum}
-            </h3>
-          }
-          action={
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => {
-                handleSubmit(id);
-              }}
-            >
-              Submit
-            </Button>
-          }
-        />
-      )}
-    </div>
-  );
+  return <Countdown date={data.date + data.delay} renderer={renderer} />;
 }
 
-export default CountdownTimer
+CountdownTimer.propTypes = {
+  deadline: PropTypes.number,
+  // completedCompoment: PropTypes.node,
+  localVaraiableName: PropTypes.string,
+};
+
+export default CountdownTimer;
