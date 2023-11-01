@@ -31,7 +31,7 @@ export default function ListPublicQuizForClient(props) {
       userId: localStorage.getItem("userId"),
       quizId: id,
       timeStartQuiz: new Date(),
-      status: ""
+      status: "Doing"
     }
     const res = await addQuizAccess(dataAdd);
     const accessId = res.data.data.id;
@@ -41,7 +41,6 @@ export default function ListPublicQuizForClient(props) {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Quizz" />
       <List>
         {quizzes?.map((item, index) => {
           const hasDivider = index < quizzes.length - 1;

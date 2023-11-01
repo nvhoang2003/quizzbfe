@@ -33,7 +33,6 @@ export default function ListPrivateQuizForClient(props) {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Quizz" />
       <List>
         {quizzes?.map((item, index) => {
           const hasDivider = index < quizzes.length - 1;
