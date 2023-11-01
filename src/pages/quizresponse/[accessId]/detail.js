@@ -17,7 +17,7 @@ const Detail = (props) => {
     const response = await getResponseByID(accessId);
 
     if (response.status < 400) {
-      const quizResponse = res.data.data;
+      const quizResponse = response?.data?.data;
 
       setData(quizResponse);
     } else {

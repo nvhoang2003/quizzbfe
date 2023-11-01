@@ -8,13 +8,12 @@ const Row = ({ questionResult }) => {
       questionResult?.question?.matchSubQuestions?.length > 0 ? (
         <Grid>
           <Grid container my={1}>
-            <Grid item xs={1}></Grid>
-            <Grid item xs={5}>
+            <Grid item xs={3}>
               <Typography fontWeight="700" noWrap>
                 Câu hỏi
               </Typography>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item>
               <Typography fontWeight="700" noWrap>
                 Câu trả lời
               </Typography>
@@ -24,15 +23,12 @@ const Row = ({ questionResult }) => {
             if (item && item.questionText) {
               return (
                 <Grid key={index} container>
-                  <Grid item xs={1}>
-                    <Typography fontWeight="600">{index + 1}.</Typography>
-                  </Grid>
-                  <Grid item xs={5}>
+                  <Grid item xs={3}>
                     <Typography fontWeight="600" noWrap>
                       {item.questionText}
                     </Typography>
                   </Grid>
-                  <Grid item xs={5}>
+                  <Grid item>
                     <Typography noWrap>
                       {questionResult?.matchSubQuestionChoosen?.find(
                         (matchSub) =>

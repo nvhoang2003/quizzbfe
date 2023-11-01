@@ -33,11 +33,11 @@ const ResultQuestions = ({ questionResults }) => {
             question={questionResult?.question}
             mark={questionResult?.mark}
           />
-          <Container>
+          <Stack pl={5}>
             <QuestionResultRow
               questionResult={questionResult}
             />
-          </Container>
+          </Stack>
         </Stack>
       </Stack>
     );
