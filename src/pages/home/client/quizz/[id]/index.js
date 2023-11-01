@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import OverviewQuizz from "../../overview/overview-quizz";
 import { useRouter } from "next/router";
 import { getAllQuiz } from "@/dataProvider/quizApi";
+import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 //----------------------------------------------------------
 
@@ -12,7 +13,8 @@ import { getAllQuiz } from "@/dataProvider/quizApi";
 const Quizz = (props) => {
   const {
     query: { id }
-  } = useRouter()
+  } = useRouter();
+  
   const [paging, setPaging] = useState();
   const [list, setList] = useState([]);
 //api/Quizz/getListAllQuizz?courseId=5
@@ -72,5 +74,11 @@ const Quizz = (props) => {
     </>
   );
 };
+
+Quizz.getLayout = (page) => (
+  <DashboardLayout showBreadCrumbs={false}>
+    {page}
+  </DashboardLayout>
+);
 
 export default Quizz;

@@ -1,4 +1,4 @@
-import { postApi, putApi } from "@/dataProvider/baseApi";
+import { postApi, putApi, getApi } from "@/dataProvider/baseApi";
 
 const quizAccessPath = "QuizAccess";
 
@@ -6,6 +6,10 @@ const quizAccessApiPath = {
   quizAccessPath: quizAccessPath,
   addQuizAccess: quizAccessPath + "/CreateNewQuizzAccess",
   updStatusQuizAccess: quizAccessPath + "/updateStausQuizzAccess"
+}
+
+function getQuizAccess(params){
+  return getApi(quizAccessPath + "/GetListQuizzAccess", params);
 }
 
 function addQuizAccess(params) {
@@ -18,5 +22,6 @@ function updStatusQuizAccess(id, bodyParams){
 
 export {
   addQuizAccess,
-  updStatusQuizAccess
+  updStatusQuizAccess,
+  getQuizAccess
 }

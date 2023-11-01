@@ -10,32 +10,14 @@ export default function OverviewCourse(props) {
   const { products, positive = false, sx } = props;
   const router = useRouter();
 
-  const now = new Date().getTime();
-  const endDate = new Date(products.endDate).getTime();
-  const timeInMilliseconds = endDate - now
-  const seconds = Math.floor((timeInMilliseconds / 1000) % 60);
-  const minutes = Math.floor((timeInMilliseconds / (1000 * 60)) % 60);
-  const hours = Math.floor((timeInMilliseconds / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(timeInMilliseconds / (1000 * 60 * 60 * 24));
-
-  const formattedDate = `${seconds}s ,${minutes}min, ${hours}h, ${days}d`;
-
   const handleShowQuiz = (item) => {
-    if (timeInMilliseconds < 0) {
-      snackbarUtils.error("Thời gian của khóa học đã hết");
-      return null;
-    }
-    console.log(item);
-    
     router.push({
-      pathname: `client/quizz/[quizzId]`,
-      query: { quizzId: item.id },
+      pathname: `client/course/[id]`,
+      query: { id: item.id },
     });
-
   }
 
   return (
-
     <Card sx={sx}>
       <CardContent onClick={() => handleShowQuiz(products)}>
         <Stack
@@ -85,23 +67,6 @@ export default function OverviewCourse(props) {
               >
                 {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
               </SvgIcon> */}
-
-              {endDate - now > 0 ? (
-                <Typography
-                  color={positive ? 'success.main' : 'error.main'}
-                  variant="body2"
-                >
-                  Còn lại: {formattedDate}
-                </Typography>
-              ) : (
-                <Typography
-                  color={positive ? 'success.main' : 'error.main'}
-                  variant="body2"
-                >
-                  Đã hết thời gian để làm
-                </Typography>
-              )}
-
             </Stack>
             {/* <Typography
               color="text.secondary"
