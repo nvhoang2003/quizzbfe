@@ -5,9 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function DoMultiChoice(props) {
 
-  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit} = props;
-  // console.log(question);
-  // setAnswerResult([]);
+  const { question, numberQuestion, answerResult, setAnswerResult,quiz, isSubmit} = props;
   const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
@@ -78,7 +76,6 @@ export default function DoMultiChoice(props) {
           setListIdSelected(ids);
         }
       }
-      // console.log(listQuestionResult.filter(item => item.questionId == question?.id)[0])
       if (listQuestionResult?.filter(item => item.questionId == question?.id)[0]) {
         setQuestionResult(listQuestionResult.filter(item => item.questionId == question?.id)[0])
       }
@@ -96,7 +93,6 @@ export default function DoMultiChoice(props) {
       display: 'flex',
       p: 1,
       m: 1,
-      // bgcolor: 'background.paper',
       borderTop: 'solid 1px',
       width: 1
     }}
@@ -117,7 +113,7 @@ export default function DoMultiChoice(props) {
               
               <FormControlLabel key={index}
                 sx={{ paddingLeft: "100px" }}
-                control={<Checkbox disabled={isSubmit} checked={listIdSelected?.includes(item.id)} onChange={(event) => handleChange(event, item)} name="checked" />}
+                control={<Checkbox disabled={isSubmit} checked={ quiz.length? quiz[0].idAnswerChoosen?.includes(item.id) : listIdSelected.includes(item.id)} onChange={(event) => handleChange(event, item)} name="checked" />}
                 label={
 
                   <div style={{ display: 'flex', alignItems: 'center' }}>

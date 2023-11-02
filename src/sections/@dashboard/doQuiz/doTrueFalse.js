@@ -1,10 +1,10 @@
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 //----------------------------------------------------------------------
 
 export default function DoTrueFalse(props) {
-  const { question, numberQuestion, answerResult, setAnswerResult } = props;
-  const [questionResult, setQuestionResult] = useState();
+  const { question, numberQuestion, answerResult, setAnswerResult, quiz, setQuiz } = props;
+  
   const handleChange = (event, item) => {
     var newListAnswer = answerResult.filter(item => item.questionId !== question.id);
     setAnswerResult([...newListAnswer, {
@@ -14,7 +14,6 @@ export default function DoTrueFalse(props) {
     }
     ]);
   }
-
 
   return (
     <Box sx={{
@@ -31,10 +30,9 @@ export default function DoTrueFalse(props) {
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
-          value={questionResult || ''}
-          onChange={(event, value) => setQuestionResult(value)}
           name="radio-buttons-group"
           sx={{ py: 3 }}
+          value={parseInt(quiz[0]?.idAnswerChoosen[0])}
         >
           {question?.questionAnswers?.map((item, index) => (
             <FormControlLabel

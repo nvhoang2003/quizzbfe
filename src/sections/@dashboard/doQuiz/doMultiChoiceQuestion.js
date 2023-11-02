@@ -18,7 +18,15 @@ export default function DoMultiChoiceQuestion(props) {
   const { currentLevel, quizSubmit, setQuizSubmit, number } = props;
   const { push } = useRouter();
   const [submit, setSubmit] = useState(false);
-  
+
+  const [quiz, setQuiz] = useState([]);
+
+  useEffect(() => {
+    const updatedQuiz = quizSubmit
+      .filter((item) => item.questionId === currentLevel.id);
+    setQuiz(updatedQuiz);
+  }, [quizSubmit]);
+
 
   const isMultiRightAnswer = (currentQuestion) => {
     const totalRightAnswers = currentQuestion?.questionAnswers?.reduce((total, item) => {
@@ -35,7 +43,6 @@ export default function DoMultiChoiceQuestion(props) {
 
   return (
     <Container maxWidth="100%">
-      {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}> */}
       <Stack spacing={3}>
         <Card sx={{ p: 5 }}>
           <Stack
@@ -43,9 +50,21 @@ export default function DoMultiChoiceQuestion(props) {
             spacing={3}
           >
             {isMultiRightAnswer(currentLevel) ?
-              <DoMultiChoice question={currentLevel} numberQuestion={number} answerResult={quizSubmit} setAnswerResult={setQuizSubmit} isSubmit={submit} /> //
+              <DoMultiChoice
+                question={currentLevel}
+                numberQuestion={number}
+                answerResult={quizSubmit}
+                setAnswerResult={setQuizSubmit}
+                quiz={quiz}
+                isSubmit={submit} /> //
 
-              : <DoOneChoice question={currentLevel} numberQuestion={number} answerResult={quizSubmit} setAnswerResult={setQuizSubmit} isSubmit={submit} />
+              : <DoOneChoice
+                question={currentLevel}
+                numberQuestion={number}
+                answerResult={quizSubmit}
+                setAnswerResult={setQuizSubmit}
+                quiz={quiz}
+                isSubmit={submit} />
 
             }
 
@@ -53,7 +72,6 @@ export default function DoMultiChoiceQuestion(props) {
 
         </Card>
       </Stack>
-      {/* </FormProvider> */}
     </Container>
   );
 }

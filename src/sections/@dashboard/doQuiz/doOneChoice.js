@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 //----------------------------------------------------------------------
 
 export default function DoOneChoice(props) {
-  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
+  const { question, numberQuestion, answerResult, setAnswerResult,quiz, isSubmit } = props;
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
@@ -48,7 +48,7 @@ export default function DoOneChoice(props) {
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
-          value={idAnswerChoose || ''}
+          value={parseInt(quiz[0]?.idAnswerChoosen[0])}
           onChange={(event, value) => setIdAnswerChoose(value)}
           name="radio-buttons-group"
           sx={{ py: 3 }}
@@ -57,23 +57,11 @@ export default function DoOneChoice(props) {
             <FormControlLabel
               value={item?.id}
               key={index}
-              control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
+              control={<Radio onChange={(event) => handleChange(event, item)} />}
               label={
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="body1">{item?.content}</Typography>
-                  {isSubmit === true &&
-                    idAnswerChoose == item.id &&
-                    questionResult.answer && (
-                      <span>
-                        {item.fraction === questionResult.answer.fraction && questionResult.answer.fraction === 1 ? (
-                          <span key={index}><DoneIcon color='success' /></span>
-                        ) : (
-                          <span key={index}> <ClearIcon color='error' /></span>
-                        )}
-                      </span>
-                    )
-                  }
                 </div>
               }
 

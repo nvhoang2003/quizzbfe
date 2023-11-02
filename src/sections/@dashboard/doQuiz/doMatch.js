@@ -9,13 +9,13 @@ export default function DoMatch(props) {
     numberQuestion,
     answerResult,
     setAnswerResult,
-    isSubmit
+    isSubmit,
+    quiz
   } = props;
 
   const [matchAnswerChoose, setMatchAnswerChoose] = useState();
   const [listSubQuestion, setListSubQuestion] = useState();
   const [listSubAnswer, setListSubAnswer] = useState();
-
   const [oneSubQuestionPoint, setOneSubQuestionPoint] = useState(0);
 
   const shuffleArray = (arr) => {
@@ -34,11 +34,23 @@ export default function DoMatch(props) {
       questionText: subQuestion,
       answerText: event.target.value
     };
-    const matchRemove = matchAnswerChoose.filter((question) => question.questionText !== subQuestion && question.questionText !== null);
-    const newMatch = [...matchRemove, chooseAnswer];
-    setMatchAnswerChoose(newMatch);
 
-    checkRightAnswer(newMatch);
+    if (quiz.length > 0) {
+      const matchRemove = quiz[0]?.matchSubQuestionChoosen?.filter((question) => question.questionText !== subQuestion && question.questionText !== null);
+      const newMatch = [...matchRemove, chooseAnswer];
+      setMatchAnswerChoose(newMatch);
+
+      checkRightAnswer(newMatch);
+
+    } else {
+      const matchRemove = matchAnswerChoose.filter((question) => question.questionText !== subQuestion && question.questionText !== null);
+      const newMatch = [...matchRemove, chooseAnswer];
+      setMatchAnswerChoose(newMatch);
+
+      checkRightAnswer(newMatch);
+    }
+
+
   };
 
   const checkRightAnswer = (newMatch) => {
@@ -61,6 +73,7 @@ export default function DoMatch(props) {
       setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestions.filter((item) => item.questionText !== "" && item?.questionText).length);
       setMatchAnswerChoose(question.matchSubQuestions.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
     }
+
   }, [question]);
 
   return (
@@ -85,13 +98,15 @@ export default function DoMatch(props) {
                     id={subQuestion}
                     label="Câu trả lời"
                     onChange={(event) => handleSelectChange(event, subQuestion)}
-                    value={matchAnswerChoose?.filter((item) => item.questionText === subQuestion)?.map((item) => item.answerText) || ' '}
+                    value={quiz.length > 0 ? quiz[0]?.matchSubQuestionChoosen?.filter((item) => item.questionText === subQuestion)?.map((item) => item.answerText) : matchAnswerChoose?.filter((item) => item.questionText === subQuestion)?.map((item) => item.answerText)}
                     disabled={isSubmit}
                   >
 
                     <MenuItem value="" name="answer">Vui lòng chọn câu trả lời</MenuItem>
                     {listSubAnswer?.map((subAnswer, answerIndex) => (
-                      <MenuItem key={answerIndex} value={subAnswer} name="answer">{subAnswer}</MenuItem>
+                      <MenuItem key={answerIndex}
+                        value={subAnswer}
+                        name="answer">{subAnswer}</MenuItem>
                     ))}
 
 

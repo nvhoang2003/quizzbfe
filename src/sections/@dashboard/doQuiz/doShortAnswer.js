@@ -6,13 +6,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import DoneIcon from "@mui/icons-material/Done";
-import ClearIcon from "@mui/icons-material/Clear";
 //----------------------------------------------------------------------
 
 export default function DoShortAnswer(props) {
-  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
+  const { question, numberQuestion, answerResult, setAnswerResult, quiz, isSubmit } = props;
   const handleChangeAnswer = (event) => {
 
     var newListAnswer = answerResult?.filter(item => item.questionId !== question.id);
@@ -23,6 +20,7 @@ export default function DoShortAnswer(props) {
       shortAnswerChoosen: event.target.value
     }
     ]);
+
   };
 
   return (
@@ -52,22 +50,9 @@ export default function DoShortAnswer(props) {
           <TextField
             disabled={isSubmit}
             size="small"
+            value={quiz.length > 0 ? quiz[0]?.shortAnswerChoosen : ""}
             onChange={(event) => handleChangeAnswer(event)}
           />
-          {/* {isSubmit === true && (
-            <span>
-              {answerResult.status ? (
-                <span>
-                  <DoneIcon color="success" />
-                </span>
-              ) : (
-                <span>
-                  {" "}
-                  <ClearIcon color="error" />
-                </span>
-              )}
-            </span>
-          )} */}
         </div>
       </Box>
     </Box>

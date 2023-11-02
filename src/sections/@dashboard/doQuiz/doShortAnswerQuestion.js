@@ -6,26 +6,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { LoadingButton } from "@mui/lab";
-import PropTypes from "prop-types";
 import _ from "lodash";
-import { Controller, useForm } from "react-hook-form";
-import FormProvider from "@/components/form/FormProvider";
-import { useRouter } from "next/router";
-import ResultShortAnswerQuestion from "@/components/question-information/result-shortanswer-question";
-import ShortAnswerQuestion from "@/components/question-information/shortanswer-question";
 import DoShortAnswer from "./doShortAnswer";
 
 //---------------------------------------------------
 
 export default function DoShortQuestion(props) {
-  const { currentLevel, quizSubmit, setQuizSubmit,number } = props
-
+  const { currentLevel, quizSubmit, setQuizSubmit, number } = props
   const [submit, setSubmit] = useState(false);
+  const [quiz, setQuiz] = useState([]);
   useEffect(() => {
-  }, [submit]);
-
+    const updatedQuiz = quizSubmit
+      .filter((item) => item.questionId === currentLevel.id);
+    setQuiz(updatedQuiz);
+  }, [quizSubmit]);
 
   return (
     <Container maxWidth="100%">
@@ -35,7 +29,13 @@ export default function DoShortQuestion(props) {
             divider={<Divider variant="middle" />}
             spacing={3}
           >
-            <DoShortAnswer question={currentLevel} numberQuestion={number} answerResult={quizSubmit} setAnswerResult={setQuizSubmit} isSubmit={submit} />
+            <DoShortAnswer
+              question={currentLevel}
+              numberQuestion={number}
+              answerResult={quizSubmit}
+              setAnswerResult={setQuizSubmit}
+              quiz={quiz}
+              isSubmit={submit} />
           </Stack>
         </Card>
       </Stack>

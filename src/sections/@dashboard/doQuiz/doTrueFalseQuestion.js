@@ -10,14 +10,20 @@ import _ from "lodash";
 import DoTrueFalse from "./doTrueFalse";
 
 //---------------------------------------------------
-
-
 export default function DoTrueFalseQuestion(props) {
   const { currentLevel, quizSubmit, setQuizSubmit, number } = props;
   const [submit, setSubmit] = useState(false);
 
   useEffect(() => {
   }, [submit]);
+
+  const [quiz, setQuiz] = useState([]);
+
+  useEffect(() => {
+    const updatedQuiz = quizSubmit
+      .filter((item) => item.questionId === currentLevel.id);
+    setQuiz(updatedQuiz);
+  }, [quizSubmit]);
 
   return (
     <Container maxWidth="100%">
@@ -32,7 +38,9 @@ export default function DoTrueFalseQuestion(props) {
               numberQuestion={number}
               answerResult={quizSubmit}
               setAnswerResult={setQuizSubmit}
-              />
+              quiz={quiz}
+              setQuiz={setQuiz}
+            />
           </Stack>
         </Card>
       </Stack>
