@@ -1,29 +1,40 @@
-import { DoQuizLayout } from '@/layouts/testquiz/DoQuizLayout';
-import Head from 'next/head';
-import { Layout as DashboardLayout } from '@/layouts/dashboard/layout';
-import { Box, Stack, Container, Typography, Grid, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import PaginationQuestion from '@/components/list-question/PaginationQuestion';
-import { React, useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { getQuizForTestID, submitQuiz } from '@/dataProvider/quizApi';
-import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
-import { useSelector } from '@/redux/store';
-import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
-import DoShortQuestion from '@/sections/@dashboard/doQuiz/doShortAnswerQuestion';
-import DoMultiChoiceQuestion from '@/sections/@dashboard/doQuiz/doMultiChoiceQuestion';
-import DoMatchQuestion from '@/sections/@dashboard/doQuiz/doMatchQuestion';
-import DoTrueFalseQuestion from '@/sections/@dashboard/doQuiz/doTrueFalseQuestion';
-import DoDragAndDropQuestion from '@/sections/@dashboard/doQuiz/doDragAndDropIntoText/doDragAndDrop';
-import { useForm } from 'react-hook-form';
-import FormProvider from '@/components/form/FormProvider';
-import { LoadingButton } from '@mui/lab';
+import { DoQuizLayout } from "@/layouts/testquiz/DoQuizLayout";
+import Head from "next/head";
+import { Layout as DashboardLayout } from "@/layouts/dashboard/layout";
+import {
+  Box,
+  Stack,
+  Container,
+  Typography,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+import PaginationQuestion from "@/components/list-question/PaginationQuestion";
+import { React, useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { getQuizForTestID, submitQuiz } from "@/dataProvider/quizApi";
+import ConfirmDialog from "@/components/confirm-dialog/ConfirmDialog";
+import { useSelector } from "@/redux/store";
+import CountdownTimer from "@/components/countdown-timer/CountDownTimer";
+import DoShortQuestion from "@/sections/@dashboard/doQuiz/doShortAnswerQuestion";
+import DoMultiChoiceQuestion from "@/sections/@dashboard/doQuiz/doMultiChoiceQuestion";
+import DoMatchQuestion from "@/sections/@dashboard/doQuiz/doMatchQuestion";
+import DoTrueFalseQuestion from "@/sections/@dashboard/doQuiz/doTrueFalseQuestion";
+import DoDragAndDropQuestion from "@/sections/@dashboard/doQuiz/doDragAndDropIntoText/doDragAndDrop";
+import { useForm } from "react-hook-form";
+import FormProvider from "@/components/form/FormProvider";
+import { LoadingButton } from "@mui/lab";
+import ConfirmDialogQuestion from "@/components/confirm-dialog/ConfirmDialogQuestion";
 
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
 const TestQuiz = (props) => {
   const {
-    query: { id }
+    query: { id },
   } = useRouter();
 
   const [data, setData] = useState({});
@@ -43,8 +54,7 @@ const TestQuiz = (props) => {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const methods = useForm({
-  });
+  const methods = useForm({});
 
   const {
     reset,
@@ -64,7 +74,7 @@ const TestQuiz = (props) => {
     setOpenConfirm(false);
   };
 
-  const listQuestionResult = useSelector(state => state.quizResult.value);
+  const listQuestionResult = useSelector((state) => state.quizResult.value);
 
   const handleSubmitConfirm = async () => {
     const number =parseInt(id);
@@ -95,7 +105,11 @@ const TestQuiz = (props) => {
         quiz: quizResponse.quiz,
         questionReults: quizResponse.questionReults,
       };
-      props.changeInfo(transformData.userDoQuizz, transformData.courseName, transformData.quiz?.name);
+      props.changeInfo(
+        transformData.userDoQuizz,
+        transformData.courseName,
+        transformData.quiz?.name
+      );
       setSumValue(transformData.questionReults.length);
       setTimeLimit(transformData?.quiz?.timeLimit);
       // setEndValue(sumValue > 10 ? 10 : sumValue);
@@ -103,7 +117,7 @@ const TestQuiz = (props) => {
     } else {
       return res;
     }
-  };
+  }
 
   useEffect(() => {
     setCurrent(quizSubmit?.length);
@@ -127,6 +141,18 @@ const TestQuiz = (props) => {
     }
   }, [id, sumValue]);
 
+  const [openCountDownConfirm, setOpenCountDownConfirm] = useState(true);
+
+  const handleCountDownCloseConfirm = (event, reason) => {
+    if (reason !== 'backdropClick') {
+      setOpenCountDownConfirm(true);
+    }
+  };
+  const handleCountDownSubmit = () => {
+    router.push(`/ortherpage/` + id);
+
+  }
+
   return (
     <>
       <Head>
@@ -149,15 +175,40 @@ const TestQuiz = (props) => {
                 sx={{
                   px: 1,
                 }}
-                className='right-item'
+                className="right-item"
               >
-                <Typography variant='h4'>
-                  {timeLimit
-                    ? <>
-                      <CountdownTimer initialTime={timeLimit} question={curent} sum={sumValue} />
+                <Typography variant="h4">
+                  {timeLimit && (
+                    <>
+                      <CountdownTimer
+                        deadline={parseInt(timeLimit) * 60 * 1000}
+                        completedCompoment={
+                          <ConfirmDialogQuestion
+                            open={openCountDownConfirm}
+                            onClose={handleCountDownCloseConfirm}
+                            title="Thời gian làm bài: "
+                            content={
+                              <h3>
+                                Đã hết giờ bạn đã làm được {curent} / {sumValue}
+                              </h3>
+                            }
+                            action={
+                              <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => {
+                                  handleCountDownSubmit(id);
+                                }}
+                              >
+                                Submit
+                              </Button>
+                            }
+                          />
+                        }
+                        localVaraiableName="CD_TQ"
+                      />
                     </>
-                    : <></>}
-
+                  )}
                 </Typography>
               </Stack>
               <Stack
@@ -202,7 +253,8 @@ const TestQuiz = (props) => {
                   title=""
                   content={
                     <>
-                      Bạn đã làm được {curent} / {sumValue} , bạn có chắc là muốn nộp bài không ?
+                      Bạn đã làm được {curent} / {sumValue} , bạn có chắc là
+                      muốn nộp bài không ?
                     </>
                   }
                   action={
@@ -221,16 +273,11 @@ const TestQuiz = (props) => {
             </Stack>
           </FormProvider>
         </Container>
-      </Box >
+      </Box>
     </>
   );
 };
 
-
-TestQuiz.getLayout = (page) =>
-  <DoQuizLayout>
-    {page}
-  </DoQuizLayout>
-
+TestQuiz.getLayout = (page) => <DoQuizLayout>{page}</DoQuizLayout>;
 
 export default TestQuiz;
