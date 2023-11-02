@@ -1,49 +1,37 @@
+import { changeQuizResult } from '@/redux/slice/quizResult';
+import { useDispatch, useSelector } from '@/redux/store';
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 //----------------------------------------------------------------------
 
-export default function TrueFalseQuestion(props) {
-  const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
-
-  console.log(question);
+export default function DoOneChoice(props) {
+  const { question, numberQuestion, answerResult, setAnswerResult,quiz, isSubmit } = props;
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',
     questionId: 0,
-    answer: null,
-    fraction: 0,
+    answer: [],
   });
-
   const [idAnswerChoose, setIdAnswerChoose] = useState();
 
   const listQuestionResult = useState([]);
 
   const handleChange = (event, item) => {
+    var newListAnswer = answerResult?.filter(item => item.questionId !== question.id);
 
-    setQuestionResult({
-      mark: item.fraction,
-      status: item.fraction == 1 ? 'Đúng' : 'Sai',
-      questionId: question.question?.id,
-      answer: item.answer,
-      fraction: item.fraction
-    })
+    setAnswerResult([...newListAnswer, {
+      questionId: question.id,
+      questionType: question.questionsType,
+      idAnswerChoosen: [item.id]
+    }
+    ]);
   }
-
   useEffect(() => {
     const answerChoosen = listQuestionResult.filter(item => item.questionId === question.question?.id);
-    {
-      answerResult.id === "undefined" ? setIdAnswerChoose(answerResult.id) :
-
-        setIdAnswerChoose(answerChoosen[0]?.answer?.id);
-    }
+    setIdAnswerChoose(answerChoosen[0]?.answer?.id);
   }, [question]);
-
-  useEffect(() => {
-    setAnswerResult(questionResult);
-  }, [questionResult]);
-
 
   return (
     <Box sx={{
@@ -55,36 +43,25 @@ export default function TrueFalseQuestion(props) {
       width: 1
     }}>
       <Box sx={{ py: 3, }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Câu Hỏi {numberQuestion}: {question?.content}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>Câu hỏi {numberQuestion} : {question?.content}</Typography>
         {question?.imageUrl && <img src={question.imageUrl} alt="Image" height="300" width="300" />}
         <Typography sx={{ fontSize: '12px' }}>Chọn Một Đáp Án</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
-          value={idAnswerChoose || ''}
+          value={parseInt(quiz[0]?.idAnswerChoosen[0])}
           onChange={(event, value) => setIdAnswerChoose(value)}
           name="radio-buttons-group"
           sx={{ py: 3 }}
         >
-          {question?.answers?.map((item, index) => (
+          {question?.questionAnswers?.map((item, index) => (
             <FormControlLabel
               value={item?.id}
               key={index}
-              control={<Radio disabled={isSubmit} onChange={(event) => handleChange(event, item)} />}
+              control={<Radio onChange={(event) => handleChange(event, item)} />}
               label={
+
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="body1">{item?.answer}</Typography>
-                  {isSubmit === true &&
-                    idAnswerChoose == item.id &&
-                    questionResult.answer && (
-                      <span>
-                        {item.fraction === questionResult.fraction && questionResult.fraction === 1 ? (
-                          <span key={index}><DoneIcon color='success' /></span>
-                        ) : (
-                          <span key={index}> <ClearIcon color='error' /></span>
-                        )}
-                      </span>
-                    )
-                  }
+                  <Typography variant="body1">{item?.content}</Typography>
                 </div>
               }
 
