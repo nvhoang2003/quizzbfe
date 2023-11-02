@@ -1,24 +1,55 @@
-import { DoQuizLayout } from '@/layouts/testquiz/DoQuizLayout';
-import Head from 'next/head';
-import { Layout as DashboardLayout } from '@/layouts/dashboard/layout';
-import { Box, Stack, Container, Typography, Grid, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import PaginationQuestion from '@/components/list-question/PaginationQuestion';
-import { React, useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { getQuizForTestID, submitQuiz } from '@/dataProvider/quizApi';
-import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
-import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
-import DoShortQuestion from '@/sections/@dashboard/doQuiz/doShortAnswerQuestion';
-import DoMultiChoiceQuestion from '@/sections/@dashboard/doQuiz/doMultiChoiceQuestion';
-import DoMatchQuestion from '@/sections/@dashboard/doQuiz/doMatchQuestion';
-import DoTrueFalseQuestion from '@/sections/@dashboard/doQuiz/doTrueFalseQuestion';
-import DoDragAndDropQuestion from '@/sections/@dashboard/doQuiz/doDragAndDropIntoText/doDragAndDrop';
-import { useForm } from 'react-hook-form';
-import FormProvider from '@/components/form/FormProvider';
-import { LoadingButton } from '@mui/lab';
-import { useSelector, useDispatch } from 'react-redux'
-import { changeQuizResult } from '@/redux/slice/quizResult';
+// import { DoQuizLayout } from '@/layouts/testquiz/DoQuizLayout';
+// import Head from 'next/head';
+// import { Layout as DashboardLayout } from '@/layouts/dashboard/layout';
+// import { Box, Stack, Container, Typography, Grid, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
+// import PaginationQuestion from '@/components/list-question/PaginationQuestion';
+// import { React, useRouter } from 'next/router';
+// import { useEffect, useState } from 'react';
+// import { getQuizForTestID, submitQuiz } from '@/dataProvider/quizApi';
+// import ConfirmDialog from '@/components/confirm-dialog/ConfirmDialog';
+// import CountdownTimer from '@/components/countdown-timer/CountDownTimer';
+// import DoShortQuestion from '@/sections/@dashboard/doQuiz/doShortAnswerQuestion';
+// import DoMultiChoiceQuestion from '@/sections/@dashboard/doQuiz/doMultiChoiceQuestion';
+// import DoMatchQuestion from '@/sections/@dashboard/doQuiz/doMatchQuestion';
+// import DoTrueFalseQuestion from '@/sections/@dashboard/doQuiz/doTrueFalseQuestion';
+// import DoDragAndDropQuestion from '@/sections/@dashboard/doQuiz/doDragAndDropIntoText/doDragAndDrop';
+// import { useForm } from 'react-hook-form';
+// import FormProvider from '@/components/form/FormProvider';
+// import { LoadingButton } from '@mui/lab';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { changeQuizResult } from '@/redux/slice/quizResult';
 
+import { DoQuizLayout } from "@/layouts/testquiz/DoQuizLayout";
+import Head from "next/head";
+import { Layout as DashboardLayout } from "@/layouts/dashboard/layout";
+import {
+  Box,
+  Stack,
+  Container,
+  Typography,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+import PaginationQuestion from "@/components/list-question/PaginationQuestion";
+import { React, useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { getQuizForTestID, submitQuiz } from "@/dataProvider/quizApi";
+import ConfirmDialog from "@/components/confirm-dialog/ConfirmDialog";
+import CountdownTimer from "@/components/countdown-timer/CountDownTimer";
+import DoShortQuestion from "@/sections/@dashboard/doQuiz/doShortAnswerQuestion";
+import DoMultiChoiceQuestion from "@/sections/@dashboard/doQuiz/doMultiChoiceQuestion";
+import DoMatchQuestion from "@/sections/@dashboard/doQuiz/doMatchQuestion";
+import DoTrueFalseQuestion from "@/sections/@dashboard/doQuiz/doTrueFalseQuestion";
+import DoDragAndDropQuestion from "@/sections/@dashboard/doQuiz/doDragAndDropIntoText/doDragAndDrop";
+import { useForm } from "react-hook-form";
+import FormProvider from "@/components/form/FormProvider";
+import { LoadingButton } from "@mui/lab";
+import ConfirmDialogQuestion from "@/components/confirm-dialog/ConfirmDialogQuestion";
+import { useSelector, useDispatch } from 'react-redux';
+import { changeQuizResult } from '@/redux/slice/quizResult';
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
@@ -139,6 +170,18 @@ const TestQuiz = (props) => {
     }
   }, [quizSubmit]);
 
+  const [openCountDownConfirm, setOpenCountDownConfirm] = useState(true);
+
+  const handleCountDownCloseConfirm = (event, reason) => {
+    if (reason !== 'backdropClick') {
+      setOpenCountDownConfirm(true);
+    }
+  };
+  const handleCountDownSubmit = () => {
+    router.push(`/ortherpage/` + id);
+
+  }
+
   // console.log(listQuestionResult);
   // console.log(quizSubmit);
   return (
@@ -166,11 +209,37 @@ const TestQuiz = (props) => {
                 className='right-item'
               >
                 <Typography variant='h4'>
-                  {timeLimit
-                    ? <>
-                      <CountdownTimer initialTime={timeLimit} question={curent} sum={sumValue} />
+                  {timeLimit && (
+                    <>
+                      <CountdownTimer
+                        deadline={parseInt(timeLimit) * 60 * 1000}
+                        completedCompoment={
+                          <ConfirmDialogQuestion
+                            open={openCountDownConfirm}
+                            onClose={handleCountDownCloseConfirm}
+                            title="Thời gian làm bài: "
+                            content={
+                              <h3>
+                                Đã hết giờ bạn đã làm được {curent} / {sumValue}
+                              </h3>
+                            }
+                            action={
+                              <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => {
+                                  handleCountDownSubmit(id);
+                                }}
+                              >
+                                Submit
+                              </Button>
+                            }
+                          />
+                        }
+                        localVaraiableName="CD_TQ"
+                      />
                     </>
-                    : <></>}
+                  )}
 
                 </Typography>
               </Stack>
