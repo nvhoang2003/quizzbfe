@@ -26,10 +26,10 @@ const Head = ({ data }) => {
       >
         <span>
           Họ và tên học sinh:{" "}
-          {data.userDoQuizz?.firstname + data.userDoQuizz?.lastname}
+          {data.userName}
         </span>
-        <span>Khóa học: {data.course?.fullName}</span>
-        <span>Tên đề thi: {data.quiz?.name}</span>
+        <span>Khóa học: {data.courseName}</span>
+        <span>Tên đề thi: {data.quizName}</span>
       </Typography>
       <Typography
         display="flex"
@@ -43,10 +43,10 @@ const Head = ({ data }) => {
         <Box mr={1}>Tổng điểm:</Box>
         <Box
           color={
-            data.totalPoint >= data.quiz?.pointToPass ? "#2FAE03" : "#E45858"
+            data.totalPoint?.toFixed(1) >= data.pointToPass ? "#2FAE03" : "#E45858"
           }
         >
-          {data.totalPoint}/{data.quiz?.maxPoint}
+          { (Math.round(data.totalPoint * 2) / 2).toFixed(1)}/{data.maxPoint}
         </Box>
       </Typography>
     </Stack>

@@ -13,7 +13,7 @@ const ResultQuestions = ({ questionResults }) => {
     );
 
     return (
-      <Stack display="flex" flexDirection="row">
+      <Stack display="flex" flexDirection="row" key={index}>
         <Stack>
           {questionResult?.status && questionResult.status == "Right" ? (
             <Done color="success" />
@@ -31,7 +31,7 @@ const ResultQuestions = ({ questionResults }) => {
           <HeadQuestion
             indexQuestion={index + 1}
             question={questionResult?.question}
-            mark={questionResult?.mark}
+            mark={questionResult?.question.defaultMark}
           />
           <Stack pl={5}>
             <QuestionResultRow

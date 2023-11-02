@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Container, Grid, Stack, Typography } from "@mui/material";
+import React from "react";
 
 const Row = ({ questionResult }) => {
   return (
@@ -40,7 +41,7 @@ const Row = ({ questionResult }) => {
                 </Grid>
               );
             } else {
-              return <></>;
+              return <React.Fragment key={index}></React.Fragment>;
             }
           })}
         </Grid>
