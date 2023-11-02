@@ -117,6 +117,7 @@ export const AuthProvider = (props) => {
 
       if (responseLogin.status < 400) {
         setupLocalStorage(responseLogin.data.accessToken);
+        localStorage.setItem("userId", responseLogin.data.userId);
         window.sessionStorage.setItem("authenticated", "true");
         snackbarUtils.success("Đăng nhập thành công");
         const user = {

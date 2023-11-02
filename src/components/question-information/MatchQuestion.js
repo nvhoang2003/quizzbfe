@@ -49,6 +49,7 @@ export default function MatchQuestion(props) {
   };
 
   const checkRightAnswer = (newMatch) => {
+    console.log(newMatch);
     var response = true;
     var mark = 0;
     newMatch?.map(oneMatch => {
@@ -73,7 +74,7 @@ export default function MatchQuestion(props) {
       setListSubQuestion(question.matchSubQuestionBanks.map((item) => item.questionText).filter((item) => item !== ""));
       setListSubAnswer(shuffleArray(question.matchSubQuestionBanks.map((item) => item.answerText)));
       // setListRightResult(question.matchSubQuestionBanks);
-      setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestionBanks.filter((item) => item.questionText !== "").length);
+      setOneSubQuestionPoint(question?.defaultMark / question.matchSubQuestionBanks.filter((item) => item.questionText !== "" && item?.questionText).length);
       setMatchAnswerChoose(question.matchSubQuestionBanks.map((item) => ({ questionText: item.questionText, answerText: "" })).filter((item) => item.questionText !== ""));
     }
   }, [question]);

@@ -50,12 +50,19 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await auth.signIn(values.username, values.password);
-
         if (response.status < 400) {
+          localStorage.setItem("userId", response.data.userId);
+          console.log(response);
           if (continueUrl && continueUrl != null && continueUrl != "") {
             router.push(continueUrl);
           } else {
-            router.push("/");
+            router.push("/home/client");
+            // if (response.data.roleName == "admin") {
+
+            // } else if (response.data.roleName == "student") {
+            //   router.push("/home/client");
+            // }
+
           }
         } else {
           setMessage(response.response?.data?.title);
