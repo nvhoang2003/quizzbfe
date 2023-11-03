@@ -1,7 +1,7 @@
+import ListCourse from "@/sections/@dashboard/list/course/list";
 import { Box, Container, Grid } from "@mui/material";
 import Head from "next/head";
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import Course from "./course/course";
 
 //----------------------------------------------------------
 const HomePage = (props) => {
@@ -25,7 +25,7 @@ const HomePage = (props) => {
             xs={12}
             item
           >
-            <Course/>
+            <ListCourse />
           </Grid>
         </Container>
       </Box>

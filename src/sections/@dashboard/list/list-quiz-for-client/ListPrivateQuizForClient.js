@@ -53,6 +53,9 @@ export default function ListPrivateQuizForClient(props) {
                 primary={item.quizName}
                 primaryTypographyProps={{ variant: 'subtitle1' }}
                 secondaryTypographyProps={{ variant: 'body2' }}
+                sx={{
+                  cursor: "pointer"
+                }}
               />
               <IconButton edge="end">
                 <SvgIcon>

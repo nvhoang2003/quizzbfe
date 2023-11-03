@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { TopNav } from '../dashboard/top-nav';
 import { SideNav } from './SideNav';
+import { withAuthGuard } from "src/hocs/with-auth-guard";
 import { useState } from 'react';
 import React from 'react';
 
@@ -24,7 +25,7 @@ const LayoutContainer = styled('div')({
 });
 
 
-export const DoQuizLayout = (props) => {
+export const DoQuizLayout = withAuthGuard((props) => {
   const [info, setInfo] = useState({
     name: '',
     course: '',
@@ -65,7 +66,7 @@ export const DoQuizLayout = (props) => {
     </>
 
   );
-};
+});
 
 DoQuizLayout.prototypes = {
   children: PropTypes.node

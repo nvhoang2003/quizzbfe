@@ -50,6 +50,7 @@ import { LoadingButton } from "@mui/lab";
 import ConfirmDialogQuestion from "@/components/confirm-dialog/ConfirmDialogQuestion";
 import { useSelector, useDispatch } from "react-redux";
 import { changeQuizResult } from "@/redux/slice/quizResult";
+import { usePathname } from "next/navigation";
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
@@ -60,6 +61,7 @@ const TestQuiz = (props) => {
 
   const [data, setData] = useState({});
   const router = useRouter();
+  const pathname = usePathname();
   const [curent, setCurrent] = useState(1);
   const [sumValue, setSumValue] = useState(0);
   const [timeLimit, setTimeLimit] = useState();
@@ -84,13 +86,17 @@ const TestQuiz = (props) => {
     formState: { isSubmitting },
   } = methods;
 
-  const handleRouteChange = (url) => {
-    if (window.confirm("Bạn có chắc chắn muốn rời khỏi trang này không?")) {
-      dispatch(changeQuizResult([]));
-      localStorage.removeItem("CD_TQ");
-    } else {
-      Router.events.emit("routeChangeError");
-      useRouter().push()(Router.asPath);
+  const handleRouteChange = (url, event) => {
+    console.log(event);
+    if (!event.shallow) {
+      if (window.confirm("Bạn có chắc chắn muốn rời khỏi trang này không?")) {
+        dispatch(changeQuizResult([]));
+        localStorage.removeItem("CD_TQ");
+      } else {
+        Router.events.emit("routeChangeError");
+        router.push(pathname, undefined, { shallow: true });
+        throw 'Route change aborted.'
+      }
     }
   };
 
@@ -121,7 +127,11 @@ const TestQuiz = (props) => {
       const res = await submitQuiz(transformData);
       if (res.data.status === true) {
         setSubmit(true);
-        router.push(`/ortherpage/${id}?quizId=${data?.quiz?.id}&public=${res?.data?.data?.quiz?.isPublic}`);
+        router.push(
+          `/ortherpage/${id}?quizId=${data?.quiz?.id}&public=${res?.data?.data?.quiz?.isPublic}`,
+          undefined,
+          { shallow: true }
+        );
       }
     } catch (error) {}
 
@@ -206,7 +216,7 @@ const TestQuiz = (props) => {
     }
   };
   const handleCountDownSubmit = () => {
-    router.push(`/ortherpage/` + id);
+    router.push(`/ortherpage/ ${id}`, undefined, { shallow: true });
   };
 
   // console.log(listQuestionResult);
