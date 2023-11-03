@@ -34,7 +34,7 @@ import {
   DialogContent,
 } from "@mui/material";
 import PaginationQuestion from "@/components/list-question/PaginationQuestion";
-import { React, useRouter } from "next/router";
+import { React, useRouter, Router } from "next/router";
 import { useEffect, useState } from "react";
 import { getQuizForTestID, submitQuiz } from "@/dataProvider/quizApi";
 import ConfirmDialog from "@/components/confirm-dialog/ConfirmDialog";
@@ -48,14 +48,14 @@ import { useForm } from "react-hook-form";
 import FormProvider from "@/components/form/FormProvider";
 import { LoadingButton } from "@mui/lab";
 import ConfirmDialogQuestion from "@/components/confirm-dialog/ConfirmDialogQuestion";
-import { useSelector, useDispatch } from 'react-redux';
-import { changeQuizResult } from '@/redux/slice/quizResult';
+import { useSelector, useDispatch } from "react-redux";
+import { changeQuizResult } from "@/redux/slice/quizResult";
 //-----------------------------------------------------------------------
 const Completionist = () => <span>You are good to go!</span>;
 
 const TestQuiz = (props) => {
   const {
-    query: { id }
+    query: { id },
   } = useRouter();
 
   const [data, setData] = useState({});
@@ -69,7 +69,7 @@ const TestQuiz = (props) => {
   const [submit, setSubmit] = useState(false);
   const [truefalse, setTruefalse] = useState([]);
   // console.log(quizSubmit);state => state?.quizSubmit?.value
-  const listQuestionResult = useSelector(state => state.quizResult.value);
+  const listQuestionResult = useSelector((state) => state.quizResult.value);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -85,6 +85,24 @@ const TestQuiz = (props) => {
     formState: { isSubmitting },
   } = methods;
 
+  const handleRouteChange = (url) => {
+    if (window.confirm("Bạn có chắc chắn muốn rời khỏi trang này không?")) {
+      dispatch(changeQuizResult([]));
+      localStorage.removeItem("CD_TQ");
+    } else {
+      Router.events.emit("routeChangeError");
+      useRouter().push()(Router.asPath);
+    }
+  };
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      Router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, []);
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -98,8 +116,8 @@ const TestQuiz = (props) => {
     const transformData = {
       accessId: number,
       quizId: data?.quiz?.id,
-      listQuestionSubmit: quizSubmit
-    }
+      listQuestionSubmit: quizSubmit,
+    };
     try {
       const res = await submitQuiz(transformData);
       if (res.data.status === true) {
@@ -107,13 +125,11 @@ const TestQuiz = (props) => {
 
         router.push(`/ortherpage/` + id);
       }
-
-    } catch (error) {
-
-    }
+    } catch (error) {}
 
     dispatch(changeQuizResult([]));
-  }
+    localStorage.removeItem("CD_TQ");
+  };
 
   async function fetchQuizByID() {
     const res = await getQuizForTestID(id);
@@ -125,7 +141,11 @@ const TestQuiz = (props) => {
         quiz: quizResponse.quiz,
         questionReults: quizResponse.questionReults,
       };
-      props.changeInfo(transformData.userDoQuizz, transformData.courseName, transformData.quiz?.name);
+      props.changeInfo(
+        transformData.userDoQuizz,
+        transformData.courseName,
+        transformData.quiz?.name
+      );
       setSumValue(transformData.questionReults.length);
       setTimeLimit(transformData?.quiz?.timeLimit);
       // setEndValue(sumValue > 10 ? 10 : sumValue);
@@ -133,7 +153,7 @@ const TestQuiz = (props) => {
     } else {
       return res;
     }
-  };
+  }
 
   useEffect(() => {
     setCurrent(quizSubmit?.length);
@@ -147,19 +167,29 @@ const TestQuiz = (props) => {
 
   useEffect(() => {
     // console.log(listQuestionResult);
-    if (quizSubmit, listQuestionResult) {
-      const answer = listQuestionResult.filter(item => item.questionId == data?.questionReults?.id);
-      const ids = answer[0]?.answer?.map(i => i.id);
+    if ((quizSubmit, listQuestionResult)) {
+      const answer = listQuestionResult.filter(
+        (item) => item.questionId == data?.questionReults?.id
+      );
+      const ids = answer[0]?.answer?.map((i) => i.id);
       if (ids) {
-        if (typeof ids === 'Array') {
+        if (typeof ids === "Array") {
           setListIdSelected([...ids]);
         } else {
           setListIdSelected(ids);
         }
       }
       // console.log(listQuestionResult.filter(item => item.questionId == question.question.id)[0])
-      if (listQuestionResult.filter(item => item.questionId == data?.questionReults?.id)[0]) {
-        setQuizSubmit(listQuestionResult.filter(item => item.questionId == data?.questionReults?.id)[0])
+      if (
+        listQuestionResult.filter(
+          (item) => item.questionId == data?.questionReults?.id
+        )[0]
+      ) {
+        setQuizSubmit(
+          listQuestionResult.filter(
+            (item) => item.questionId == data?.questionReults?.id
+          )[0]
+        );
       }
     }
   }, [listQuestionResult, quizSubmit]);
@@ -173,14 +203,13 @@ const TestQuiz = (props) => {
   const [openCountDownConfirm, setOpenCountDownConfirm] = useState(true);
 
   const handleCountDownCloseConfirm = (event, reason) => {
-    if (reason !== 'backdropClick') {
+    if (reason !== "backdropClick") {
       setOpenCountDownConfirm(true);
     }
   };
   const handleCountDownSubmit = () => {
     router.push(`/ortherpage/` + id);
-
-  }
+  };
 
   // console.log(listQuestionResult);
   // console.log(quizSubmit);
@@ -197,7 +226,10 @@ const TestQuiz = (props) => {
         }}
       >
         <Container maxWidth="xl">
-          <FormProvider methods={methods} onSubmit={handleSubmit(handleOpenConfirm)}>
+          <FormProvider
+            methods={methods}
+            onSubmit={handleSubmit(handleOpenConfirm)}
+          >
             <Stack spacing={3}>
               <Stack
                 display="flex"
@@ -206,9 +238,9 @@ const TestQuiz = (props) => {
                 sx={{
                   px: 1,
                 }}
-                className='right-item'
+                className="right-item"
               >
-                <Typography variant='h4'>
+                <Typography variant="h4">
                   {timeLimit && (
                     <>
                       <CountdownTimer
@@ -240,54 +272,60 @@ const TestQuiz = (props) => {
                       />
                     </>
                   )}
-
                 </Typography>
               </Stack>
-              <Stack
-                className='center-item'
-                spacing={3}
-              >
-                <Stack
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  {listQuestionResult && data?.questionReults && data.questionReults.map((item, index) => {
-                    switch (item.questionsType) {
-                      case 'ShortAnswer':
-                        return <DoShortQuestion
-                          key={index}
-                          currentLevel={item}
-                          quizSubmit={quizSubmit}
-                          setQuizSubmit={setQuizSubmit}
-                          number={index + 1} />;
-                      case 'Match':
-                        return <DoMatchQuestion
-                          key={index}
-                          currentLevel={item}
-                          quizSubmit={quizSubmit}
-                          setQuizSubmit={setQuizSubmit}
-                          number={index + 1} />;
-                      case 'TrueFalse':
-                        return <DoTrueFalseQuestion
-                          key={index}
-                          currentLevel={item}
-                          quizSubmit={quizSubmit}
-                          setQuizSubmit={setQuizSubmit}
-                          number={index + 1} />;
-                      case 'MultiChoice':
-                        return <DoMultiChoiceQuestion
-                          key={index}
-                          currentLevel={item}
-                          quizSubmit={quizSubmit}
-                          setQuizSubmit={setQuizSubmit}
-                          number={index + 1} />;
-                      // case 'DragAndDropIntoText':
-                      //   return <DoDragAndDropQuestion key={index} currentLevel={item} drag={drag} setDrag={setDrag} numbers={index + 1} />;
-                      default:
-                        return null;
-                    }
-                  })}
+              <Stack className="center-item" spacing={3}>
+                <Stack justifyContent="center" alignItems="center" spacing={2}>
+                  {listQuestionResult &&
+                    data?.questionReults &&
+                    data.questionReults.map((item, index) => {
+                      switch (item.questionsType) {
+                        case "ShortAnswer":
+                          return (
+                            <DoShortQuestion
+                              key={index}
+                              currentLevel={item}
+                              quizSubmit={quizSubmit}
+                              setQuizSubmit={setQuizSubmit}
+                              number={index + 1}
+                            />
+                          );
+                        case "Match":
+                          return (
+                            <DoMatchQuestion
+                              key={index}
+                              currentLevel={item}
+                              quizSubmit={quizSubmit}
+                              setQuizSubmit={setQuizSubmit}
+                              number={index + 1}
+                            />
+                          );
+                        case "TrueFalse":
+                          return (
+                            <DoTrueFalseQuestion
+                              key={index}
+                              currentLevel={item}
+                              quizSubmit={quizSubmit}
+                              setQuizSubmit={setQuizSubmit}
+                              number={index + 1}
+                            />
+                          );
+                        case "MultiChoice":
+                          return (
+                            <DoMultiChoiceQuestion
+                              key={index}
+                              currentLevel={item}
+                              quizSubmit={quizSubmit}
+                              setQuizSubmit={setQuizSubmit}
+                              number={index + 1}
+                            />
+                          );
+                        // case 'DragAndDropIntoText':
+                        //   return <DoDragAndDropQuestion key={index} currentLevel={item} drag={drag} setDrag={setDrag} numbers={index + 1} />;
+                        default:
+                          return null;
+                      }
+                    })}
                   <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                     <LoadingButton
                       type="submit"
@@ -305,7 +343,8 @@ const TestQuiz = (props) => {
                   title=""
                   content={
                     <>
-                      Bạn đã làm được {curent} / {sumValue} , bạn có chắc là muốn nộp bài không ?
+                      Bạn đã làm được {curent} / {sumValue} , bạn có chắc là
+                      muốn nộp bài không ?
                     </>
                   }
                   action={
@@ -324,16 +363,11 @@ const TestQuiz = (props) => {
             </Stack>
           </FormProvider>
         </Container>
-      </Box >
+      </Box>
     </>
   );
 };
 
-
-TestQuiz.getLayout = (page) =>
-  <DoQuizLayout>
-    {page}
-  </DoQuizLayout>
-
+TestQuiz.getLayout = (page) => <DoQuizLayout>{page}</DoQuizLayout>;
 
 export default TestQuiz;

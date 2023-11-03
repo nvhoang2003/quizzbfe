@@ -1,13 +1,20 @@
-import PropTypes from 'prop-types';
-import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
-import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
-import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
-import snackbarUtils from '@/utils/snackbar-utils';
-import { useRouter } from 'next/navigation';
+import PropTypes from "prop-types";
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Stack,
+  SvgIcon,
+  Typography,
+  CardActions,
+  CardHeader,
+} from "@mui/material";
+import snackbarUtils from "@/utils/snackbar-utils";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function OverviewCourse(props) {
-  const { products, positive = false, sx } = props;
+  const { product, positive = false, sx } = props;
   const router = useRouter();
 
   const handleShowQuiz = (item) => {
@@ -15,75 +22,55 @@ export default function OverviewCourse(props) {
       pathname: `client/course/[id]`,
       query: { id: item.id },
     });
-  }
+  };
 
   return (
-    <Card sx={sx}>
-      <CardContent onClick={() => handleShowQuiz(products)}>
-        <Stack
-          alignItems="flex-start"
-          direction="row"
-          justifyContent="space-between"
-          spacing={3}
-        >
-          <Stack spacing={1}>
-            <Typography
-              color="text.secondary"
-              variant="h5"
-            >
-              {products.shortName}
-            </Typography>
-            {/* <Typography variant="h4">
-              {products.shortName}
-            </Typography> */}
-          </Stack>
-          <Avatar
-            sx={{
-              backgroundColor: 'error.main',
-              height: 56,
-              width: 56
-            }}
-          >
-            <SvgIcon>
-              <CurrencyDollarIcon />
-            </SvgIcon>
-          </Avatar>
+    <Card
+      sx={sx}
+      style={{
+        boxShadow:
+          "0px 5px 22px rgba(0, 0, 0, 0.15), 0px 5px 22px rgba(0, 0, 0, 0.03)",
+        borderRadius: 5,
+      }}
+    >
+      <Stack
+        onClick={() => handleShowQuiz(product)}
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        height={"6.25rem"}
+        padding="1rem 1rem 0.75rem"
+        sx={{ backgroundColor: "rgb(32,33,36)", cursor: "pointer" }}
+      >
+        <Typography color="white" variant="h5" textTransform="uppercase">
+          <Link href={`/home/client/course/${product.id}`}>
+            {product.fullName}
+          </Link>
+        </Typography>
+        <Stack display="flex" flexDirection="row" alignItems="center">
+          <Typography color="white" noWrap>
+            {product.shortName}
+          </Typography>
         </Stack>
-        {products.endDate && (
-          <Stack
-            alignItems="center"
-            direction="row"
-            spacing={2}
-            sx={{ mt: 2 }}
-          >
-            <Stack
-              alignItems="center"
-              direction="row"
-              spacing={0.5}
-            >
-              {/* <SvgIcon
-                color={positive ? 'success' : 'error'}
-                fontSize="small"
-              >
-                {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
-              </SvgIcon> */}
-            </Stack>
-            {/* <Typography
-              color="text.secondary"
-              variant="caption"
-            >
-              {products.createBy}
-            </Typography> */}
-          </Stack>
-        )}
+      </Stack>
+      <CardContent
+        onClick={() => handleShowQuiz(product)}
+        style={{
+          display: "flex",
+          padding: "0.75rem 1rem",
+          cursor: "pointer",
+          flexGrow: 1,
+        }}
+      >
+        {/* <Typography>{product.description}</Typography> */}
       </CardContent>
-    </Card >
+    </Card>
   );
-};
+}
 
 OverviewCourse.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   sx: PropTypes.object,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
 };
