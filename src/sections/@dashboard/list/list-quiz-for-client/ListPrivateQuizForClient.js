@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import PropTypes from 'prop-types';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import EllipsisVerticalIcon from '@heroicons/react/24/solid/EllipsisVerticalIcon';
-import { addQuizAccess } from '@/dataProvider/quizAccess';
+import { updStatusQuizAccess } from '@/dataProvider/quizAccess';
 
 import {
   Box,
@@ -26,10 +26,17 @@ export default function ListPrivateQuizForClient(props) {
 
   //check time
 
-  const handleClick = (id) => {
-    push(`/testquiz/${id}`);
+  const handleClick = async (item) => {
+    const dataAdd = {
+      userId: localStorage.getItem("userId"),
+      quizId: item?.quiz?.id,
+      timeStartQuiz: new Date(),
+      status: "Doing"
+    }
+    const res = await updStatusQuizAccess(item?.id, dataAdd);
+    const accessId = item?.id;
+    push(`/testquiz/${accessId}`);
   }
-
 
   return (
     <Card sx={sx}>
@@ -40,7 +47,7 @@ export default function ListPrivateQuizForClient(props) {
             <ListItem
               key={index}
               divider={hasDivider}
-              onClick={() => handleClick(item.quizAccess.id)}
+              onClick={() => handleClick(item?.quizAccess)}
             >
               <ListItemText
                 primary={item.quizName}

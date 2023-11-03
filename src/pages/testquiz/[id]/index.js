@@ -63,7 +63,6 @@ const TestQuiz = (props) => {
   const [curent, setCurrent] = useState(1);
   const [sumValue, setSumValue] = useState(0);
   const [timeLimit, setTimeLimit] = useState();
-  const [drag, setDrag] = useState([]);
   const [quizSubmit, setQuizSubmit] = useState([]);
   const dispatch = useDispatch();
   const [submit, setSubmit] = useState(false);
@@ -104,8 +103,7 @@ const TestQuiz = (props) => {
       const res = await submitQuiz(transformData);
       if (res.data.status === true) {
         setSubmit(true);
-
-        router.push(`/ortherpage/` + id);
+        router.push(`/ortherpage/${id}?quizId=${data?.quiz?.id}&public=${res?.data?.data?.quiz?.isPublic}`);
       }
 
     } catch (error) {

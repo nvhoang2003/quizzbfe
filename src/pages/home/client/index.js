@@ -23,6 +23,7 @@ const HomePage = (props) => {
         <Container maxWidth="lg">
           <Grid
             xs={12}
+            item
           >
             <Course/>
           </Grid>
