@@ -50,12 +50,14 @@ export default function ListPublicQuizForClient(props) {
               divider={hasDivider}
               key={item.id}
               onClick={() => handleClick(item.id)}
-            // onClick={handleClick(product.courseid)}
             >
               <ListItemText
                 primary={item.name}
                 primaryTypographyProps={{ variant: 'subtitle1' }}
                 secondaryTypographyProps={{ variant: 'body2' }}
+                sx={{
+                  cursor: "pointer"
+                }}
               />
               <IconButton edge="end">
                 <SvgIcon>

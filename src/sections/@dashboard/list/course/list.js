@@ -1,13 +1,12 @@
 import { Box, Container, Grid, Stack } from "@mui/material";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import OverviewCourse from "../overview/overview-course";
+import OverviewCourse from "@/sections/@dashboard/list/course/item";
 import { getAllCourse } from "@/dataProvider/courseApi";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 
 //----------------------------------------------------------
 
-const Course = (props) => {
+const List = (props) => {
   const [paging, setPaging] = useState();
   const [list, setList] = useState([]);
 
@@ -58,6 +57,4 @@ const Course = (props) => {
   );
 };
 
-Course.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-export default Course;
+export default List;
