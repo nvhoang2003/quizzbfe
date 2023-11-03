@@ -34,7 +34,6 @@ export default function ListPublicQuizForClient(props) {
       status: "Doing"
     }
     const res = await addQuizAccess(dataAdd);
-    console.log(res);
     const accessId = res.data.data.id;
     push(`/testquiz/${accessId}`);
   }

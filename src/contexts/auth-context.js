@@ -79,17 +79,19 @@ export const AuthProvider = (props) => {
     initialized.current = true;
 
     let isAuthenticated = false;
+    var userId = localStorage.getItem("userId");
+    var access_token = localStorage.getItem("access_token");
 
     try {
-      isAuthenticated =
-        window.sessionStorage.getItem("authenticated") === "true";
+      isAuthenticated = userId && access_token;
     } catch (err) {
       console.error(err);
     }
 
     if (isAuthenticated) {
       const user = {
-        name: "userI",
+        id: userId,
+        username: "No Name",
       };
 
       dispatch({
@@ -118,7 +120,6 @@ export const AuthProvider = (props) => {
       if (responseLogin.status < 400) {
         setupLocalStorage(responseLogin.data.accessToken);
         localStorage.setItem("userId", responseLogin.data.userId);
-        window.sessionStorage.setItem("authenticated", "true");
         snackbarUtils.success("Đăng nhập thành công");
         const user = {
           id: responseLogin?.data?.userId,
@@ -138,7 +139,8 @@ export const AuthProvider = (props) => {
   };
   const signOut = () => {
     setupLocalStorage("");
-    window.sessionStorage.setItem("authenticated", "false");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("access_token");
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });
