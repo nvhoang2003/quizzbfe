@@ -8,6 +8,7 @@ const authApiPath = {
 }
 
 const loginAuth = async (payload) => {
+  localStorage.removeItem("access_token");
   return await postApi(authApiPath.loginPath, payload);
 };
 
