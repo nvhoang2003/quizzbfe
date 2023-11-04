@@ -19,7 +19,7 @@ export default function Item(props) {
 
   const handleShowQuiz = (item) => {
     router.push({
-      pathname: `client/course/[id]`,
+      pathname: `/home/client/course/[id]`,
       query: { id: item.id },
     });
   };
