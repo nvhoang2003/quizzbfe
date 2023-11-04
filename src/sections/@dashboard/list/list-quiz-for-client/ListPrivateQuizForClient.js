@@ -22,6 +22,7 @@ import {
 
 export default function ListPrivateQuizForClient(props) {
   const { quizzes, sx } = props;
+  console.log(quizzes);
   const { push } = useRouter();
 
   //check time

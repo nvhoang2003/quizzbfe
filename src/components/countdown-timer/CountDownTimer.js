@@ -5,7 +5,7 @@ import Countdown from "react-countdown";
 
 //----------------------------------------------------------------
 
-function CountdownTimer({ deadline, completedCompoment, localVaraiableName }) {
+function CountdownTimer({ deadline, completedCompoment, completedFunction, localVaraiableName }) {
   const [data, setData] = useState({ date: Date.now(), delay: deadline });
   const [wantedDelay, setWantedDelay] = useState(deadline);
 
@@ -29,6 +29,7 @@ function CountdownTimer({ deadline, completedCompoment, localVaraiableName }) {
 
   const renderer = ({ hours, minutes, seconds, completed }) => {
     if (completed) {
+      completedFunction();
       return <>{completedCompoment && completedCompoment}</>;
     } else {
       return <>{formatTime(hours, minutes, seconds)}</>;
@@ -74,6 +75,7 @@ function CountdownTimer({ deadline, completedCompoment, localVaraiableName }) {
 CountdownTimer.propTypes = {
   deadline: PropTypes.number,
   completedCompoment: PropTypes.node,
+  completedFunction: PropTypes.func,
   localVaraiableName: PropTypes.string,
 };
 

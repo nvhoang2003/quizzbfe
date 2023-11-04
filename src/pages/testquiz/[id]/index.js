@@ -133,7 +133,7 @@ const TestQuiz = (props) => {
           { shallow: true }
         );
       }
-    } catch (error) {}
+    } catch (error) { }
 
     dispatch(changeQuizResult([]));
     localStorage.removeItem("CD_TQ");
@@ -253,29 +253,34 @@ const TestQuiz = (props) => {
                     <>
                       <CountdownTimer
                         deadline={parseInt(timeLimit) * 60 * 1000}
-                        completedCompoment={
-                          <ConfirmDialogQuestion
-                            open={openCountDownConfirm}
-                            onClose={handleCountDownCloseConfirm}
-                            title="Thời gian làm bài: "
-                            content={
-                              <h3>
-                                Đã hết giờ bạn đã làm được {curent} / {sumValue}
-                              </h3>
-                            }
-                            action={
-                              <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() => {
-                                  handleCountDownSubmit(id);
-                                }}
-                              >
-                                Submit
-                              </Button>
-                            }
-                          />
-                        }
+                        completedFunction={() => {
+                          handleSubmitConfirm();
+                        }}
+                        // completedCompoment={
+                        //   <ConfirmDialogQuestion
+                        //     open={openCountDownConfirm}
+                        //     onClose={handleCountDownCloseConfirm}
+                        //     title=""
+                        //     content={
+                        //       <h3>
+                        //        Thời gian làm bài của bạn đã hết và bạn đã làm được :  
+                        //        <br/>
+                        //        {curent} / {sumValue}
+                        //       </h3>
+                        //     }
+                        //     action={
+                        //       <Button
+                        //         variant="contained"
+                        //         color="success"
+                        //         onClick={() => {
+                        //           handleCountDownSubmit(id);
+                        //         }}
+                        //       >
+                        //         Submit
+                        //       </Button>
+                        //     }
+                        //   />
+                        // }
                         localVaraiableName="CD_TQ"
                       />
                     </>

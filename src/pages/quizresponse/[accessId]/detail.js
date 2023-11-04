@@ -34,6 +34,9 @@ const Detail = (props) => {
       return response;
     }
   }
+  const handleGoHome = () => {
+    router.push(`/home/client/`);
+  }
 
   useEffect(() => {
     if (accessId) {
@@ -89,6 +92,17 @@ const Detail = (props) => {
             </Stack>
 
             <DetailResponse data={data} />
+          </Stack>
+          {/* //right-item */}
+          <Stack alignItems={'right-item '} justifyContent={'right-item '} direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 2, sm: 3, md: 5 }}>
+            <Button
+              variant="outlined"
+              onClick={handleGoHome}
+              size="medium"
+            >
+              Trở Lại
+            </Button>
           </Stack>
         </Container>
       </Box>
