@@ -40,6 +40,7 @@ export default function FormDetailMultichoice({ currentLevel }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  console.log(currentLevel);
 
   const isMultiRightAnswer = (currentQuestion) => {
     const totalRightAnswers = currentQuestion?.answer_content?.reduce((total, item) => {

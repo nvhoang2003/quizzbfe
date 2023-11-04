@@ -40,7 +40,7 @@ export default function Item(props) {
         justifyContent="space-between"
         height={"6.25rem"}
         padding="1rem 1rem 0.75rem"
-        sx={{ backgroundColor: "rgb(32,33,36)", cursor: "pointer" }}
+        sx={{ backgroundColor: "rgb(75, 79, 94)", cursor: "pointer" }}
       >
         <Typography color="white" variant="h5" textTransform="uppercase">
           <Link href={`/home/client/course/${product.id}`} color="inherit" underline="hover">

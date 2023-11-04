@@ -1,4 +1,4 @@
-const { Typography, Stack, Box, Container } = require("@mui/material");
+const { Typography, Stack, Box, Container, Button } = require("@mui/material");
 import { getResponseByID } from "@/dataProvider/quizResponseApi";
 import { DetailResponse } from "@/sections/@dashboard/detail/quizresponse/DetailResponse";
 import Head from "next/head";
@@ -9,7 +9,9 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 const Detail = (props) => {
   const {
     query: { accessId },
+
   } = useRouter();
+ const router = useRouter();
 
   const [data, setData] = useState({});
 
@@ -23,6 +25,9 @@ const Detail = (props) => {
     } else {
       return response;
     }
+  }
+  const handleGoHome = () => {
+    router.push(`/home/client/`);
   }
 
   useEffect(() => {
@@ -61,6 +66,17 @@ const Detail = (props) => {
             </Stack>
 
             <DetailResponse data={data} />
+          </Stack>
+          {/* //right-item */}
+          <Stack alignItems={'right-item '} justifyContent={'right-item '} direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 2, sm: 3, md: 5 }}>
+            <Button
+              variant="outlined"
+              onClick={handleGoHome}
+              size="medium"
+            >
+              Trở Lại
+            </Button>
           </Stack>
         </Container>
       </Box>

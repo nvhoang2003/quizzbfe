@@ -5,6 +5,7 @@ import {
   Divider,
   Stack,
   Typography,
+  Box,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { LoadingButton } from "@mui/lab";
@@ -43,26 +44,33 @@ export default function DoMatchQuestion(props) {
 
   return (
     <Container maxWidth="100%">
-      {/* <FormProvider> */}
       <Stack spacing={3}>
         <Card sx={{ p: 5 }}>
-          <Stack
-            divider={<Divider variant="middle" />}//flexItem sx={{ borderStyle: "dashed" }}  //, backgroundColor: '#EEFCEE'
-            spacing={3}
-          >
-            <Typography sx={{ fontWeight: 'bold' }}> Câu hỏi {number} : {currentLevel?.content}</Typography>
-            <DoMatch
-              question={currentLevel}
-              numberQuestion={number}
-              answerResult={quizSubmit}
-              setAnswerResult={setQuizSubmit}
-              isSubmit={submit}
-              quiz={quiz}
-            />
-          </Stack>
+          <Box sx={{
+            bgcolor: 'background.paper',
+            borderTop: 'solid 1px',
+            paddingTop: '30px',
+          }}>
+            <Stack
+              spacing={3}
+            >
+
+              <Typography sx={{ fontWeight: 'bold' }}> Câu hỏi {number} : {currentLevel?.content}</Typography>
+              <DoMatch
+                question={currentLevel}
+                numberQuestion={number}
+                answerResult={quizSubmit}
+                setAnswerResult={setQuizSubmit}
+                isSubmit={submit}
+                quiz={quiz}
+              />
+
+            </Stack>
+          </Box>
         </Card>
       </Stack>
+
       {/* </FormProvider> */}
-    </Container>
+    </Container >
   )
 }

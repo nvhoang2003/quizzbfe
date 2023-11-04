@@ -15,6 +15,7 @@ const Row = ({ questionResult }) => {
       <RadioGroup
         value={questionResult?.idAnswerChoosen || ""}
         name="radio-buttons-group"
+        disabled={true}
       >
         {questionResult?.question?.questionAnswers?.map((item, index) => (
           <FormControlLabel

@@ -23,25 +23,26 @@ const List = (props) => {
   useEffect(() => {
     fetchQuiz();
   }, []);
-  console.log(list);
 
-  const handleShowQuiz = (item) => {
-    console.log(item);
-  };
 
   return (
     <>
       <Head>
         <title>Overview</title>
       </Head>
-      <Box
+      {/* <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 0
         }}
-      >
-        <Stack display="flex" flexWrap="wrap" pt="1.5rem">
+      > */}
+       <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={3}
+            >
           {list.map((course, index) => {
             return (
               <OverviewCourse
@@ -52,7 +53,7 @@ const List = (props) => {
             );
           })}
         </Stack>
-      </Box>
+      {/* </Box> */}
     </>
   );
 };

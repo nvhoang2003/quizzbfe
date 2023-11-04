@@ -77,15 +77,7 @@ export default function DoMatch(props) {
   }, [question]);
 
   return (
-    <Box sx={{
-      display: 'flex',
-      p: 1,
-      m: 1,
-      bgcolor: 'background.paper',
-      borderTop: 'solid 1px',
-      width: 1
-    }}>
-      <Box sx={{ py: 3, }}>
+    <Box>
 
         {listSubQuestion?.map((subQuestion, quesIndex) => (
           <Stack direction="row" spacing={3} key={quesIndex} sx={{ my: 3 }}>
@@ -117,7 +109,6 @@ export default function DoMatch(props) {
             )}
           </Stack>
         ))}
-      </Box>
     </Box>
   )
 }
