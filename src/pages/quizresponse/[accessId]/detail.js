@@ -1,19 +1,27 @@
-const { Typography, Stack, Box, Container, Button } = require("@mui/material");
+const { Typography, Stack, Box, Container, Button, SvgIcon } = require("@mui/material");
 import { getResponseByID } from "@/dataProvider/quizResponseApi";
 import { DetailResponse } from "@/sections/@dashboard/detail/quizresponse/DetailResponse";
+import { ArrowBack } from "@mui/icons-material";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 
 const Detail = (props) => {
+  const router = useRouter();
+
   const {
     query: { accessId },
-
-  } = useRouter();
- const router = useRouter();
+  } = router;
 
   const [data, setData] = useState({});
+
+  const switchToHomePage = () => {
+    router.push({
+      pathname: `/home/client/course/[id]`,
+      query: { id: 5 },
+    });
+  }
 
   async function fetchQuizResponseById(accessId) {
     const response = await getResponseByID(accessId);
@@ -62,6 +70,24 @@ const Detail = (props) => {
                 <Typography variant="h4">
                   <Box sx={{ textTransform: "uppercase" }}>Chi tiết đề thi</Box>
                 </Typography>
+              </Stack>
+              <Stack
+                sx={{
+                  ml: "auto",
+                }}
+              >
+                <Button
+                  color="primary"
+                  startIcon={
+                    <SvgIcon fontSize="small">
+                      <ArrowBack />
+                    </SvgIcon>
+                  }
+                  variant="contained"
+                  onClick={switchToHomePage}
+                >
+                  Trở lại
+                </Button>
               </Stack>
             </Stack>
 
