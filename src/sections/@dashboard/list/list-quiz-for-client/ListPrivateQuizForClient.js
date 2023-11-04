@@ -25,7 +25,6 @@ export default function ListPrivateQuizForClient(props) {
   const { push } = useRouter();
 
   //check time
-
   const handleClick = async (item) => {
     const dataAdd = {
       userId: localStorage.getItem("userId"),
@@ -47,10 +46,10 @@ export default function ListPrivateQuizForClient(props) {
             <ListItem
               key={index}
               divider={hasDivider}
-              onClick={() => handleClick(item?.quizAccess)}
+              onClick={() => handleClick(item)}
             >
               <ListItemText
-                primary={item.quizName}
+                primary={item.quiz.name}
                 primaryTypographyProps={{ variant: 'subtitle1' }}
                 secondaryTypographyProps={{ variant: 'body2' }}
                 sx={{
