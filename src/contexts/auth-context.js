@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import PropTypes from "prop-types";
-import { setupLocalStorage } from "@/auth/utils";
+import { isValidToken, setupLocalStorage } from "@/auth/utils";
 import { loginAuth } from "@/dataProvider/authApi";
 import snackbarUtils from "@/utils/snackbar-utils";
 
@@ -83,7 +83,7 @@ export const AuthProvider = (props) => {
     var access_token = localStorage.getItem("access_token");
 
     try {
-      isAuthenticated = userId && access_token;
+      isAuthenticated = userId && isValidToken(access_token);
     } catch (err) {
       console.error(err);
     }
