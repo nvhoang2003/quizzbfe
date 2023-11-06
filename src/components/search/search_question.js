@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from 'react';
 import FormProvider from '@/components/form/FormProvider';
 import RHFTextField from '@/components/form/RHFTextField';
 import { Container, Button, Card, Divider, Grid, Stack, Typography, TextField, SvgIcon } from '@mui/material'
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { LoadingButton } from '@mui/lab';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,12 +17,15 @@ import { Icon } from '@iconify/react';
 import { format } from 'date-fns';
 import snackbarUtils from '@/utils/snackbar-utils';
 import { getAllQuestion } from '@/dataProvider/questionApi';
+import { RotateLeft } from "@mui/icons-material";
 //--------------------------------------------------
 
-const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
+const SearchQuestion = ({ handleSearchSubmit, ...prop }) => {
+  const { filter, setListQuiz } = prop;
   const [newData, setNewData] = useState([]);
   const { push } = useRouter();
   const [cate, setCate] = useState([]);
+  const [categoryId, setCategoryId] = useState(0);
   const [type, setType] = useState([]);
   const [reRender, setReRender] = useState([]);
 
@@ -33,13 +35,14 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentLevel?.name || '',
-      authorName: currentLevel?.authorName || '',
-      questiontype: currentLevel?.questiontype || '',
-      startDate: currentLevel?.startDate || null,
-      endDate: currentLevel?.endDate || null
+      name: '',
+      tags: '',
+      authorName: '',
+      questiontype: '',
+      startDate: null,
+      endDate: null
     }),
-    [currentLevel]
+    [filter]
   );
 
   const methods = useForm({
@@ -56,12 +59,14 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (currentLevel) {
-      reset(defaultValues);
-    }
 
-  }, [currentLevel]);
+
+  const handlerCategoryChange = (event, index) => {
+    setCategoryId(parseInt(event.target.value));
+    setValue(event.target.name, event.target.value);
+    setReRender({ [event.target.name]: event.target.value });
+  };
+
 
   const handlerTypeChange = (event, index) => {
     setValue(event.target.name, event.target.value);
@@ -86,26 +91,42 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
     fetchAllQuestionType()
   }, []);
 
+  async function fetchAll() {
+    const res = await getAllCate();
+    if (res.status < 400) {
+      const transformData = res.data.data.map((cate, index) => {
+        return {
+          id: cate.id,
+          num: index + 1,
+          name: cate.name,
+          description: cate.description
+        };
+      });
+      setCate(transformData);
+    } else {
+      return res;
+    }
+  }
+  useEffect(() => {
+    fetchAll()
+  }, []);
+
 
   async function fetchAllQuestion(data) {//filter
-    //console.log(data);
     const res = await getAllQuestion(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {
-
-
-
-        
         return {
           id: qb.id,
           num: index + 1,
           name: qb.name,
           questionsType: qb.questionsType,
           authorName: qb.authorName,
+          tags: qb.tags,
           defaultMark: qb.defaultMark
         };
       });
-      setNewData(transformData);
+      setListQuiz(transformData);
     } else {
       return res;
     }
@@ -131,12 +152,15 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
         endDate,
       };
       fetchAllQuestion(Data);
-      handleSearchSubmit(newData);
 
     } catch (error) {
       snackbarUtils.error(error);
     }
   };
+  const onReset = async () => {
+    reset(defaultValues);
+    await fetchAllQuestion(defaultValues);
+  }
 
   return (
     <Container maxWidth='100%' sx={{ paddingTop: "20px" }}>
@@ -161,11 +185,32 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
                       sx={{ width: '200px' }}
                     />
 
+                    <RHFTextField
+                      name="tags"
+                      label="Từ khóa"
+                      id="tags"
+                      sx={{ width: '250px' }}
+                    />
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '200px' }}>
                       <RHFSelect name="questiontype" placeholder="Ques" onChange={handlerTypeChange}>
                         <option value="">QuestionType</option>
                         {!_.isEmpty(type) &&
                           type.map((option) => (
+                            <option key={option.name} value={option.id}>
+                              {option.name}
+                            </option>
+                          ))}
+                      </RHFSelect>
+                    </div>
+                  </Stack>
+                  <Stack direction="row" spacing={2} sx={{ width: 1 }}>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '250px' }}>
+                      <RHFSelect name="categoryId" placeholder="Danh mục" onChange={handlerCategoryChange}>
+                        <option value="">--- Hãy chọn danh mục ---</option>
+                        {!_.isEmpty(cate) &&
+                          cate.map((option) => (
                             <option key={option.name} value={option.id}>
                               {option.name}
                             </option>
@@ -219,19 +264,22 @@ const SearchQuestion = ({ handleSearchSubmit, currentLevel }) => {
                     </div>
                   </Stack>
 
+
                   <Stack alignItems="flex-end" sx={{ mt: 3 }} spacing={2} direction="row" justifyContent="flex-end">
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}
                       startIcon={<Icon icon="ion:search" />}
                     >
-                      Search
+                      Tìm kiếm
                     </LoadingButton>
                     <Button
-                      size="small"
                       color="error"
-                      onClick={() => {
-                        reset(defaultValues);
-                      }}
-                      startIcon={<Icon icon="mdi:reload" />}
+                      startIcon={
+                        <SvgIcon fontSize="small">
+                          <RotateLeft />
+                        </SvgIcon>
+                      }
+                      variant="contained"
+                      onClick={onReset}
                     >
                       Xóa
                     </Button>

@@ -39,7 +39,7 @@ export default function QuestionTableRows({
   row,
   selected,
   onSelectRow,
-  onUpdateRow,
+  onShowRow,
   onDeleteRow,
   index,
 }) {
@@ -81,7 +81,7 @@ export default function QuestionTableRows({
             }}
           >
             <Tooltip title="Show" placement="top">
-              <IconButton color="info" onClick={onUpdateRow} >
+              <IconButton color="info" onClick={onShowRow} >
                 <Visibility />
               </IconButton>
             </Tooltip>

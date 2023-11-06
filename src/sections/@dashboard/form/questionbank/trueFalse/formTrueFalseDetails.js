@@ -29,6 +29,10 @@ export default function FormDetailTrueFalse({ currentLevel }) {
 
   const [answerResult, setAnswerResult] = useState([]);
   const [submit, setSubmit] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const question = urlParams.get('question');
+
 
   const methods = useForm({
   });
@@ -42,13 +46,19 @@ export default function FormDetailTrueFalse({ currentLevel }) {
     formState: { isSubmitting },
   } = methods;
 
-  
+
   const restart = () => {
     window.location.reload(true);
 
   }
   const close = () => {
-    push("/questionbank");
+    if (question) {
+      push("/question");
+    } else {
+      push("/questionbank");
+    }
+
+
   }
 
   const onSubmit = async () => {
@@ -84,7 +94,7 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               disabled={!submit}
               onClick={() => restart()}
             >
-              Làm Lại 
+              Làm Lại
             </LoadingButton>
 
             <LoadingButton
@@ -93,7 +103,7 @@ export default function FormDetailTrueFalse({ currentLevel }) {
               loading={isSubmitting}
               disabled={submit}
             >
-              Kiểm Tra Đáp Án 
+              Kiểm Tra Đáp Án
             </LoadingButton>
 
             <LoadingButton
@@ -105,7 +115,7 @@ export default function FormDetailTrueFalse({ currentLevel }) {
           </Stack>
         </Stack>
       </FormProvider>
-     
+
     </Container>
   );
 }

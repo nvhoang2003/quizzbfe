@@ -14,6 +14,7 @@ export default function OneChoiceQuestion(props) {
     questionId: 0,
     answer: [],
   });
+  console.log(question);
   const [idAnswerChoose, setIdAnswerChoose] = useState();
 
   const listQuestionResult = useState([]);

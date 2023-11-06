@@ -9,11 +9,7 @@ import TableBodyCustom from "@/components/table/TableBodyCustom";
 import { Card, IconButton, Table, TableContainer, Tooltip } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteQuizById, getAllQuiz } from "@/dataProvider/quizApi";
 import { enqueueSnackbar } from "notistack";
-import { getAllQuestionbank } from "@/dataProvider/questionbankApi";
-import { Iconify } from '@iconify/react';
-import { selectClasses } from "@mui/base";
 import QuestionTableRows from "./tableQuestionTableRow";
 import { deleteMultiById, deleteQuestionById, getAllQuestion } from "@/dataProvider/questionApi";
 
@@ -73,9 +69,9 @@ export default function QuestionTable(prop) {
     const response = await deleteQuestionById(id);
     if (response.status < 400) {
       await fetchQuiz();
-      enqueueSnackbar("response.data.message", { variant: "success" });
+      enqueueSnackbar(response.data.message, { variant: "success" });
     } else {
-      enqueueSnackbar(response.response.data.title, { variant: "error" });
+      enqueueSnackbar("Action error", { variant: "error" });
     }
   };
 
@@ -85,6 +81,7 @@ export default function QuestionTable(prop) {
 
   const fetchQuiz = async () => {
     const res = await getAllQuestion(filter);
+    console.log(res);
     if (res.status < 400) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
@@ -93,18 +90,13 @@ export default function QuestionTable(prop) {
     }
   };
 
-  const switchToUpdate = (item) => {
-    if (item.questionsType == "MultiChoice") {
-      router.push({
-        pathname: '/question/multiQuestion/[questionBankId]/details',
-        query: { questionBankId: item.id },
-      });
-    } if (item.questionsType == "TrueFalse") {
-      router.push({
-        pathname: '/questionbank/TrueFalseQuestion/[questionBankId]/edit',
-        query: { questionBankId: item.id },
-      });
-    }
+  const switchToShow = (item) => {
+    router.push({
+      pathname: `/questionbank/${item.questionsType}/${item.id}/detail`,
+      query: {
+        question: item.id
+      },
+    });
   }
 
 
@@ -132,7 +124,7 @@ export default function QuestionTable(prop) {
                   key={index}
                   row={item}
                   selected={selected.includes(item.id)}
-                  onUpdateRow={() => switchToUpdate(item)}
+                  onShowRow={() => switchToShow(item)}
                   onDeleteRow={() => handleDeleteRow(item.id)}
                   index={index}
                 />

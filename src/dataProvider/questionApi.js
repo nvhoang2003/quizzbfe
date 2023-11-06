@@ -4,6 +4,7 @@ const multi = 'MultiQuestion';
 const path = 'Question';
 //Question/AddMultiQuestions
 ///getListQuestion/DeleteQuestion/56
+//Question/GetQuestionById/5
 
 
 function getAllQuestion(params) {
@@ -14,8 +15,8 @@ function addMultiQuestions(qb){
   return postApi(path + `/AddMultiQuestions`,qb);
 }
 
-function getMultiById(id){
-  return getApi(multi + `/GetQuestionBankById/${id}`);
+function getQuestionById(id){
+  return getApi(path + `/GetQuestionById/${id}`);
 }
 
 // function getQuestionBankByID(id){
@@ -26,8 +27,9 @@ function getMultiById(id){
 //   return putApi(catePath +`/updateCategories/${id}`,cate);
 // }
 
+///api/Question/DeleteQuestion/5
 function deleteQuestionById(id){
-  return deleteApi(listPath + `/DeleteQuestion/${id}`);
+  return deleteApi(path + `/DeleteQuestion/${id}`);
 }
 
 
@@ -35,7 +37,7 @@ function deleteQuestionById(id){
 
 export {
     getAllQuestion,
-    getMultiById,
+    getQuestionById,
     deleteQuestionById,
     addMultiQuestions
 }
