@@ -19,10 +19,10 @@ import {
   ListItemText,
   SvgIcon
 } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 
 export default function ListPrivateQuizForClient(props) {
   const { quizzes, sx } = props;
-  console.log(quizzes);
   const { push } = useRouter();
 
   //check time
@@ -34,8 +34,13 @@ export default function ListPrivateQuizForClient(props) {
       status: "Doing"
     }
     const res = await updStatusQuizAccess(item?.id, dataAdd);
-    const accessId = item?.id;
-    push(`/testquiz/${accessId}`);
+
+    if (res.status < 400) {
+      const accessId = res.data.data.id;
+      push(`/testquiz/${accessId}`);
+    } else {
+      enqueueSnackbar(res.response.data.title, { variant: "error" });
+    }
   }
 
   return (

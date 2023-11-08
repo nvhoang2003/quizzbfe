@@ -1,6 +1,5 @@
 import { ResultQuestions } from "@/sections/@dashboard/list/quizResponse/result-questions";
-
-const { Container, Stack, Typography, Box } = require("@mui/material");
+import { Container, Stack, Typography, Box } from "@mui/material";
 
 const Head = ({ data }) => {
   return (
@@ -24,10 +23,7 @@ const Head = ({ data }) => {
           pr: 1,
         }}
       >
-        <span>
-          Họ và tên học sinh:{" "}
-          {data.userName}
-        </span>
+        <span>Họ và tên học sinh: {data.userName}</span>
         <span>Khóa học: {data.courseName}</span>
         <span>Tên đề thi: {data.quizName}</span>
       </Typography>
@@ -43,10 +39,12 @@ const Head = ({ data }) => {
         <Box mr={1}>Tổng điểm:</Box>
         <Box
           color={
-            data.totalPoint?.toFixed(1) >= data.pointToPass ? "#2FAE03" : "#E45858"
+            data.totalPoint?.toFixed(1) >= data.pointToPass
+              ? "#2FAE03"
+              : "#E45858"
           }
         >
-          { (Math.round(data.totalPoint * 2) / 2).toFixed(1)}/{data.maxPoint}
+          {(Math.round(data.totalPoint * 2) / 2).toFixed(1)}/{data.maxPoint}
         </Box>
       </Typography>
     </Stack>
@@ -57,7 +55,10 @@ const DetailResponse = ({ data }) => {
   return (
     <Container maxWidth="xl">
       <Head data={data} />
-      <ResultQuestions questionResults={data.questionReults} />
+      <ResultQuestions
+        questionResults={data.questionReults}
+        isPublic={data.isPublic}
+      />
     </Container>
   );
 };

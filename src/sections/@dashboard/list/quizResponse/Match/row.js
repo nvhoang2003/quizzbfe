@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import { Container, Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import React from "react";
 
-const Row = ({ questionResult }) => {
+const Row = ({ questionResult, isPublic }) => {
   return (
     <>
       {questionResult?.question?.matchSubQuestions &&
@@ -22,8 +22,25 @@ const Row = ({ questionResult }) => {
           </Grid>
           {questionResult?.question?.matchSubQuestions?.map((item, index) => {
             if (item && item.questionText) {
+              const answerTextChoosen =
+                questionResult?.matchSubQuestionChoosen?.find(
+                  (matchSub) =>
+                    matchSub.questionText.trim() == item?.questionText?.trim()
+                )?.answerText;
+              const correctAnswer = item.answerText == answerTextChoosen;
+
               return (
-                <Grid key={index} container>
+                <Grid
+                  key={index}
+                  container
+                  sx={{
+                    color: isPublic
+                      ? correctAnswer
+                        ? "#2FAE03"
+                        : "#E45858"
+                      : "",
+                  }}
+                >
                   <Grid item xs={3}>
                     <Typography fontWeight="600" noWrap>
                       {item.questionText}
@@ -31,11 +48,7 @@ const Row = ({ questionResult }) => {
                   </Grid>
                   <Grid item>
                     <Typography noWrap>
-                      {questionResult?.matchSubQuestionChoosen?.find(
-                        (matchSub) =>
-                          matchSub.questionText.trim() ==
-                          item?.questionText?.trim()
-                      )?.answerText || "Chưa chọn đáp án"}
+                      {answerTextChoosen || "Chưa chọn đáp án"}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -54,6 +67,7 @@ const Row = ({ questionResult }) => {
 
 Row.propTypes = {
   questionReult: PropTypes.object,
+  isPublic: PropTypes.bool,
 };
 
 export default Row;
