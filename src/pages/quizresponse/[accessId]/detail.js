@@ -1,4 +1,11 @@
-const { Typography, Stack, Box, Container, Button, SvgIcon } = require("@mui/material");
+import {
+  Typography,
+  Stack,
+  Box,
+  Container,
+  Button,
+  SvgIcon,
+} from "@mui/material";
 import { getResponseByID } from "@/dataProvider/quizResponseApi";
 import { DetailResponse } from "@/sections/@dashboard/detail/quizresponse/DetailResponse";
 import { ArrowBack } from "@mui/icons-material";
@@ -21,21 +28,19 @@ const Detail = (props) => {
       pathname: `/home/client/course/[id]`,
       query: { id: 5 },
     });
-  }
+  };
 
   async function fetchQuizResponseById(accessId) {
     const response = await getResponseByID(accessId);
 
     if (response.status < 400) {
       const quizResponse = response?.data?.data;
+      quizResponse.isPublic = !!quizResponse.isPublic;
 
       setData(quizResponse);
     } else {
       return response;
     }
-  }
-  const handleGoHome = () => {
-    router.push(`/home/client/`);
   }
 
   useEffect(() => {
@@ -92,17 +97,6 @@ const Detail = (props) => {
             </Stack>
 
             <DetailResponse data={data} />
-          </Stack>
-          {/* //right-item */}
-          <Stack alignItems={'right-item '} justifyContent={'right-item '} direction={{ xs: 'column', sm: 'row' }}
-              spacing={{ xs: 2, sm: 3, md: 5 }}>
-            <Button
-              variant="outlined"
-              onClick={handleGoHome}
-              size="medium"
-            >
-              Trở Lại
-            </Button>
           </Stack>
         </Container>
       </Box>

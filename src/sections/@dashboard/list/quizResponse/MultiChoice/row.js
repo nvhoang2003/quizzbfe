@@ -1,22 +1,22 @@
 import PropTypes from "prop-types";
 import {
   Checkbox,
-  Container,
   FormControlLabel,
   Radio,
   RadioGroup,
-  Stack,
   Typography,
 } from "@mui/material";
 
-const Row = ({ questionResult }) => {
-
+const Row = ({ questionResult, isPublic }) => {
   const isMultiRightAnswer = (currentQuestion) => {
-    const totalRightAnswers = currentQuestion?.questionAnswers?.reduce((total, item) => {
-      return total + (item.fraction > 0 ? 1 : 0);
-    }, 0);
+    const totalRightAnswers = currentQuestion?.questionAnswers?.reduce(
+      (total, item) => {
+        return total + (item.fraction > 0 ? 1 : 0);
+      },
+      0
+    );
     return totalRightAnswers > 1;
-  }
+  };
 
   return (
     <>
@@ -26,34 +26,46 @@ const Row = ({ questionResult }) => {
         name="radio-buttons-group"
         disabled={true}
       >
-        {questionResult?.question?.questionAnswers?.map((item, index) => (
-          <FormControlLabel
-            value={item?.id}
-            key={index}
-            control={
-              isMultiRightAnswer(questionResult?.question) ?
-                <Checkbox
-                  checked={questionResult?.idAnswerChoosen?.includes(item?.id)}
-                // disabled={true}
-                />
-                :
-                <Radio
-                  // disabled={true}
-                  checked={questionResult?.idAnswerChoosen?.includes(item?.id)}
-                />
+        {questionResult?.question?.questionAnswers?.map((item, index) => {
+          const correctAnswer =
+            item.fraction > 0 ? (item.fraction == 1 ? 1 : 2) : 0;
+          const colorAnswer = isPublic
+            ? correctAnswer != 0
+              ? correctAnswer == 1
+                ? "success"
+                : "warning"
+              : "error"
+            : "";
 
-
-
-
-            }
-
-            label={
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="body1">{item?.content}</Typography>
-              </div>
-            }
-          />
-        ))}
+          return (
+            <FormControlLabel
+              value={item?.id}
+              key={index}
+              control={
+                isMultiRightAnswer(questionResult?.question) ? (
+                  <Checkbox
+                    color={colorAnswer}
+                    checked={questionResult?.idAnswerChoosen?.includes(
+                      item?.id
+                    )}
+                  />
+                ) : (
+                  <Radio
+                    color={colorAnswer}
+                    checked={questionResult?.idAnswerChoosen?.includes(
+                      item?.id
+                    )}
+                  />
+                )
+              }
+              label={
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Typography variant="body1">{item?.content}</Typography>
+                </div>
+              }
+            />
+          );
+        })}
       </RadioGroup>
     </>
   );
@@ -61,6 +73,7 @@ const Row = ({ questionResult }) => {
 
 Row.propTypes = {
   questionReult: PropTypes.object,
+  isPublic: PropTypes.bool,
 };
 
 export default Row;

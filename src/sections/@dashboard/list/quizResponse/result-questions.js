@@ -1,14 +1,20 @@
 import PropTypes from "prop-types";
-import { Container, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import dynamic from "next/dynamic";
 import { Clear, Done } from "@mui/icons-material";
 import HeadQuestion from "@/sections/@dashboard/list/quizResponse/head-question";
+import ResultAnswer from "@/sections/@dashboard/list/quizResponse/result-answer";
 
-const ResultQuestions = ({ questionResults }) => {
+const ResultQuestions = ({ questionResults, isPublic }) => {
   return questionResults?.map((questionResult, index) => {
     const QuestionResultRow = dynamic(() =>
       import(
         `@/sections/@dashboard/list/quizResponse/${questionResult?.question?.questionsType}/row`
+      )
+    );
+    const AnswerResult = dynamic(() =>
+      import(
+        `@/sections/@dashboard/list/quizResponse/${questionResult?.question?.questionsType}/result`
       )
     );
 
@@ -33,11 +39,17 @@ const ResultQuestions = ({ questionResults }) => {
             question={questionResult?.question}
             mark={questionResult?.question.defaultMark}
           />
-          <Stack pl={5}>
+          <Stack pl={0}>
             <QuestionResultRow
               questionResult={questionResult}
+              isPublic={isPublic}
             />
           </Stack>
+          {isPublic && (
+            <Stack pt={2}>
+              <ResultAnswer questionResult={questionResult} />
+            </Stack>
+          )}
         </Stack>
       </Stack>
     );
@@ -46,6 +58,7 @@ const ResultQuestions = ({ questionResults }) => {
 
 ResultQuestions.propTypes = {
   questionReults: PropTypes.array,
+  isPublic: PropTypes.bool,
 };
 
 export { ResultQuestions };
