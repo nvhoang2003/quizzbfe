@@ -1,11 +1,11 @@
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
-import { Box, Container, Stack, Typography } from "@mui/material";
-import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
-import Head from "next/head";
-import QuizForm from "@/sections/@dashboard/form/quiz/form";
-import { getQuizById } from "@/dataProvider/quizApi";
+  import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+  import { useRouter } from "next/router";
+  import React, { useCallback, useEffect, useState } from "react";
+  import { Box, Container, Stack, Typography } from "@mui/material";
+  import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
+  import Head from "next/head";
+  import QuizForm from "@/sections/@dashboard/form/quiz/form";
+  import { getQuizById } from "@/dataProvider/quizApi";
 
 const QuizEdit = (props) => {
   const {
@@ -29,8 +29,7 @@ const QuizEdit = (props) => {
         maxPoint: q.maxPoint,
         isPublic: q.isPublic,
         isValid: q.isValid,
-        courseid: q.courseid,
-        listQuestion: q.listQuestion
+        courseid: q.courseid
       };
 
       setEditData(transformData);

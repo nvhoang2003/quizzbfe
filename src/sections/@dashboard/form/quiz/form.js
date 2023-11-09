@@ -20,7 +20,12 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import RHFSwitch from "@/components/form/RHFSwitch";
-import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import {
+  Close,
+  DriveFileRenameOutline,
+  KeyboardDoubleArrowRight,
+  Save,
+} from "@mui/icons-material";
 import RHFNumberInput from "@/components/form/RHFNumberInput";
 import RHFDateTimePicker from "@/components/form/RHFDateTimePicker";
 import { postAddQuiz, putEditQuiz } from "@/dataProvider/quizApi";
@@ -38,6 +43,10 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
     router.push("/quiz");
   };
 
+  const switchToAddQuestion = (id) => {
+    router.push(`/quiz/${id}/add-question`);
+  };
+
   const {
     setError,
     clearErrors,
@@ -51,19 +60,19 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
     timeLimit: Yup.number()
       .required("Giới hạn thời gian không được để trống")
       .min(0.1, "Giới hạn thời gian phải lớn hơn hoặc bằng 0,1"),
-    pointToPass: Yup.number()
-      .required("Điểm đạt không được để trống")
-      .min(0.1, "Điểm đạt phải lớn hơn hoặc bằng 0,1"),
     description: Yup.string(),
   });
-  
+
   const defaultValues = useMemo(
     () => ({
       name: currentLevel?.name || "",
-      timeOpen: currentLevel?.timeOpen ? new Date(currentLevel?.timeOpen) : null,
-      timeClose: currentLevel?.timeOpen ? new Date(currentLevel?.timeOpen) : null,
+      timeOpen: currentLevel?.timeOpen
+        ? new Date(currentLevel?.timeOpen)
+        : null,
+      timeClose: currentLevel?.timeOpen
+        ? new Date(currentLevel?.timeOpen)
+        : null,
       timeLimit: currentLevel?.timeLimit || 0,
-      pointToPass: currentLevel?.pointToPass || 0,
       description: currentLevel?.description || "",
       isPublic: currentLevel?.isPublic == 1 ? true : false,
     }),
@@ -95,8 +104,8 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
       naveMethod: "string",
       overduehanding: "string",
       preferedBehavior: "string",
-      pointToPass: data.pointToPass,
       maxPoint: currentLevel?.maxPoint ?? 0,
+      pointToPass: currentLevel?.pointToPass ?? 0,
       isPublic: data.isPublic ? 1 : 0,
     };
   };
@@ -106,12 +115,13 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
 
     try {
       const res = await putEditQuiz(currentLevel?.id, transformData);
-      
+
       if (res.status < 400) {
-        snackbarUtils.success(res?.data?.message || "Cập Nhật Thành Công");
+        snackbarUtils.success(res?.data?.message || "Lưu Thành Công");
+        switchToAddQuestion(res?.data?.data?.id);
       } else {
         const responseData = res?.response?.data;
-        snackbarUtils.error("Cập Nhật Thất Bại");
+        snackbarUtils.error("Lưu Thất Bại");
 
         Object.entries(responseData?.errors).forEach(
           ([fieldKey, errorMessage]) => {
@@ -132,12 +142,13 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
 
     try {
       const res = await postAddQuiz(transformData);
-      
+
       if (res.status < 400) {
-        snackbarUtils.success(res?.data?.message || "Tạo Mới Thành Công");
+        snackbarUtils.success(res?.data?.message || "Lưu Thành Công");
+        switchToAddQuestion(res?.data?.data?.id);
       } else {
         const responseData = res?.response?.data;
-        snackbarUtils.error("Tạo Mới Thất Bại");
+        snackbarUtils.error("Lưu Thất Bại");
 
         Object.entries(responseData?.errors).forEach(
           ([fieldKey, errorMessage]) => {
@@ -226,21 +237,6 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
               isError={errors.timeLimit}
               errorMessage={errors.timeLimit?.message}
             />
-            <Tooltip title="ex: 5 điểm" placement="top-start">
-              <Stack width={1}>
-                <RHFNumberInput
-                  name="pointToPass"
-                  id="pointToPass"
-                  label="Điểm đạt"
-                  inputProps={{
-                    step: "0.1",
-                    min: 0,
-                  }}
-                  isError={errors.PointToPass}
-                  errorMessage={errors.PointToPass?.message}
-                />
-              </Stack>
-            </Tooltip>
             <RHFSwitch
               name="isPublic"
               label={
@@ -295,7 +291,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
             color="primary"
             startIcon={
               <SvgIcon>
-                <KeyboardDoubleArrowRight />
+                <Save />
               </SvgIcon>
             }
             variant="contained"
@@ -303,7 +299,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
             loading={isValidating || isSubmitting}
             onClick={() => clearErrors()}
           >
-            Tiếp tục
+            Lưu
           </LoadingButton>
         </Stack>
       </FormProvider>

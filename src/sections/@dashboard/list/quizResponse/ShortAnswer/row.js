@@ -8,7 +8,7 @@ const Row = ({ questionResult, isPublic }) => {
         <Typography fontWeight="700" mr={2} pl={3}>
           Câu trả lời:
         </Typography>
-        <Typography noWrap>{questionResult?.shortAnswerChoosen}</Typography>
+        <Typography noWrap>{questionResult?.shortAnswerChoosen ?? "Bạn chưa trả lời câu hỏi này"}</Typography>
       </Stack>
     </>
   );
