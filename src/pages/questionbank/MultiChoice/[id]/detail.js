@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 import { Container } from 'postcss';
 import FormDetailMultichoice from '@/sections/@dashboard/form/questionbank/multichoice/formMultichoiceDetails';
+import { getQuestionById } from '@/dataProvider/questionApi';
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +22,14 @@ export default function Details(props) {
     query: { id }
   } = useRouter()
 
-  async function fetchQuestionByID(id) {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const question = urlParams.get('question');
+
+  async function fetchQuestionBankByID(id) {
     const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
-      console.log(q);
       const transformData = {
         id: q.id,
         name: q.name,
@@ -36,7 +40,55 @@ export default function Details(props) {
         tagId: [],
         answer_content: [],
         isPublic: q.isPublic,
-        imageUrl:q.imageUrl
+        imageUrl: q.imageUrl
+      };
+
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).map((element) => {
+        transformData.tagId.push(element.id);
+      });
+
+      q.quizbankAnswers?.forEach((element) => {
+        transformData.answer_content.push({
+          id: element.id,
+          answer: element.content,
+          feedback: element.feedback,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId,
+          questionId: element.questionId,
+        });
+      });
+
+      setEditData(transformData);
+      props.changeLastPath(transformData.name);
+    } else {
+      return res;
+    }
+  }
+
+  async function fetchQuestionByID(id) {
+    console.log(id);
+    const res = await getQuestionById(id);
+    if (res.status < 400) {
+      const q = res.data.data;
+      const transformData = {
+        id: q.id,
+        name: q.name,
+        generalfeedback: q.generalfeedback,
+        content: q.content,
+        defaultMark: q.defaultMark,
+        categoryId: q.categoryId,
+        tagId: [],
+        answer_content: [],
+        isPublic: q.isPublic,
+        authorId: q.authorId,
+        imageUrl: q.imageUrl,
+        questionstype:q.questionstype
       };
 
       q.tags?.filter((tag) => {
@@ -49,14 +101,13 @@ export default function Details(props) {
         transformData.tagId.push(element.id);
       });
 
-      q.quizbankAnswers?.forEach(element => {
+      q.questionAnswers?.forEach(element => {
         transformData.answer_content.push({
           id: element.id,
-          answer: element.content,
           feedback: element.feedback,
+          answer: element.content,
           fraction: element.fraction,
-          quizBankId: element.quizBankId,
-          questionId: element.questionId
+          quizBankId: element.quizBankId
         });
       });
       setEditData(transformData);
@@ -68,9 +119,12 @@ export default function Details(props) {
 
 
   useEffect(() => {
-    if (id) {
-      fetchQuestionByID(id);
+    if (urlParams.get('question')) {
+      fetchQuestionByID(question);
+    } else {
+      fetchQuestionBankByID(id);
     }
+
   }, [id]);
 
   return (

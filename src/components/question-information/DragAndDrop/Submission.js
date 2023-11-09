@@ -27,11 +27,19 @@ export default function Buttons({
   setItems,
   setHasSubmitted,
 }) {
+
+
   const saveTask = useLocalStorage(taskId)[1];
   const [trials, setTrials] = useState(0);
   const [solutionShown, setSolutionShown] = useState(false);
   const [submitButtonRef, confetti] = useConfetti();
   const { push } = useRouter();
+
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const question = urlParams.get('question');
+
   const allBlanksEmpty = useMemo(
     () =>
       !Object.entries(items).some(
@@ -88,7 +96,12 @@ export default function Buttons({
 
 
   const close = () => {
-    push("/questionbank");
+    if (question) {
+      push("/question");
+    } else {
+      push("/questionbank");
+    }
+
   }
 
 

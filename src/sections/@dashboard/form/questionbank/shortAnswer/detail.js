@@ -27,6 +27,9 @@ export default function Detail({ currentLevel }) {
 
   const [answerResult, setAnswerResult] = useState([]);
   const [submit, setSubmit] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const question = urlParams.get('question');
 
   const methods = useForm({
   });
@@ -45,7 +48,13 @@ export default function Detail({ currentLevel }) {
 
   }
   const close = () => {
-    push("/questionbank");
+    if (question) {
+      push("/question");
+    } else {
+      push("/questionbank");
+    }
+
+
   }
 
   const onSubmit = async () => {

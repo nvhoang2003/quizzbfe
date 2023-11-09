@@ -4,10 +4,12 @@ import PropTypes from "prop-types";
 import {
   Box,
   Button,
+  Card,
   IconButton,
   Stack,
   TableCell,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -20,12 +22,10 @@ import {
   Visibility,
 } from "@mui/icons-material";
 import ConfirmDialog from "@/components/confirm-dialog";
-import { formatedNullDateTime, formatedNullString } from "@/utils/formatter";
-import CustomTooltip from "@/components/tooltip/CustomTooltip";
-import Checkbox from '@mui/material/Checkbox';
+import { format, parseISO } from 'date-fns';
 //----------------------------------------------------------------------------
 
-QuestionTableRows.propTypes = {
+QuizAccessTableRows.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onSelectRow: PropTypes.func,
@@ -35,19 +35,20 @@ QuestionTableRows.propTypes = {
 
 //----------------------------------------------------------------------------
 
-export default function QuestionTableRows({
+export default function QuizAccessTableRows({
   row,
   selected,
   onSelectRow,
-  onShowRow,
+  onUpdateRow,
   onDeleteRow,
   index,
 }) {
   const {
-    name,
-    questionsType,
-    authorName,
+    user,
+    status,
     isPublic,
+    quiz,
+    timeStartQuiz
   } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [select, setSelect] = useState([]);
@@ -59,19 +60,23 @@ export default function QuestionTableRows({
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
- 
+
+  const formattedDate = timeStartQuiz ? format(new Date(timeStartQuiz), 'HH:mm:ss dd/MM/yyyy') : "Chưa bắt đầu";
+
+
+
+
 
   return (
     <React.Fragment>
       <TableRow hover selected={selected}>
         <TableCell align="center">{index + 1}</TableCell>
-        <TableCell align="center">{name}</TableCell>
-        <TableCell align="center">{questionsType}</TableCell>
-        <TableCell align="center">{authorName}</TableCell>
+        <TableCell align="center">{user?.fullName}</TableCell>
+        <TableCell align="center">{status}</TableCell>
+        <TableCell align="center">{quiz?.name}</TableCell>
+        <TableCell align="center">{quiz?.course?.fullName}</TableCell>
         <TableCell align="center">
-          <Typography color={!isPublic ? "#E45858" : "#2FAE03"}>
-            {!isPublic ? "Không" : "Có"}
-          </Typography>
+          {formattedDate}
         </TableCell>
         <TableCell align="center">
           <Box
@@ -81,15 +86,10 @@ export default function QuestionTableRows({
             }}
           >
             <Tooltip title="Show" placement="top">
-              <IconButton color="info" onClick={onShowRow} >
-                <Visibility />
+              <IconButton color="info" onClick={onUpdateRow} >
+              <ModeEdit />
               </IconButton>
             </Tooltip>
-            {/* <Tooltip title="Edit" placement="left">
-              <IconButton color="success" onClick={onUpdateRow}>
-                <ModeEdit />
-              </IconButton>
-            </Tooltip> */}
             <Tooltip title="Delete" placement="right">
               <IconButton color="error" onClick={handleOpenConfirm}>
                 <Delete />
@@ -101,9 +101,45 @@ export default function QuestionTableRows({
           open={openConfirm}
           onClose={handleCloseConfirm}
           content={
-            <Typography fontWeight="900">
-              Bạn có chắc chắn muốn xóa <strong>{name}</strong> ?
-            </Typography>
+            <>
+              <Typography variant="h5">Bạn có chắc muốn xóa </Typography>
+              <Stack
+                justifyContent="flex-start"
+                alignItems="baseline"
+                spacing={2}
+                paddingTop='20px'
+              >
+                <TextField
+                  id="outlined-read-only-input1"
+                  label="Tên học sinh"
+                  defaultValue={user?.fullName}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                />
+                <TextField
+                  id="outlined-read-only-input2"
+                  label="Trạng thái làm bài"
+                  defaultValue={status}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                />
+                <TextField
+                  id="outlined-read-only-input3"
+                  label="Tên đề học sinh tham gia"
+                  defaultValue={quiz?.name}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                />
+
+              </Stack>
+
+            </>
           }
           action={
             <Button variant="contained" color="error" onClick={() => {

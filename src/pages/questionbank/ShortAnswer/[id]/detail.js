@@ -1,3 +1,4 @@
+import { getQuestionById } from '@/dataProvider/questionApi';
 import { getQuestionBankById } from '@/dataProvider/questionbankApi';
 import FormDetailShortAnswer from "@/sections/@dashboard/form/questionbank/shortAnswer/detail";
 import { Card } from "@mui/material";
@@ -10,8 +11,12 @@ export default function Details(props) {
   const {
     query: { id },
   } = useRouter();
+  const urlParams = new URLSearchParams(window.location.search);
 
-  async function fetchQuestionByID(id) {
+  const question = urlParams.get('question');
+
+
+  async function fetchQuestionBankByID(id) {
     const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
@@ -56,10 +61,59 @@ export default function Details(props) {
     }
   }
 
-  useEffect(() => {
-    if (id) {
-      fetchQuestionByID(id);
+  async function fetchQuestionByID(id) {
+    // console.log(id);
+    const res = await getQuestionById(id);
+    if (res.status < 400) {
+      const q = res.data.data;
+      const transformData = {
+        id: q.id,
+        name: q.name,
+        generalfeedback: q.generalfeedback,
+        content: q.content,
+        defaultMark: q.defaultMark,
+        categoryId: q.categoryId,
+        tagId: [],
+        answers: [],
+        isPublic: q.isPublic,
+        authorId: q.authorId,
+        imageUrl: q.imageUrl
+      };
+
+      q.tags?.filter((tag) => {
+        if (!tag || tag == undefined || tag == "") {
+          return false;
+        }
+
+        return true;
+      }).forEach(element => {
+        transformData.tagId.push(element.id);
+      });
+
+      q.questionAnswers?.forEach(element => {
+        transformData.answers.push({
+          id: element.id,
+          feedback: element.feedback,
+          answer: element.content,
+          fraction: element.fraction,
+          quizBankId: element.quizBankId
+        });
+      });
+      setEditData(transformData);
+      props.changeLastPath(transformData.name)
+    } else {
+      return res;
     }
+  };
+
+
+  useEffect(() => {
+    if (urlParams.get('question')) {
+      fetchQuestionByID(question);
+    } else {
+      fetchQuestionBankByID(id);
+    }
+
   }, [id]);
 
   return (

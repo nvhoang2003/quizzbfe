@@ -10,22 +10,24 @@ import { Card, IconButton, Table, TableContainer, Tooltip } from "@mui/material"
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import QuestionTableRows from "./tableQuestionTableRow";
-import { deleteMultiById, deleteQuestionById, getAllQuestion } from "@/dataProvider/questionApi";
+import QuizAccessTableRows from "./QuizAccessTableRow";
+import { deleteQuizAccess, getAll } from "@/dataProvider/quizAccess";
+import ConfirmDialogQuizAccess from "@/components/confirm-dialog/ConfirmDialogQuizAccess";
 
 
 //--------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "center" },
-  { id: "name", label: "Tên câu hỏi", align: "center" },
-  { id: "questionstype", label: "Dạng câu hỏi", align: "center" },
-  { id: "authorName", label: "Tên Tác Giả", align: "center" },
-  { id: "isPublic", label: "Công khai", align: "center" },
+  { id: "userId", label: "user", align: "center" },
+  { id: "status", label: "Status", align: "center" },
+  { id: "quiz", label: "Quiz", align: "center" },
+  { id: "courseid", label: "Course", align: "center" },
+  { id: "timeStartQuiz", label: "Thời gian bắt đầu làm bài", align: "center" },
   { id: "action", label: "Thao Tác", align: "left" },
 ];
 
-export default function QuestionTable(prop) {
+export default function QuizAccessTable(prop) {
   const { push } = useRouter();
 
   const {
@@ -48,6 +50,7 @@ export default function QuestionTable(prop) {
   const [selected, setSelected] = useState([]);
   const router = useRouter();
   const [paging, setPaging] = useState({});
+  //const [selectedItem, setSelectedItem] = useState(null);
 
   const handlePageChange = useCallback(
     (event, pageIndex) => {
@@ -66,38 +69,46 @@ export default function QuestionTable(prop) {
 
 
   const handleDeleteRow = async (id) => {
-    const response = await deleteQuestionById(id);
+    const response = await deleteQuizAccess(id);
     if (response.status < 400) {
-      await fetchQuiz();
+      await fetchCourse();
       enqueueSnackbar(response.data.message, { variant: "success" });
     } else {
-      enqueueSnackbar("Action error", { variant: "error" });
+      enqueueSnackbar(response.data.title, { variant: "error" });
     }
   };
 
   useEffect(() => {
-    fetchQuiz();
+    fetchAllQuizAccess();
   }, [filter]);
 
-  const fetchQuiz = async () => {
-    const res = await getAllQuestion(filter);
+
+  const fetchAllQuizAccess = async () => {
+    const res = await getAll(filter);
     if (res.status < 400) {
+      const quizResponse = res.data.data;
       setPaging(JSON.parse(res.headers["x-pagination"]));
-      setListQuiz(res.data.data);
+      setListQuiz(quizResponse);
     } else {
-      console.log(res.message);
+      return res;
     }
   };
 
-  const switchToShow = (item) => {
-    router.push({
-      pathname: `/questionbank/${item.questionsType}/${item.id}/detail`,
-      query: {
-        question: item.id
-      },
-    });
-  }
+  const [isOpen, setOpen] = useState(false);
 
+
+  const handleOpenClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const switchToUpdate = (item) => {
+    setSelected(item);
+    handleOpenClick();
+  };
 
   return (
     <Card sx={{ p: 4 }}>
@@ -109,7 +120,7 @@ export default function QuestionTable(prop) {
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
               rowCount={listQuiz.length}
-              numSelected={selected.length}
+            // numSelected={selected.length}
             />
             <TableBodyCustom
               dense={dense}
@@ -119,15 +130,31 @@ export default function QuestionTable(prop) {
               notFoundMessage={"Không có câu hỏi tương tự"}
             >
               {listQuiz?.map((item, index) => (
-                <QuestionTableRows
+                <QuizAccessTableRows
                   key={index}
                   row={item}
-                  selected={selected.includes(item.id)}
-                  onShowRow={() => switchToShow(item)}
+                  onUpdateRow={() => {
+                    switchToUpdate(item);
+                    handleOpenClick();
+                  }}
                   onDeleteRow={() => handleDeleteRow(item.id)}
                   index={index}
                 />
               ))}
+
+              <ConfirmDialogQuizAccess
+                open={isOpen}
+                onClose={() => { handleClose() }}
+                isEdit={isOpen}
+                title={"Cập nhật QuizAccess"}
+                content={{
+                  userId: selected?.userId,
+                  courseId: selected?.quiz?.courseid,
+                  quizId: selected?.quizId,
+                  id: selected.id,
+                  status: selected.status
+                }}
+              />
             </TableBodyCustom>
           </Table>
         </Scrollbar>

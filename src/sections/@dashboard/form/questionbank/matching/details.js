@@ -23,6 +23,11 @@ Details.propTypes = {
 };
 
 export default function Details({ currentLevel }) {
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const question = urlParams.get('question');
+
   const { push } = useRouter();
 
   const [answerResult, setAnswerResult] = useState([]);
@@ -46,7 +51,13 @@ export default function Details({ currentLevel }) {
   }
 
   const close = () => {
-    push("/questionbank");
+    if (question) {
+      push("/question");
+    } else {
+      push("/questionbank");
+    }
+
+
   }
 
   const onSubmit = async () => {
@@ -73,7 +84,7 @@ export default function Details({ currentLevel }) {
                 <MatchQuestion
                   question={currentLevel}
                   numberQuestion={1}
-                  answerResult={answerResult} 
+                  answerResult={answerResult}
                   setAnswerResult={setAnswerResult}
                   isSubmit={submit}
                 />
@@ -89,7 +100,7 @@ export default function Details({ currentLevel }) {
               disabled={!submit}
               onClick={() => restart()}
             >
-              Làm Lại
+              Start again
             </LoadingButton>
 
             <LoadingButton
@@ -99,14 +110,14 @@ export default function Details({ currentLevel }) {
               onClick={() => onSubmit()}
               disabled={submit}
             >
-              Kiểm Tra Đáp Án
+              Submit and finish
             </LoadingButton>
 
             <LoadingButton
               variant="contained"
               onClick={() => close()}
             >
-              Trở Về
+              Close preview
             </LoadingButton>
           </Stack>
         </Stack>
