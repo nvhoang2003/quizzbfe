@@ -27,6 +27,7 @@ export default function FormDetailDragAndDrop(props) {
   const [content, setContent] = useState([]);
 
   // const [submit, setSubmit] = useState(false);
+  
 
   const methods = useForm({
   });

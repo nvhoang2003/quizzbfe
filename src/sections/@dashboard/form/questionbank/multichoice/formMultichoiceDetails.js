@@ -25,7 +25,6 @@ FormDetailMultichoice.propTypes = {
 };
 export default function FormDetailMultichoice({ currentLevel }) {
   const { push } = useRouter();
-  console.log(currentLevel);
   const [answerResult, setAnswerResult] = useState([]);
   const [submit, setSubmit] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
@@ -43,7 +42,6 @@ export default function FormDetailMultichoice({ currentLevel }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  console.log(currentLevel);
 
   const isMultiRightAnswer = (currentQuestion) => {
     const totalRightAnswers = currentQuestion?.answer_content?.reduce((total, item) => {

@@ -97,7 +97,6 @@ export default function index(props) {
     }
 
   }, [id]);
-  console.log(editData);
 
   return (
     <div>
