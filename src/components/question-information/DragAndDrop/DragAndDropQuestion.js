@@ -95,6 +95,9 @@ export default function Dnd({
     isTaskComplete && isTaskComplete.length ? true : false
   );
 
+
+  
+
   const [initialItems] = useMemo(
     () => parseItemsFromChildren(children, wrongAnswers),
     [children, wrongAnswers]

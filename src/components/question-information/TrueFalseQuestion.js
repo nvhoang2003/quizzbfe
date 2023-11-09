@@ -7,7 +7,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 export default function TrueFalseQuestion(props) {
   const { question, numberQuestion, answerResult, setAnswerResult, isSubmit } = props;
 
-  console.log(question);
   const [questionResult, setQuestionResult] = useState({
     mark: 0,
     status: '',

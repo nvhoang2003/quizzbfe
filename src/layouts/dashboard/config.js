@@ -56,6 +56,16 @@ export const items = [
     disabled: false
   },
   {
+    title: "QuizAccess",
+    path: "/quizAccess",
+    icon: (
+      <SvgIcon fontSize="small">
+        <QuestionMark />
+      </SvgIcon>
+    ),
+    disabled: false
+  },
+  {
     title: "Cài đặt",
     path: "/settings",
     icon: (

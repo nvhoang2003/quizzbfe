@@ -27,34 +27,6 @@ import SearchQuestion from "@/components/search/search_question";
 
 
 
-const links = [
-  { label: 'Multichoice', href: '/question/multiQuestion/create' },
-  { label: 'ShortAnswer', href: '/link3' },
-  { label: 'DragAndDrop', href: '/link4' },
-  { label: 'Matching', href: '/link1' },
-  { label: 'TrueFalse', href: '/questionbank/TrueFalseQuestion/create' },
-];
-
-const item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-function Item({ children }) {
-  return (
-    <Box sx={{ border: '1px', p: [2], m: 2, padding: '5px' }}>
-      {children}
-    </Box>
-  );
-}
-
-
-
-
-
 const QuestionList = (props) => {
   const router = useRouter();
   const [listQuiz, setListQuiz] = useState([]);
@@ -70,21 +42,6 @@ const QuestionList = (props) => {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const switchToAddNew = () => {
-    router.push("/question/create");
-  };
-
-  async function switchToAddQuestion() {
-    console.log(selectItem);
-    if (selectItem.length !== 0) {
-      const res = await addMultiQuestions(selectItem);
-      if (res.status < 400) {
-        enqueueSnackbar("Action success", { variant: "success" });
-      }
-    }
-    enqueueSnackbar("Bạn cần chọn câu hỏi trong ngân hàng câu hỏi trước khi thêm vào câu hỏi !!!!!", { variant: "error" });
   };
 
   const showBreadCrumbs = (status) => {
@@ -123,54 +80,6 @@ const QuestionList = (props) => {
                   </Box>
                 </Typography>
               </Stack>
-              <Stack
-                sx={{
-                  ml: "auto",
-                }}
-              >
-                
-                <Button
-                  color="primary"
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  sx={{ width: "150px" }}
-                  size="small"
-                  variant="contained"
-                  onClick={handleOpenClick}
-                >
-                  Tạo mới câu hỏi
-                </Button>
-
-
-                <Dialog
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="responsive-dialog-title"
-                >
-                  <DialogTitle id="responsive-dialog-title">
-                  </DialogTitle>
-                  <DialogContent>
-                    <Grid container >
-                      <Typography content='center' textAlign='center' id="modal-modal-title" variant="h6" component="h2" paddingBottom='10px'>
-                        Chọn loại câu hỏi bạn muốn tạo mới
-                      </Typography>
-                      <Grid container spacing={2}>
-                        {links.map((link, index) => (
-                          <Grid item xs={6} key={index} md={4}>
-                            <Button href={link.href}>
-                              <Item>{link.label}</Item>
-                            </Button>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                </Dialog>
-
-              </Stack>
             </Stack>
             <SearchQuestion filter={filter} setListQuiz={setListQuiz} />
             <QuestionTable
@@ -181,7 +90,6 @@ const QuestionList = (props) => {
               selectItem={selectItem}
               setSelectItem={setSelectItem}
             />
-
 
           </Stack>
         </Container>
