@@ -13,6 +13,7 @@ import { enqueueSnackbar } from "notistack";
 import QuizAccessTableRows from "./QuizAccessTableRow";
 import { deleteQuizAccess, getAll } from "@/dataProvider/quizAccess";
 import ConfirmDialogQuizAccess from "@/components/confirm-dialog/ConfirmDialogQuizAccess";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 
 //--------------------------------------------------------------
@@ -71,7 +72,7 @@ export default function QuizAccessTable(prop) {
   const handleDeleteRow = async (id) => {
     const response = await deleteQuizAccess(id);
     if (response.status < 400) {
-      await fetchCourse();
+      await fetchAllQuizAccess();
       enqueueSnackbar(response.data.message, { variant: "success" });
     } else {
       enqueueSnackbar(response.data.title, { variant: "error" });
@@ -106,8 +107,18 @@ export default function QuizAccessTable(prop) {
   };
 
   const switchToUpdate = (item) => {
+
+    // console.log(item?.quiz?.isPublic);
+    // item?.quiz?.isPublic ? handleOpenClick() : <></>
+
     setSelected(item);
-    handleOpenClick();
+
+    if (item?.quiz?.isPublic) {
+      snackbarUtils.error("Đây không phải thuộc đề kiểm tra, bạn không thể chỉnh sửa được ");
+    } else {
+      handleOpenClick();
+    }
+
   };
 
   return (
@@ -135,7 +146,7 @@ export default function QuizAccessTable(prop) {
                   row={item}
                   onUpdateRow={() => {
                     switchToUpdate(item);
-                    handleOpenClick();
+                    // handleOpenClick();
                   }}
                   onDeleteRow={() => handleDeleteRow(item.id)}
                   index={index}
@@ -151,10 +162,13 @@ export default function QuizAccessTable(prop) {
                   userId: selected?.userId,
                   courseId: selected?.quiz?.courseid,
                   quizId: selected?.quizId,
-                  id: selected.id,
-                  status: selected.status
+                  id: selected?.id,
+                  status: selected?.status,
+                  quiz: selected?.quiz?.name
                 }}
               />
+
+
             </TableBodyCustom>
           </Table>
         </Scrollbar>
