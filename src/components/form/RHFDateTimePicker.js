@@ -9,30 +9,28 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 RHFDateTimePicker.propTypes = {
   name: PropTypes.string,
-  children: PropTypes.node,
+  label: PropTypes.string,
 };
 
-export default function RHFDateTimePicker({ name, children, ...other }) {
-  const { control } = useFormContext();
-
+export default function RHFDateTimePicker({ name, label, control, isError, errorMessage, ...other }) {
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field: { ref, onBlur, name, ...field }, fieldState }) => (
         <DateTimePicker
           {...field}
           {...other}
-          renderInput={(inputProps) => (
-            <TextField
-              {...inputProps}
-              onBlur={onBlur}
-              value={field.value}
-              fullWidth
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
+          label={label}
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              onBlur: onBlur,
+              name: name,
+              error: !!fieldState.error || isError,
+              helperText: fieldState.error?.message || errorMessage,
+            },
+          }}
         />
       )}
     />

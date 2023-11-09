@@ -1,4 +1,4 @@
-import { deleteApi, getApi, postApi } from "@/dataProvider/baseApi";
+import { deleteApi, getApi, postApi, putApi } from "@/dataProvider/baseApi";
 
 const quizPath = "Quizz";
 ///Quizz/getListAllQuizz
@@ -9,8 +9,8 @@ const quizApiPath = {
   addQuiz: quizPath + "/CreateNewQuizz",
   editQuiz: quizPath + "/updateQuiz",
   addQuestion: quizPath + "/AddQuestion",
-  deleteQuizById: quizPath + "/deleteQuiz"
-}
+  deleteQuizById: quizPath + "/deleteQuiz",
+};
 ///api/Score/SubmitQuizz
 // params: {
 //   courseId: courseId
@@ -20,16 +20,24 @@ function getAllQuiz(params) {
   return getApi(quizApiPath.getListQuizz, params);
 }
 
-function getQuizForTestID(id){
+function getQuizForTestID(id) {
   return getApi(quizPath + `/getQuizForTest/${id}`);
 }
 
-function submitQuiz(params){
+function submitQuiz(params) {
   return postApi(`Score/SubmitQuizz`, params);
 }
 
 function getQuizById(quizId) {
   return getApi(quizApiPath.getQuizById + `/${quizId}`);
+}
+
+function postAddQuiz(data) {
+  return postApi(quizApiPath.addQuiz, data);
+}
+
+function putEditQuiz(quizId, data) {
+  return putApi(`${quizApiPath.editQuiz}/${quizId}`, data);
 }
 
 function deleteQuizById(quizId) {
@@ -39,7 +47,9 @@ function deleteQuizById(quizId) {
 export {
   getAllQuiz,
   getQuizForTestID,
+  postAddQuiz,
+  putEditQuiz,
   submitQuiz,
   getQuizById,
   deleteQuizById,
-}
+};

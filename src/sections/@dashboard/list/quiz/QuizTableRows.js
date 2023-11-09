@@ -107,14 +107,14 @@ export default function QuizTableRows({
             direction="row"
             gap={1}
             alignItems="center"
-            justifyContent="left"
+            justifyContent="space-between"
           >
             <Typography>
               {pointToPass}/{maxPoint}
             </Typography>
             {!isValid && (
               <CustomTooltip
-                title="Điểm đạt cao hơn điểm tối đa"
+                title="Điểm tối đa phải cao hơn điểm đạt"
                 customTooltipStyle={{
                   backgroundColor: "#E45858"
                 }}
