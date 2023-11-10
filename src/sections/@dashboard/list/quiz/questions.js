@@ -75,6 +75,18 @@ const Questions = ({ quiz }) => {
       isPublic: data.isPublic,
     };
   };
+  const fetchListQuestion = async () => {
+    const filter = {
+      pageIndex: 1,
+      pageSize: 50,
+    };
+    const res = await getAllQuestion(filter);
+    if (res.status < 400) {
+      setListQuestionUnChoose(res.data.data);
+    } else {
+      snackbarUtils.error(res.message);
+    }
+  };
 
   const fetchAddQuestion = async () => {
     setIsSubmitting(true);
@@ -130,18 +142,6 @@ const Questions = ({ quiz }) => {
   }, [addQuestions]);
 
   useEffect(() => {
-    const fetchListQuestion = async () => {
-      const filter = {
-        pageIndex: 1,
-        pageSize: 50,
-      };
-      const res = await getAllQuestion(filter);
-      if (res.status < 400) {
-        setListQuestionUnChoose(res.data.data);
-      } else {
-        snackbarUtils.error(res.message);
-      }
-    };
 
     if (listQuestionUnChoose.length === 0) {
       fetchListQuestion();

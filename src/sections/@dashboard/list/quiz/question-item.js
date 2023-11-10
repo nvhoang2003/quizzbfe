@@ -55,7 +55,8 @@ const QuestionItem = ({
         flexDirection="row"
         alignItems="center"
         gap={1.25}
-        width="80%"
+        width="calc(100% - 160px)"
+        minWidth={300}
       >
         <Stack
           p={1.25}
@@ -72,18 +73,20 @@ const QuestionItem = ({
           </Typography>
         </Stack>
         <QuestionTypeIcon questionType={question.questionsType} />
-        <Typography textTransform="capitalize" noWrap>
-          {question.name}
-        </Typography>
-        <Typography
-          textTransform="capitalize"
-          sx={{
-            opacity: 0.6,
-          }}
-          noWrap
-        >
-          {question.content}
-        </Typography>
+        <Stack gap={1.25} width="calc(100% - 90px)">
+          <Typography textTransform="capitalize" noWrap>
+            {question.name}
+          </Typography>
+          <Typography
+            textTransform="capitalize"
+            sx={{
+              opacity: 0.6,
+            }}
+            noWrap
+          >
+            {question.content}
+          </Typography>
+        </Stack>
       </Stack>
       <Stack
         display="flex"

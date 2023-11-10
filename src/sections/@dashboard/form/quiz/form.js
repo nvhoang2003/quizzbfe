@@ -30,6 +30,7 @@ import RHFNumberInput from "@/components/form/RHFNumberInput";
 import RHFDateTimePicker from "@/components/form/RHFDateTimePicker";
 import { postAddQuiz, putEditQuiz } from "@/dataProvider/quizApi";
 import snackbarUtils from "@/utils/snackbar-utils";
+import { enqueueSnackbar } from "notistack";
 
 QuizForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -115,22 +116,22 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
 
     try {
       const res = await putEditQuiz(currentLevel?.id, transformData);
-
-      if (res.status < 400) {
+      
+      if (res.status < 400 && res?.data?.status) {
         snackbarUtils.success(res?.data?.message || "Lưu Thành Công");
         switchToAddQuestion(res?.data?.data?.id);
       } else {
         const responseData = res?.response?.data;
-        snackbarUtils.error("Lưu Thất Bại");
-
-        Object.entries(responseData?.errors).forEach(
-          ([fieldKey, errorMessage]) => {
-            setError(fieldKey, {
-              type: "manual",
-              message: errorMessage,
-            });
-          }
-        );
+        snackbarUtils.error(res?.data?.message || "Lưu Thất Bại");
+        responseData?.errors &&
+          Object.entries(responseData?.errors).forEach(
+            ([fieldKey, errorMessage]) => {
+              setError(fieldKey, {
+                type: "manual",
+                message: errorMessage,
+              });
+            }
+          );
       }
     } catch (error) {
       console.log(error);

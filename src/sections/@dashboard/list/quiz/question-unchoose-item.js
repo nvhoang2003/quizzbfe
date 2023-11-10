@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import QuestionTypeIcon from "@/sections/@dashboard/icon/questiontype-icon";
+import { Scrollbar } from "@/components/scrollbar/scrollbar";
 
 export default function QuestionUnchooseItem(props) {
   const { item, onSelectRow } = props;
@@ -37,12 +38,11 @@ export default function QuestionUnchooseItem(props) {
         flexDirection="row"
         alignItems="center"
         gap={1.25}
+        width="calc(100% - 150px)"
       >
         <Checkbox checked={isChecked} onChange={handleHeaderCheckboxChange} />
         <QuestionTypeIcon questionType={item?.questionsType} />
-        <Stack
-          gap={1.25}
-        >
+        <Stack width="calc(100% - 86px)" gap={1.25}>
           <Typography textTransform="capitalize" noWrap>
             {item?.name}
           </Typography>
@@ -51,6 +51,7 @@ export default function QuestionUnchooseItem(props) {
             sx={{
               opacity: 0.6,
             }}
+            noWrap
           >
             {item?.content}
           </Typography>
@@ -62,10 +63,13 @@ export default function QuestionUnchooseItem(props) {
         alignItems="center"
         justifyContent="end"
         gap={1.25}
+        width={"130px"}
       >
-        <Typography fontWeight={700} noWrap>
-          {item?.authorName}
-        </Typography>
+        <Tooltip title={item?.authorName}>
+          <Typography fontWeight={700} noWrap>
+            {item?.authorName}
+          </Typography>
+        </Tooltip>
         <Stack
           p={1.25}
           py={0.625}
