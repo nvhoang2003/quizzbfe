@@ -87,7 +87,6 @@ export default function QuestionBankTable(prop) {
 
   const fetchQuiz = async () => {
     const res = await getAllQuestionbank(filter);
-    console.log(res);
     if (res.status < 400) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);

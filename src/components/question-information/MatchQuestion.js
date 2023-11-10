@@ -33,7 +33,6 @@ export default function MatchQuestion(props) {
     return newArr;
   }
 
-  console.log(oneSubQuestionPoint);
 
   const handleSelectChange = (event, subQuestion) => {
     const chooseAnswer = {
@@ -49,7 +48,6 @@ export default function MatchQuestion(props) {
   };
 
   const checkRightAnswer = (newMatch) => {
-    console.log(newMatch);
     var response = true;
     var mark = 0;
     newMatch?.map(oneMatch => {
@@ -67,7 +65,6 @@ export default function MatchQuestion(props) {
       answer: [...newMatch],
     })
   }
-  console.log(question);
 
   useEffect(() => {
     if (question?.matchSubQuestionBanks?.length > 0) {

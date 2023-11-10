@@ -52,8 +52,10 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
   useEffect(() => {
     if (isEdit && content) {
       setCourseId(content?.courseId);
-      setUserId(content?.userId);
-      setQuizId(content?.quizId);
+      console.log(content?.quiz);
+
+      // setUserId(content?.userId);
+      // setQuizId(content?.quizId);
       reset(defaultValues);
     }
     if (!isEdit) {
@@ -160,6 +162,7 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
     }
     if (courseId) {
       fetchAllQuizByCourse(courseId);
+
     } else {
       setQuiz([]);
     }
@@ -167,7 +170,7 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
   useEffect(() => { }, [quiz]);
 
   async function createNew(data) {
-    
+
     const transformData = {
       userId: data.userId,
       quizId: data.quizId,
@@ -179,7 +182,7 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
         snackbarUtils.success(res?.data?.message);
         onClose();
         router.push(`/quizAccess`);
-        
+
       } else {
         snackbarUtils.error(res?.response?.data?.title);
       }
@@ -201,7 +204,7 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
         snackbarUtils.success(res.data.message);
         onClose();
         router.push(`/quizAccess`);
-        
+
       } else {
         snackbarUtils.error(res.data.message);
       }
