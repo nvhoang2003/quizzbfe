@@ -17,6 +17,7 @@ export default function Result({ result_quiz, status, id }) {
   const router = useRouter();
 
   const urlParams = new URLSearchParams(window.location.search);
+
   const handleReStart = async (quizId) => {
     const dataAdd = {
       userId: localStorage.getItem("userId"),
@@ -27,6 +28,10 @@ export default function Result({ result_quiz, status, id }) {
     const res = await addQuizAccess(dataAdd);
     const accessId = res.data.data.id;
     router.push(`/testquiz/${accessId}`);
+  }
+
+  const handleRanking = () => {
+    router.push(`/home/client/ranking/${urlParams.get("quizId")}`);
   }
 
   const handleGoHome = () => {
@@ -57,9 +62,12 @@ export default function Result({ result_quiz, status, id }) {
             </Typography>
             <Stack alignItems={'center'} justifyContent={'center'} direction={{ xs: 'column', sm: 'row' }}
               spacing={{ xs: 2, sm: 3, md: 5 }}>
-              <Button variant="outlined" disabled={urlParams.get("public") == 1 ? false : true} onClick={handleReStart} size="medium">
+              {urlParams.get("public") == 0 ? <Button variant="outlined" onClick={handleRanking} size="medium">
+                Xem Thứ Hạng
+              </Button> : <Button variant="outlined" onClick={handleReStart} size="medium">
                 Thử làm lại
-              </Button>
+              </Button> }
+              
               <Button variant="outlined" onClick={handleShow} size="medium">
                 Xem đáp án chi tiết
               </Button>
