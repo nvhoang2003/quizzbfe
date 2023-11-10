@@ -5,7 +5,6 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import Head from "next/head";
 import { getQuizById } from "@/dataProvider/quizApi";
 import Questions from "@/sections/@dashboard/list/quiz/questions";
-import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 
 const AddQuestion = (props) => {
   const {
@@ -74,27 +73,7 @@ const AddQuestion = (props) => {
                   <Box sx={{ textTransform: "uppercase" }}>Thêm câu hỏi</Box>
                 </Typography>
               </Stack>
-              <Stack
-                sx={{
-                  ml: "auto",
-                }}
-              >
-                <Button
-                  color="primary"
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                  // onClick={handelOpenQuestionToAdd}
-                >
-                  Thêm
-                </Button>
-              </Stack>
             </Stack>
-
-
             <Questions quiz={editData} />
           </Stack>
         </Container>
