@@ -146,7 +146,7 @@ const Questions = ({ quiz }) => {
     if (listQuestionUnChoose.length === 0) {
       fetchListQuestion();
     } else {
-      if (addQuestions.quizzId) {
+      if (!!addQuestions.quizzId) {
         setListQuestionUnChoose(
           listQuestionUnChoose.filter(
             (obj) =>
