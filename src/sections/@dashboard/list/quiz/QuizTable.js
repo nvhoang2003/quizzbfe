@@ -147,7 +147,7 @@ export default function QuizTable(prop) {
                 row={item}
                 seleted={selected.includes(item.id)}
                 onSelectRow={() => onSelectRow(item.id)}
-                onShowRow={() => handleShowRow(item.id)}
+                // onShowRow={() => handleShowRow(item.id)}
                 onUpdateRow={() => switchToUpdate(item.id)}
                 onDeleteRow={() => handleDeleteRow(item.id)}
                 index={index}

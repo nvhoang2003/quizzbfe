@@ -15,7 +15,10 @@ import {
   putEditQuiz,
   putEditQuizPoint,
 } from "@/dataProvider/quizApi";
+import { getAllQuestion } from "@/dataProvider/questionApi";
 import snackbarUtils from "@/utils/snackbar-utils";
+import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
+import ListQuestionDialog from "@/components/list-question-dialog/ListQuestionDialog";
 
 const Questions = ({ quiz }) => {
   const router = useRouter();
@@ -33,6 +36,16 @@ const Questions = ({ quiz }) => {
       },
     ],
   });
+  const [open, setOpen] = useState(false);
+  const [listQuestionUnChoose, setListQuestionUnChoose] = useState([]);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const handelOpenDialog = () => {
+    setOpen(true);
+  }
 
   const switchToIndexPage = () => {
     router.push("/quiz");
@@ -114,8 +127,53 @@ const Questions = ({ quiz }) => {
     setMark(parseFloat(newMark.toFixed(1)));
   }, [addQuestions]);
 
+  useEffect(() => {
+    const fetchListQuestion = async () => {
+      const filter = {
+        pageIndex: 1,
+        pageSize: 50,
+      }
+      const res = await getAllQuestion(filter);
+      if (res.status < 400) {
+        setListQuestionUnChoose(res.data.data);
+      } else {
+        snackbarUtils.error(res.message);
+      }
+    };
+
+    if (listQuestionUnChoose.length === 0) {
+      fetchListQuestion();
+    }else{
+      if(addQuestions.quizzId){
+        const listId = addQuestions?.questionAddeds?.map(obj => obj.questionId);
+        setListQuestionUnChoose(listQuestionUnChoose.filter(obj => !listId.includes(obj.id)));
+      }
+    }
+  }, [addQuestions]);
+
+  console.log(addQuestions);
+  console.log(listQuestionUnChoose);
+  console.log(listQuestion);
   return (
     <Stack gap={1}>
+      <Stack
+        sx={{
+          ml: "auto",
+        }}
+      >
+        <Button
+          color="primary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <PlusIcon />
+            </SvgIcon>
+          }
+          variant="contained"
+          onClick={handelOpenDialog}
+        >
+          Thêm
+        </Button>
+      </Stack>
       <Stack
         display="flex"
         flexDirection="row"
@@ -164,6 +222,9 @@ const Questions = ({ quiz }) => {
           px: 2,
           pt: 2,
           gap: 1,
+          // position: 'absolute',
+          bottom: 10,
+          right: 0
         }}
       >
         <LoadingButton
@@ -212,6 +273,15 @@ const Questions = ({ quiz }) => {
           Lưu
         </LoadingButton>
       </Stack>
+      <ListQuestionDialog
+        open={open}
+        onClose={handleClose}
+        listQuestionUnChoose={listQuestionUnChoose}
+        setAddQuestions={setAddQuestions}
+        addQuestions={addQuestions}
+        listQuestion={listQuestion}
+        setListQuestion={setListQuestion}
+      />
     </Stack>
   );
 };
