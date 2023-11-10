@@ -23,6 +23,7 @@ import {
 } from "@mui/icons-material";
 import ConfirmDialog from "@/components/confirm-dialog";
 import { format, parseISO } from 'date-fns';
+import snackbarUtils from "@/utils/snackbar-utils";
 //----------------------------------------------------------------------------
 
 QuizAccessTableRows.propTypes = {
@@ -61,6 +62,15 @@ export default function QuizAccessTableRows({
     setOpenConfirm(false);
   };
 
+  const switchToDelete = () => {
+    if (status == 'Done') {
+      snackbarUtils.error("Bài này đã hoàn thành, bạn không thể chỉnh sửa được ");
+    } else {
+      handleOpenConfirm();
+    }
+
+  };
+
   const formattedDate = timeStartQuiz ? format(new Date(timeStartQuiz), 'HH:mm:ss dd/MM/yyyy') : "Chưa bắt đầu";
 
 
@@ -87,70 +97,70 @@ export default function QuizAccessTableRows({
           >
             <Tooltip title="Show" placement="top">
               <IconButton color="info" onClick={onUpdateRow} >
-              <ModeEdit />
+                <ModeEdit />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete" placement="right">
-              <IconButton color="error" onClick={handleOpenConfirm}>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </TableCell>
-        <ConfirmDialog
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          content={
-            <>
-              <Typography variant="h5">Bạn có chắc muốn xóa </Typography>
-              <Stack
-                justifyContent="flex-start"
-                alignItems="baseline"
-                spacing={2}
-                paddingTop='20px'
-              >
-                <TextField
-                  id="outlined-read-only-input1"
-                  label="Tên học sinh"
-                  defaultValue={user?.fullName}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                />
-                <TextField
-                  id="outlined-read-only-input2"
-                  label="Trạng thái làm bài"
-                  defaultValue={status}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                />
-                <TextField
-                  id="outlined-read-only-input3"
-                  label="Tên đề học sinh tham gia"
-                  defaultValue={quiz?.name}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                />
+              <IconButton color="error" onClick={() => switchToDelete()}>
+              <Delete />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </TableCell>
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        content={
+          <>
+            <Typography variant="h5">Bạn có chắc muốn xóa </Typography>
+            <Stack
+              justifyContent="flex-start"
+              alignItems="baseline"
+              spacing={2}
+              paddingTop='20px'
+            >
+              <TextField
+                id="outlined-read-only-input1"
+                label="Tên học sinh"
+                defaultValue={user?.fullName}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+              />
+              <TextField
+                id="outlined-read-only-input2"
+                label="Trạng thái làm bài"
+                defaultValue={status}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+              />
+              <TextField
+                id="outlined-read-only-input3"
+                label="Tên đề học sinh tham gia"
+                defaultValue={quiz?.name}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+              />
 
-              </Stack>
+            </Stack>
 
-            </>
-          }
-          action={
-            <Button variant="contained" color="error" onClick={() => {
-              onDeleteRow();
-              handleCloseConfirm();
-            }}>
-              Xóa
-            </Button>
-          }
-        />
-      </TableRow>
-    </React.Fragment>
+          </>
+        }
+        action={
+          <Button variant="contained" color="error" onClick={() => {
+            onDeleteRow();
+            handleCloseConfirm();
+          }}>
+            Xóa
+          </Button>
+        }
+      />
+    </TableRow>
+    </React.Fragment >
   );
 }

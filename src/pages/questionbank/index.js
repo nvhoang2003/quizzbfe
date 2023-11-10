@@ -77,12 +77,11 @@ const QuizList = (props) => {
   };
 
   async function switchToAddQuestion() {
-
-    console.log(selectItem);
     if (selectItem.length !== 0) {
       const res = await addMultiQuestions(selectItem);
       if (res.status < 400) {
-        enqueueSnackbar("Action success", { variant: "success" });
+        enqueueSnackbar("Bạn đã thêm mới vào câu hỏi thành công", { variant: "success" });
+        window.location.reload();
       }
       return;
     }
