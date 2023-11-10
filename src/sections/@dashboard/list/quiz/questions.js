@@ -41,11 +41,11 @@ const Questions = ({ quiz }) => {
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   const handelOpenDialog = () => {
     setOpen(true);
-  }
+  };
 
   const switchToIndexPage = () => {
     router.push("/quiz");
@@ -91,7 +91,9 @@ const Questions = ({ quiz }) => {
       const resAddQuestion = await postAddQuestion(addQuestions);
 
       if (resAddQuestion.status < 400) {
-        snackbarUtils.success(resAddQuestion?.data?.message || "Lưu Thành Công");
+        snackbarUtils.success(
+          resAddQuestion?.data?.message || "Lưu Thành Công"
+        );
         switchToIndexPage();
       } else {
         snackbarUtils.error("Lưu Thất Bại");
@@ -132,7 +134,7 @@ const Questions = ({ quiz }) => {
       const filter = {
         pageIndex: 1,
         pageSize: 50,
-      }
+      };
       const res = await getAllQuestion(filter);
       if (res.status < 400) {
         setListQuestionUnChoose(res.data.data);
@@ -143,10 +145,16 @@ const Questions = ({ quiz }) => {
 
     if (listQuestionUnChoose.length === 0) {
       fetchListQuestion();
-    }else{
-      if(addQuestions.quizzId){
-        const listId = addQuestions?.questionAddeds?.map(obj => obj.questionId);
-        setListQuestionUnChoose(listQuestionUnChoose.filter(obj => !listId.includes(obj.id)));
+    } else {
+      if (addQuestions.quizzId) {
+        setListQuestionUnChoose(
+          listQuestionUnChoose.filter(
+            (obj) =>
+              !addQuestions?.questionAddeds.some(
+                (item) => item.questionId == obj.id
+              )
+          )
+        );
       }
     }
   }, [addQuestions]);
@@ -224,7 +232,7 @@ const Questions = ({ quiz }) => {
           gap: 1,
           // position: 'absolute',
           bottom: 10,
-          right: 0
+          right: 0,
         }}
       >
         <LoadingButton

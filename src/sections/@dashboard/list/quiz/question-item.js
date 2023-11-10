@@ -85,7 +85,13 @@ const QuestionItem = ({
           {question.content}
         </Typography>
       </Stack>
-      <Stack display="flex" flexDirection="row" alignItems="center" gap={1.25}>
+      <Stack
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="end"
+        gap={1.25}
+      >
         <Tooltip title="Delete">
           <IconButton onClick={() => handleDeleteAddQuestion()}>
             <DeleteOutline color="error" />
