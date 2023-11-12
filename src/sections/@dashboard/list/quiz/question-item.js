@@ -56,7 +56,6 @@ const QuestionItem = ({
         alignItems="center"
         gap={1.25}
         width="calc(100% - 160px)"
-        minWidth={300}
       >
         <Stack
           p={1.25}
@@ -74,18 +73,23 @@ const QuestionItem = ({
         </Stack>
         <QuestionTypeIcon questionType={question.questionsType} />
         <Stack gap={1.25} width="calc(100% - 90px)">
-          <Typography textTransform="capitalize" noWrap>
-            {question.name}
-          </Typography>
-          <Typography
-            textTransform="capitalize"
-            sx={{
-              opacity: 0.6,
-            }}
-            noWrap
-          >
-            {question.content}
-          </Typography>
+          <Tooltip title={question.name}>
+            <Typography textTransform="capitalize" noWrap>
+              {question.name}
+            </Typography>
+          </Tooltip>
+
+          <Tooltip title={question.content}>
+            <Typography
+              textTransform="capitalize"
+              sx={{
+                opacity: 0.6,
+              }}
+              noWrap
+            >
+              {question.content}
+            </Typography>
+          </Tooltip>
         </Stack>
       </Stack>
       <Stack
@@ -111,7 +115,7 @@ const QuestionItem = ({
               min: 0,
             }}
             value={addQuestions?.questionAddeds?.at(index)?.point}
-            onChange={(value) => handleChangeMark(event.target.value)}
+            onChange={(event) => handleChangeMark(event.target.value)}
             sx={{
               width: 100,
             }}
