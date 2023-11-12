@@ -43,18 +43,23 @@ export default function QuestionUnchooseItem(props) {
         <Checkbox checked={isChecked} onChange={handleHeaderCheckboxChange} />
         <QuestionTypeIcon questionType={item?.questionsType} />
         <Stack width="calc(100% - 86px)" gap={1.25}>
-          <Typography textTransform="capitalize" noWrap>
-            {item?.name}
-          </Typography>
-          <Typography
-            textTransform="capitalize"
-            sx={{
-              opacity: 0.6,
-            }}
-            noWrap
-          >
-            {item?.content}
-          </Typography>
+          <Tooltip title={item?.name}>
+            <Typography textTransform="capitalize" noWrap>
+              {item?.name}
+            </Typography>
+          </Tooltip>
+
+          <Tooltip title={item?.content}>
+            <Typography
+              textTransform="capitalize"
+              sx={{
+                opacity: 0.6,
+              }}
+              noWrap
+            >
+              {item?.content}
+            </Typography>
+          </Tooltip>
         </Stack>
       </Stack>
       <Stack
