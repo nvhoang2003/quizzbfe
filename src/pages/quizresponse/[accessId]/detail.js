@@ -82,13 +82,13 @@ const Detail = (props) => {
                 }}
               >
                 <Button
-                  color="primary"
+                  color="inherit"
                   startIcon={
                     <SvgIcon fontSize="small">
                       <ArrowBack />
                     </SvgIcon>
                   }
-                  variant="contained"
+                  variant="text"
                   onClick={switchToHomePage}
                 >
                   Trở lại

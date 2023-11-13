@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs, { Dayjs } from "dayjs";
 import { Scrollbar } from "@/components/scrollbar/scrollbar";
 import RHFTextField from "@/components/form/RHFTextField";
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import FormProvider from "@/components/form/FormProvider";
 import PropTypes from "prop-types";
 import {
@@ -20,9 +20,17 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import RHFSwitch from "@/components/form/RHFSwitch";
-import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import {
+  Close,
+  DriveFileRenameOutline,
+  KeyboardDoubleArrowRight,
+  Save,
+} from "@mui/icons-material";
 import RHFNumberInput from "@/components/form/RHFNumberInput";
 import RHFDateTimePicker from "@/components/form/RHFDateTimePicker";
+import { postAddQuiz, putEditQuiz } from "@/dataProvider/quizApi";
+import snackbarUtils from "@/utils/snackbar-utils";
+import { enqueueSnackbar } from "notistack";
 
 QuizForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -35,35 +43,42 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
   const switchToIndexPage = () => {
     router.push("/quiz");
   };
-  const switchToAddQuestionPage = () => {
-    router.push("/quiz/add_question");
+
+  const switchToAddQuestion = (id) => {
+    router.push(`/quiz/${id}/add-question`);
   };
 
-  const defaultValues = useMemo(
-    () => ({
-      name: currentLevel?.name || "",
-      timeOpen: null,
-      timeClose: null,
-      // timeOpen: currentLevel?.timeOpen ? dayjs(currentLevel.timeOpen) : null,
-      // timeClose: currentLevel?.timeClose ? dayjs(currentLevel.timeClose) : null,
-      timeLimit: currentLevel?.timeLimit || 0,
-      pointToPass: currentLevel?.pointToPass || 0,
-      isPublic: currentLevel?.isPublic == 1 ? true : false,
-    }),
-    [currentLevel]
-  );
+  const {
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
   const validationSchema = Yup.object().shape({
-    quizName: Yup.string().trim().required("Tên đề thi không được để trống"),
+    name: Yup.string().trim().required("Tên đề thi không được để trống"),
     timeOpen: Yup.date().required("Giờ mở đề không được để trống"),
     timeClose: Yup.date().required("Giờ đóng đề không được để trống"),
     timeLimit: Yup.number()
       .required("Giới hạn thời gian không được để trống")
       .min(0.1, "Giới hạn thời gian phải lớn hơn hoặc bằng 0,1"),
-    pointToPass: Yup.number()
-      .required("Điểm đạt không được để trống")
-      .min(0.1, "Điểm đạt phải lớn hơn hoặc bằng 0,1"),
+    description: Yup.string(),
   });
+
+  const defaultValues = useMemo(
+    () => ({
+      name: currentLevel?.name || "",
+      timeOpen: currentLevel?.timeOpen
+        ? new Date(currentLevel?.timeOpen)
+        : null,
+      timeClose: currentLevel?.timeOpen
+        ? new Date(currentLevel?.timeOpen)
+        : null,
+      timeLimit: currentLevel?.timeLimit || 0,
+      description: currentLevel?.description || "",
+      isPublic: currentLevel?.isPublic == 1 ? true : false,
+    }),
+    [currentLevel]
+  );
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -79,13 +94,78 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
     formState: { isValidating, isSubmitting },
   } = methods;
 
-  const fetchUpdate = async (data) => {};
+  const convertToRequestData = (data) => {
+    return {
+      courseid: data.courseid ?? 5,
+      name: data.name,
+      description: data.description,
+      timeOpen: data.timeOpen,
+      timeClose: data.timeClose,
+      timeLimit: data?.timeLimit?.toString(),
+      naveMethod: "string",
+      overduehanding: "string",
+      preferedBehavior: "string",
+      maxPoint: currentLevel?.maxPoint ?? 0,
+      pointToPass: currentLevel?.pointToPass ?? 0,
+      isPublic: data.isPublic ? 1 : 0,
+    };
+  };
 
-  const createNew = async (data) => {};
+  const fetchUpdate = async (data) => {
+    const transformData = convertToRequestData(data);
 
-  const onSubmit = (async (data) => {
-    console.log(data);
-  });
+    try {
+      const res = await putEditQuiz(currentLevel?.id, transformData);
+      
+      if (res.status < 400 && res?.data?.status) {
+        snackbarUtils.success(res?.data?.message || "Lưu Thành Công");
+        switchToAddQuestion(res?.data?.data?.id);
+      } else {
+        const responseData = res?.response?.data;
+        snackbarUtils.error(res?.data?.message || "Lưu Thất Bại");
+        responseData?.errors &&
+          Object.entries(responseData?.errors).forEach(
+            ([fieldKey, errorMessage]) => {
+              setError(fieldKey, {
+                type: "manual",
+                message: errorMessage,
+              });
+            }
+          );
+      }
+    } catch (error) {
+      snackbarUtils.error(error);    }
+  };
+
+  const createNew = async (data) => {
+    const transformData = convertToRequestData(data);
+
+    try {
+      const res = await postAddQuiz(transformData);
+
+      if (res.status < 400) {
+        snackbarUtils.success(res?.data?.message || "Lưu Thành Công");
+        switchToAddQuestion(res?.data?.data?.id);
+      } else {
+        const responseData = res?.response?.data;
+        snackbarUtils.error("Lưu Thất Bại");
+
+        Object.entries(responseData?.errors).forEach(
+          ([fieldKey, errorMessage]) => {
+            setError(fieldKey, {
+              type: "manual",
+              message: errorMessage,
+            });
+          }
+        );
+      }
+    } catch (error) {
+      snackbarUtils.error(error);    }
+  };
+
+  const onSubmit = (data) => {
+    isEdit ? fetchUpdate(data) : createNew(data);
+  };
 
   return (
     <Stack sx={{ px: 3, py: 2, minWidth: "270px" }}>
@@ -109,64 +189,76 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
               Thông tin đề thi
             </Typography>
           </Stack>
-          <Container maxWidth="xl">
-            <Stack display="flex" flexWrap="wrap" direction="column" gap={2}>
-              <RHFTextField name="name" id="name" label="Tên đề thi" />
-              <RHFDateTimePicker
-                name="timeOpen"
-                id="timeOpen"
-                label="Giờ mở đề thi"
-                sx={{
-                  width: "100%",
-                }}
-              />
-              <RHFDateTimePicker
-                name="timeClose"
-                id="timeClose"
-                label="Giờ đóng đề thi"
-                sx={{
-                  width: "100%",
-                }}
-              />
-              <RHFNumberInput
-                name="timeLimit"
-                id="timeLimit"
-                label="Giới hạn thời gian (giờ)"
-                inputProps={{
-                  step: "0.1",
-                  min: 0,
-                }}
-              />
-              <Tooltip title="ex: 5đ" placement="top-start">
-                <Stack width={1}>
-                  <RHFNumberInput
-                    name="pointToPass"
-                    id="pointToPass"
-                    label="Điểm đạt"
-                    inputProps={{
-                      step: "0.1",
-                      min: 0,
-                    }}
-                  />
-                </Stack>
-              </Tooltip>
-              <RHFSwitch
-                name="isPublic"
-                label={
-                  <Typography sx={{ fontWeight: 500 }}>Công khai</Typography>
-                }
-                labelPlacement="start"
-                sx={{
-                  mx: 1,
-                  width: 1,
-                  justifyContent: "start",
-                }}
-                onClick={(event) => {
-                  event.target.value = !event.target.value;
-                }}
-              />
-            </Stack>
-          </Container>
+          <Stack
+            display="flex"
+            flexWrap="wrap"
+            direction="column"
+            gap={2}
+            pl={3}
+          >
+            <RHFTextField
+              name="name"
+              id="name"
+              label="Tên đề thi"
+              isError={errors.Name}
+              errorMessage={errors.Name?.message}
+            />
+            <RHFDateTimePicker
+              name="timeOpen"
+              id="timeOpen"
+              label="Giờ mở đề thi"
+              control={control}
+              sx={{
+                width: "100%",
+              }}
+              isError={errors.TimeOpen}
+              errorMessage={errors.TimeOpen?.message}
+            />
+            <RHFDateTimePicker
+              name="timeClose"
+              id="timeClose"
+              label="Giờ đóng đề thi"
+              control={control}
+              sx={{
+                width: "100%",
+              }}
+              isError={errors.TimeClose}
+              errorMessage={errors.TimeClose?.message}
+            />
+            <RHFNumberInput
+              name="timeLimit"
+              id="timeLimit"
+              label="Giới hạn thời gian (phút)"
+              inputProps={{
+                step: "0.1",
+                min: 0,
+              }}
+              isError={errors.timeLimit}
+              errorMessage={errors.timeLimit?.message}
+            />
+            <RHFSwitch
+              name="isPublic"
+              label={
+                <Typography sx={{ fontWeight: 500 }}>Công khai</Typography>
+              }
+              labelPlacement="start"
+              sx={{
+                mx: 1,
+                width: 1,
+                justifyContent: "start",
+              }}
+              onClick={(event) => {
+                event.target.value = !event.target.value;
+              }}
+            />
+            <RHFTextField
+              name="description"
+              id="description"
+              label="Mô tả"
+              isError={errors.Description}
+              errorMessage={errors.Description?.message}
+            />
+          </Stack>
         </Stack>
         <Stack
           display="flex"
@@ -176,6 +268,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
           justifyContent="flex-end"
           sx={{
             px: 2,
+            pt: 2,
             gap: 1,
           }}
         >
@@ -197,14 +290,15 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
             color="primary"
             startIcon={
               <SvgIcon>
-                <KeyboardDoubleArrowRight />
+                <Save />
               </SvgIcon>
             }
             variant="contained"
             type="submit"
             loading={isValidating || isSubmitting}
+            onClick={() => clearErrors()}
           >
-            Tiếp tục
+            Lưu
           </LoadingButton>
         </Stack>
       </FormProvider>

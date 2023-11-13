@@ -2,7 +2,7 @@ import { ResultQuestions } from "@/sections/@dashboard/list/quizResponse/result-
 import { Container, Stack, Typography, Box } from "@mui/material";
 
 const Head = ({ data }) => {
-  return (
+    return (
     <Stack
       display="flex"
       flexWrap="wrap"
@@ -57,7 +57,7 @@ const DetailResponse = ({ data }) => {
       <Head data={data} />
       <ResultQuestions
         questionResults={data.questionReults}
-        isPublic={data.isPublic}
+        isPublic={data?.isPublic}
       />
     </Container>
   );

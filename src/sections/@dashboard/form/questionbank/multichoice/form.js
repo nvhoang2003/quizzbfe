@@ -197,9 +197,9 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   useEffect(() => {
     if (isEdit && currentLevel) {
-      console.log(currentLevel);
       setCategoryId(currentLevel?.categoryId);
       fetchTagChoose(currentLevel);
+
       reset(defaultValues);
       setImageUrl(currentLevel.imageUrl);
     }
@@ -396,7 +396,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      snackbarUtils.error(error);
     }
   };
 
@@ -459,8 +459,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   }
 
   const backBtnOnclick = () => {
@@ -469,10 +468,8 @@ export default function Form({ isEdit = false, currentLevel }) {
 
   const onSubmit = async (data) => {
     if (!isEdit) {
-      console.log("meno");
       createNew(data);
     } else {
-      console.log(isEdit);
       fetchUpdate(data);
     }
   };

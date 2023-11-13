@@ -35,13 +35,11 @@ RHFMultiCheckbox.propTypes = {
 
 export function RHFMultiCheckbox({ name, options, ...other }) {
   const { control } = useFormContext();
-  console.log(options);
   return (
     <Controller
       name={name}
       control={control}
       render={({ field }) => {
-        console.log(field);
         // const onSelected = (option) =>
         //   field.value.includes(option) ? field.value.filter((value) => value !== option) : [...field.value, option];
         // const onSelected = (option) => {

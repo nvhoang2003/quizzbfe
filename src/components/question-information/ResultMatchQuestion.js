@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 export default function ResultMatchQuestion(props) {
   const { questionResult, isSubmit, answerResult } = props;
-  console.log(answerResult);
   return (
     <Stack spacing={3} sx={{ paddingTop: "20px" }}>
       {isSubmit === true ? (

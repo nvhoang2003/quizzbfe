@@ -20,22 +20,15 @@ import MatchQuestion from "@/components/question-information/MatchQuestion";
 import ResultMatchQuestion from "@/components/question-information/ResultMatchQuestion";
 import DoMatch from "./doMatch";
 
-// DoMatchQuestion.propTypes = {
-//   currentLevel: PropTypes.object,
-// };
-
 export default function DoMatchQuestion(props) {
-  //quizSubmit={quizSubmit} setQuizSubmit={setQuizSubmit}
   const { currentLevel, quizSubmit, setQuizSubmit, number } = props;
   const { push } = useRouter();
   const [submit, setSubmit] = useState(false);
   const [quiz, setQuiz] = useState([]);
-  // console.log(quizSubmit);
-  // console.log(currentLevel);
+
   useEffect(() => {
     const updatedQuiz = quizSubmit
       .filter((item) => item.questionId === currentLevel.id);
-    // console.log(updatedQuiz);
     setQuiz(updatedQuiz);
   }, [quizSubmit]);
 
@@ -69,8 +62,6 @@ export default function DoMatchQuestion(props) {
           </Box>
         </Card>
       </Stack>
-
-      {/* </FormProvider> */}
     </Container >
   )
 }

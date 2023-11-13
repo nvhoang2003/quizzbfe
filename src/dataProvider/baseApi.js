@@ -11,11 +11,10 @@ const axiosNonDisplayError = {
 
 const axiosError = (response) => {
   if (axiosNonDisplayError[response.code]) {
-    console.log(axiosNonDisplayError[response.code]);
+    snackbarUtils.error(axiosNonDisplayError[response.code]);
   }
 
   if (axiosDisplayError[response.code]) {
-    console.log(axiosDisplayError[response.code]);
     snackbarUtils.error(axiosDisplayError[response.code]);
   }
 };

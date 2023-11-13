@@ -91,7 +91,7 @@ export default function QuestionBankTable(prop) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils.error(res.message);
     }
   };
 

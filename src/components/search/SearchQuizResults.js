@@ -76,7 +76,7 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
     if (res.status < 400) {
       setListScore(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 
@@ -91,7 +91,7 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
       setPagingQuiz(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
   const handlePageQuizChange = useCallback(
@@ -119,7 +119,7 @@ export default function SearchQuizResults({ handleSearchSubmit, ...prop }) {
       setPagingCourse(JSON.parse(res.headers["x-pagination"]));
       setListCourse(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
   const handlePageCourseChange = useCallback(

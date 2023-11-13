@@ -9,7 +9,7 @@ const nextConfig = {
   system: {
     // BRAND NAME
     BRAND_NAME: 'QuizzBank'
-  }
+  },
 }
 
 module.exports = nextConfig

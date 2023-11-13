@@ -24,20 +24,25 @@ import { RotateLeft, Search } from "@mui/icons-material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import RHFSwitch from "../form/RHFSwitch";
 import { Scrollbar } from "../scrollbar/scrollbar";
+import RHFDatePicker from "../form/RHFDatePicker";
+import RHFDateTimePicker from "../form/RHFDateTimePicker";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
   const { filter, setListQuiz } = prop;
 
+  const validationSchema = Yup.object().shape({});
+
   const defaultValues = useMemo(
     () => ({
       name: "",
-      timeStart: "",
-      tineEnd: "",
+      timeStart: null,
+      timeEnd: null,
       isPublic: false,
     }),
     [filter]
   );
-  const validationSchema = Yup.object().shape({});
+
   const methods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues,
@@ -58,7 +63,7 @@ export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
     if (res.status < 400) {
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 
@@ -112,10 +117,11 @@ export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
                     minWidth: "250px",
                   }}
                 >
-                  <DateTimePicker
-                    name="timeOpen"
-                    id="timeOpen"
+                  <RHFDateTimePicker
+                    name="timeStart"
+                    id="timeStart"
                     label="Giờ Mở Đề"
+                    control={control}
                     sx={{
                       width: 1,
                     }}
@@ -129,10 +135,11 @@ export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
                     minWidth: "250px",
                   }}
                 >
-                  <DateTimePicker
-                    name="timeClose"
-                    id="timeClose"
+                  <RHFDateTimePicker
+                    name="timeEnd"
+                    id="timeEnd"
                     label="Giờ Đóng Đề"
+                    control={control}
                     sx={{
                       width: 1,
                     }}

@@ -107,14 +107,14 @@ export default function QuizTableRows({
             direction="row"
             gap={1}
             alignItems="center"
-            justifyContent="left"
+            justifyContent="space-between"
           >
             <Typography>
               {pointToPass}/{maxPoint}
             </Typography>
             {!isValid && (
               <CustomTooltip
-                title="Điểm đạt cao hơn điểm tối đa"
+                title="Điểm tối đa phải cao hơn điểm đạt"
                 customTooltipStyle={{
                   backgroundColor: "#E45858"
                 }}
@@ -139,11 +139,11 @@ export default function QuizTableRows({
               alignItems: "center",
             }}
           >
-            <Tooltip title="Show" placement="right">
+            {/* <Tooltip title="Show" placement="right">
               <IconButton color="info" onClick={onShowRow}>
                 <Visibility />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Edit" placement="right">
               <IconButton color="success" onClick={onUpdateRow}>
                 <ModeEdit />

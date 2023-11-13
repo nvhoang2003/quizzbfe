@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { getAllQuiz } from "@/dataProvider/quizApi";
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { getAll } from "@/dataProvider/quizAccess";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 //----------------------------------------------------------
 
@@ -24,7 +25,7 @@ const Quizz = (props) => {
     if (res.status < 400) {
       setList(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 

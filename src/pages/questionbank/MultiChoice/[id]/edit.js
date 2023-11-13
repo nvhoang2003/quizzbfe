@@ -23,7 +23,6 @@ export default function Edit(props) {
     const res = await getQuestionBankById(id);
     if (res.status < 400) {
       const q = res.data.data;
-      console.log(q);
       const transformData = {
         id: q.id,
         name: q.name,

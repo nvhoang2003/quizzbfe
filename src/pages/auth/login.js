@@ -26,6 +26,7 @@ import { useSnackbar } from "notistack";
 import { axiosError } from "src/dataProvider/baseApi";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 const Page = () => {
   const router = useRouter();
@@ -52,7 +53,6 @@ const Page = () => {
         const response = await auth.signIn(values.username, values.password);
         if (response.status < 400) {
           localStorage.setItem("userId", response.data.userId);
-          console.log(response);
           if (continueUrl && continueUrl != null && continueUrl != "") {
             router.push(continueUrl);
           } else {
@@ -68,7 +68,7 @@ const Page = () => {
           setMessage(response.response?.data?.title);
         }
       } catch (err) {
-        console.log(err);
+        snackbarUtils("Có lỗi trong đăng nhập");
       }
     },
   });

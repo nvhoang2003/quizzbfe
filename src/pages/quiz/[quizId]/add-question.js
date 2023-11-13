@@ -1,20 +1,19 @@
-  import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-  import { useRouter } from "next/router";
-  import React, { useCallback, useEffect, useState } from "react";
-  import { Box, Container, Stack, Typography } from "@mui/material";
-  import { Close, KeyboardDoubleArrowRight } from "@mui/icons-material";
-  import Head from "next/head";
-  import QuizForm from "@/sections/@dashboard/form/quiz/form";
-  import { getQuizById } from "@/dataProvider/quizApi";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { useRouter } from "next/router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import Head from "next/head";
+import { getQuizById } from "@/dataProvider/quizApi";
+import Questions from "@/sections/@dashboard/list/quiz/questions";
 
-const QuizEdit = (props) => {
+const AddQuestion = (props) => {
   const {
     query: { quizId },
   } = useRouter();
 
   const [editData, setEditData] = useState();
 
-  async function fetchQuizById(quizId) {
+  const fetchQuizById = async (quizId) => {
     const res = await getQuizById(quizId);
     if (res.status < 400) {
       const q = res.data.data;
@@ -29,7 +28,8 @@ const QuizEdit = (props) => {
         maxPoint: q.maxPoint,
         isPublic: q.isPublic,
         isValid: q.isValid,
-        courseid: q.courseid
+        courseid: q.courseid,
+        listQuestion: q.listQuestion,
       };
 
       setEditData(transformData);
@@ -38,7 +38,7 @@ const QuizEdit = (props) => {
     } else {
       return res;
     }
-  }
+  };
 
   useEffect(() => {
     if (quizId) {
@@ -49,7 +49,7 @@ const QuizEdit = (props) => {
   return (
     <>
       <Head>
-        <title>Đề thi - Tạo đề</title>
+        <title>Đề thi - Thêm câu hỏi</title>
       </Head>
       <Box
         component="main"
@@ -70,12 +70,11 @@ const QuizEdit = (props) => {
             >
               <Stack spacing={1} mr={1}>
                 <Typography variant="h4">
-                  <Box sx={{ textTransform: "uppercase" }}>Sửa đề thi</Box>
+                  <Box sx={{ textTransform: "uppercase" }}>Thêm câu hỏi</Box>
                 </Typography>
               </Stack>
             </Stack>
-
-            <QuizForm isEdit={true} currentLevel={editData} />
+            <Questions quiz={editData} />
           </Stack>
         </Container>
       </Box>
@@ -83,6 +82,6 @@ const QuizEdit = (props) => {
   );
 };
 
-QuizEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AddQuestion.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default QuizEdit;
+export default AddQuestion;

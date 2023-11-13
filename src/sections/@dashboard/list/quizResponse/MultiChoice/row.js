@@ -17,7 +17,7 @@ const Row = ({ questionResult, isPublic }) => {
     );
     return totalRightAnswers > 1;
   };
-
+  
   return (
     <>
       <Typography fontWeight="700">Câu trả lời:</Typography>
@@ -35,7 +35,7 @@ const Row = ({ questionResult, isPublic }) => {
                 ? "success"
                 : "warning"
               : "error"
-            : "";
+            : "primary";
 
           return (
             <FormControlLabel

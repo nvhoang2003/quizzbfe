@@ -117,8 +117,7 @@ const SearchQuestionBank = ({ handleSearchSubmit, ...prop }) => {
   }, []);
 
 
-  async function fetchAllQuestion(data) {//filter
-    //console.log(data);
+  async function fetchAllQuestion(data) {
     const res = await getAllQuestionbank(data);
     if (res.status < 400) {
       const transformData = res.data.data.map((qb, index) => {

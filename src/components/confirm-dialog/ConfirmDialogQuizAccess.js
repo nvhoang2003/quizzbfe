@@ -52,8 +52,6 @@ export default function ConfirmDialogQuizAccess({ title, action, open, onClose, 
   useEffect(() => {
     if (isEdit && content) {
       setCourseId(content?.courseId);
-      console.log(content?.quiz);
-
       // setUserId(content?.userId);
       // setQuizId(content?.quizId);
       reset(defaultValues);

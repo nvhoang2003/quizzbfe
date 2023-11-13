@@ -10,7 +10,7 @@ RHFNumberInput.propTypes = {
   name: PropTypes.string,
 };
 
-export default function RHFNumberInput({ name, ...other }) {
+export default function RHFNumberInput({ name, isError, errorMessage,  ...other }) {
   const { control } = useFormContext();
   const validate = (value) => {
     const matches = value.match(
@@ -31,8 +31,8 @@ export default function RHFNumberInput({ name, ...other }) {
           value={field.value}
           fullWidth
           type="number"
-          error={!!error}
-          helperText={error?.message}
+          error={!!error || isError}
+          helperText={error?.message || errorMessage}
           {...other}
         />
       )}

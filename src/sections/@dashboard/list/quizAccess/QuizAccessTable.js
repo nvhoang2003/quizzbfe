@@ -107,10 +107,6 @@ export default function QuizAccessTable(prop) {
   };
 
   const switchToUpdate = (item) => {
-
-    // console.log(item?.quiz?.isPublic);
-    // item?.quiz?.isPublic ? handleOpenClick() : <></>
-
     setSelected(item);
 
     if (item?.quiz?.isPublic) {

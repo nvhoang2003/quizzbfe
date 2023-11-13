@@ -5,8 +5,9 @@ import { Tabs, Tab, Box, Stack, Container } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
 import { getAllQuiz } from "@/dataProvider/quizApi";
-import { getQuizAccess } from "@/dataProvider/quizAccess";
+import { getListExamForStudent } from "@/dataProvider/quizAccess";
 import Head from "next/head";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 export default function Course() {
   const [value, setValue] = useState(0);
@@ -29,11 +30,11 @@ export default function Course() {
       courseId: id,
       status: "Wait",
     };
-    const res = await getQuizAccess(data);
+    const res = await getListExamForStudent(data);
     if (res.status < 400) {
       setListPrivateQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 
@@ -47,7 +48,7 @@ export default function Course() {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListPublicQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 

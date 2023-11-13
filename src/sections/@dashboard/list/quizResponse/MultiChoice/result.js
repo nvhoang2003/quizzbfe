@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Card, Stack, Typography } from "@mui/material";
 
 const Result = ({ questionResult }) => {
-  console.log(questionResult);
   return questionResult?.question?.questionAnswers &&
     questionResult?.question?.questionAnswers.length > 0 ? (
     <Card
