@@ -53,7 +53,6 @@ export default function index(props) {
   }
 
   async function fetchQuestionByID(id) {
-    // console.log(id);
     const res = await getQuestionById(id);
     if (res.status < 400) {
       const q = res.data.data;

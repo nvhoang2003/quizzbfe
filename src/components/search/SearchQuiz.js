@@ -26,6 +26,7 @@ import RHFSwitch from "../form/RHFSwitch";
 import { Scrollbar } from "../scrollbar/scrollbar";
 import RHFDatePicker from "../form/RHFDatePicker";
 import RHFDateTimePicker from "../form/RHFDateTimePicker";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
   const { filter, setListQuiz } = prop;
@@ -62,7 +63,7 @@ export default function SearchQuiz({ handleSearchSubmit, ...prop }) {
     if (res.status < 400) {
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res?.message);
     }
   };
 

@@ -8,8 +8,6 @@ import NoneChooseAnswerResponse from './NoneChooseAnswerResponse';
 export default function MultiQuestionResponse(props) {
   const { questionData, index } = props;
 
-  console.log(questionData)
-
   return (
     <Card sx={{ minWidth: 500, backgroundColor: "#f2f4f7", mx: 20, mb: 10 }} >
       <CardContent>

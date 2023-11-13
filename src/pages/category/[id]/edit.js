@@ -66,7 +66,6 @@ export default function Edit(props) {
 Edit.getInitialProps = () => {
   // Khởi tạo và trả về giá trị cho biến myVariable
   const myVariable = 'Hello World';
-  console.log("Adu getInitProps o component con")
   return { myVariable };
 };
 

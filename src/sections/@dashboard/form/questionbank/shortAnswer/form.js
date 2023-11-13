@@ -397,7 +397,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      snackbarUtils.error(error);
     }
   }
 
@@ -446,7 +446,6 @@ export default function Form({ isEdit = false, currentLevel }) {
     };
     try {
       const res = await updateQb(currentLevel.id, transformData, 1);
-      console.log(res);
       if (res.data.status === true) {
         snackbarUtils.success("Cập Nhật Thành Công");
         push("/questionbank");
@@ -461,18 +460,15 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   }
 
   const onSubmit = async (data) => {
     clearErrors();
 
     if (!isEdit) {
-      console.log("meno");
       createNew(data);
     } else {
-      console.log(isEdit);
       fetchUpdate(data);
     }
   };

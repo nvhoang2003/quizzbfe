@@ -14,6 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { addQuizAccess } from "@/dataProvider/quizAccess";
 import { jwtDecode } from "@/auth/utils";
 import { getLocalStorage } from "@/dataProvider/baseApi";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "left" },
@@ -112,7 +113,7 @@ export default function QuizTable(prop) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils.error();(res.message);
     }
   };
 

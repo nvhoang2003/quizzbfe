@@ -134,8 +134,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
           );
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   };
 
   const createNew = async (data) => {
@@ -161,8 +160,7 @@ export default function QuizForm({ isEdit = false, currentLevel }) {
         );
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   };
 
   const onSubmit = (data) => {

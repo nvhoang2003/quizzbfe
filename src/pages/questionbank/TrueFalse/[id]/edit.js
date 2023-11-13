@@ -23,7 +23,6 @@ export default function Edit(props) {
    
     if (res.status < 400) {
       const q = res.data.data;
-      console.log(q);
       const transformData = {
         id: q.id,
         name: q.name,
@@ -65,7 +64,6 @@ export default function Edit(props) {
       return res;
     }
   };
-  console.log(editData);
 
   useEffect(() => {
     if (id) {

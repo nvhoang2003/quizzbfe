@@ -12,6 +12,7 @@ import Close from "@mui/icons-material/Close";
 import QuestionUnchooseItem from "@/sections/@dashboard/list/quiz/question-unchoose-item";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import EmptyContent from "@/components/empty-content/EmptyContent";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 export default function ListQuestionDialog(props) {
   const {
@@ -53,12 +54,19 @@ export default function ListQuestionDialog(props) {
   };
 
   const handlebuttonAdd = () => {
-    setAddQuestions({
-      ...addQuestions,
-      questionAddeds: [...addQuestions.questionAddeds, ...listQuestionChoose],
-    });
-    setListQuestion([...listQuestion, ...listDisplayQuestionChoose]);
-    handleClose();
+    const duplicateQuestion = listDisplayQuestionChoose.filter(obj1 => listQuestion.some(obj2 => obj2.id === obj1.id));
+    if (duplicateQuestion.length > 0) {
+      snackbarUtils.error("Câu hỏi đã được thêm vào đề");
+    } else {
+      setAddQuestions({
+        ...addQuestions,
+        questionAddeds: [...addQuestions.questionAddeds, ...listQuestionChoose],
+      });
+      setListQuestion([...listQuestion, ...listDisplayQuestionChoose]);
+      setListQuestionChoose([]);
+      setListDisplayQuestionChoose([]);
+      handleClose();
+    }
   };
 
   return (

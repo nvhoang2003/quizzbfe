@@ -22,7 +22,7 @@ const Row = ({ questionResult, isPublic }) => {
           const correctAnswer = item.fraction == 1;
 
           return (
-            <Grid container>
+            <Grid container key={index}>
               {isPublic && (
                 <Grid
                   item
@@ -43,7 +43,7 @@ const Row = ({ questionResult, isPublic }) => {
                   control={
                     <Radio
                       color={
-                        isPublic ? (correctAnswer ? "success" : "error") : ""
+                        isPublic ? (correctAnswer ? "success" : "error") : "primary"
                       }
                     />
                   }

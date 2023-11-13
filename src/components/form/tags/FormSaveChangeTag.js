@@ -60,7 +60,6 @@ const onSubmit = async (data) => {
 
   //debugger
   if (!isEdit) {
-      console.log(data);
       // try {
       //     const res = await createSale(data)
       //     if (res.status < 400) {

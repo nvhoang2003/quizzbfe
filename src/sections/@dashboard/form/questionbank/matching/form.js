@@ -364,8 +364,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   }
 
   async function fetchUpdate(data) {
@@ -388,8 +387,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   }
   const backBtnOnclick = () => {
     push("/questionbank");
@@ -398,7 +396,6 @@ export default function Form({ isEdit = false, currentLevel }) {
   const onSubmit = async (data) => {
     clearErrors();
     if (!isEdit) {
-      console.log(data);
       createNew(data);
     } else {
       fetchUpdate(data);

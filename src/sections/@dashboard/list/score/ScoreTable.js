@@ -6,6 +6,7 @@ import ScoreTableRows from "./ScoreTableRows";
 import { getListResponseForPeopleDoQuiz } from "@/dataProvider/quizResponseApi";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 const TABLE_HEAD = [
   { id: "no", label: "#", align: "left" },
@@ -68,7 +69,7 @@ export default function ScoreTable(prop) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListScore(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils.error(res.message);
     }
   }
 

@@ -74,7 +74,6 @@ export default function MultiChoiceQuestion(props) {
           setListIdSelected(ids);
         }
       }
-      // console.log(listQuestionResult.filter(item => item.questionId == question?.id)[0])
       if (listQuestionResult?.filter(item => item.questionId == question?.id)[0]) {
         setQuestionResult(listQuestionResult.filter(item => item.questionId == question?.id)[0])
       }

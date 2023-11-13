@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import QuestionTableRows from "./tableQuestionTableRow";
 import { deleteMultiById, deleteQuestionById, getAllQuestion } from "@/dataProvider/questionApi";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 
 //--------------------------------------------------------------
@@ -85,7 +86,7 @@ export default function QuestionTable(prop) {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setListQuiz(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils(res.message);
     }
   };
 
@@ -138,8 +139,6 @@ export default function QuestionTable(prop) {
           rowsPerPageOptions={[10, 25, 50]}
         />
       </TableContainer>
-
     </Card>
-
   );
 }

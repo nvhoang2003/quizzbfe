@@ -3,6 +3,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import OverviewCourse from "@/sections/@dashboard/list/course/item";
 import { getAllCourse } from "@/dataProvider/courseApi";
+import snackbarUtils from "@/utils/snackbar-utils";
 
 //----------------------------------------------------------
 
@@ -16,7 +17,7 @@ const List = (props) => {
       setPaging(JSON.parse(res.headers["x-pagination"]));
       setList(res.data.data);
     } else {
-      console.log(res.message);
+      snackbarUtils.error(res.message);
     }
   };
 

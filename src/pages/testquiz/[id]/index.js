@@ -69,7 +69,6 @@ const TestQuiz = (props) => {
   const dispatch = useDispatch();
   const [submit, setSubmit] = useState(false);
   const [truefalse, setTruefalse] = useState([]);
-  // console.log(quizSubmit);state => state?.quizSubmit?.value
   const listQuestionResult = useSelector((state) => state.quizResult.value);
 
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -87,7 +86,6 @@ const TestQuiz = (props) => {
   } = methods;
 
   const handleRouteChange = (url, event) => {
-    console.log(event);
     if (!event.shallow) {
       if (window.confirm("Bạn có chắc chắn muốn rời khỏi trang này không?")) {
         dispatch(changeQuizResult([]));
@@ -174,7 +172,6 @@ const TestQuiz = (props) => {
   }, [id, sumValue]);
 
   useEffect(() => {
-    // console.log(listQuestionResult);
     if ((quizSubmit, listQuestionResult)) {
       const answer = listQuestionResult.filter(
         (item) => item.questionId == data?.questionReults?.id
@@ -187,7 +184,6 @@ const TestQuiz = (props) => {
           setListIdSelected(ids);
         }
       }
-      // console.log(listQuestionResult.filter(item => item.questionId == question.question.id)[0])
       if (
         listQuestionResult.filter(
           (item) => item.questionId == data?.questionReults?.id
@@ -219,8 +215,6 @@ const TestQuiz = (props) => {
     router.push(`/ortherpage/ ${id}`, undefined, { shallow: true });
   };
 
-  // console.log(listQuestionResult);
-  // console.log(quizSubmit);
   return (
     <>
       <Head>

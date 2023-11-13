@@ -28,10 +28,15 @@ function deleteQuizAccess(id) {
   return deleteApi(quizAccessApiPath.quizAccessPath +`/deleteQuizAccess/${id}`);
 }
 
+function getListExamForStudent(params){
+  return getApi(quizAccessApiPath.quizAccessPath + `/GetListExamForStudent`, params)
+}
+
 export {
   addQuizAccess,
   updStatusQuizAccess,
   getQuizAccess,
   getAll,
-  deleteQuizAccess
+  deleteQuizAccess,
+  getListExamForStudent
 }

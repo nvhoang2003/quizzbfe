@@ -336,7 +336,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      snackbarUtils.error(error);
     }
   }
 
@@ -401,7 +401,7 @@ export default function Form({ isEdit = false, currentLevel }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      snackbarUtils.error(error);
     }
   }
 

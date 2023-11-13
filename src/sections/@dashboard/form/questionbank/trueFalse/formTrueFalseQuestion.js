@@ -171,8 +171,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       ) {
         currentLevel?.answers?.forEach((element) => {
           if (element.fraction === 1) {
-            console.log("kldj");
-            console.log(element);
             const ans = {
               feedback: element.feedback === null ? "" : element.feedback,
               answer_truefalse: element.content == "Đúng" ? "true" : "false",
@@ -364,13 +362,11 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
         });
       }
     } catch (error) {
-      console.log(error);
-    }
+      snackbarUtils.error(error);    }
   }
 
   async function fetchUpdate(data) {
     clearErrors();
-    console.log(data);
     const transformData = {
       name: data.name,
       content: data.content,
@@ -398,7 +394,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
       rightAnswer: data.answer.answer_truefalse === "false" ? false : true,
       authorId: currentLevel?.authorId
     };
-    console.log(transformData);
 
     try {
       const res = await updateQb(currentLevel.id, transformData, 1);
@@ -422,7 +417,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
     if (!isEdit) {
       createNew(data);
     } else {
@@ -441,8 +435,6 @@ export default function FormTrueFalseQuestionBank({ isEdit = false, currentLevel
 
     reader.readAsDataURL(file);
   };
-
-  console.log(answerChoose);
 
   return (
     <Container maxWidth="100%">
