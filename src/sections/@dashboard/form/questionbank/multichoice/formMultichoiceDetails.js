@@ -91,7 +91,10 @@ export default function FormDetailMultichoice({ currentLevel }) {
                 {isMultiRightAnswer(currentLevel) ?
                   <MultiChoiceQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} /> //
 
-                  : <OneChoiceQuestion question={currentLevel} numberQuestion={1} answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />}
+                  :
+                  <OneChoiceQuestion question={currentLevel} numberQuestion={1}
+                    answerResult={answerResult} setAnswerResult={setAnswerResult} isSubmit={submit} />
+                }
 
               </Stack>
             </Card>

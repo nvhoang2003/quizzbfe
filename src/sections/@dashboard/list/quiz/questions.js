@@ -38,7 +38,7 @@ const Questions = ({ quiz }) => {
   });
   const [open, setOpen] = useState(false);
   const [listQuestionUnChoose, setListQuestionUnChoose] = useState([]);
-  
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -144,19 +144,19 @@ const Questions = ({ quiz }) => {
   useEffect(() => {
 
     if (listQuestionUnChoose.length === 0) {
-    fetchListQuestion();
-} else {
-    if (!!addQuestions.quizzId) {
-      setListQuestionUnChoose(
-        listQuestionUnChoose.filter(
-          (obj) =>
-            !addQuestions?.questionAddeds.some(
-              (item) => item.questionId == obj.id
-            )
-        )
-      );
+      fetchListQuestion();
+    } else {
+      if (!!addQuestions.quizzId) {
+        setListQuestionUnChoose(
+          listQuestionUnChoose.filter(
+            (obj) =>
+              !addQuestions?.questionAddeds.some(
+                (item) => item.questionId == obj.id
+              )
+          )
+        );
+      }
     }
-}
   }, [addQuestions]);
 
   return (
