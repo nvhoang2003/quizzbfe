@@ -141,7 +141,7 @@ input#base-increment:focus {
 @media (min-width: 900px) {
   .nav-item-active::after {
     background-color: #1a73e8;
-    bottom: -13px;
+    bottom: -11px;
     content: " ";
     height: 2px;
     left: 12px;

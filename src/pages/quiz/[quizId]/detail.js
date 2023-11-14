@@ -5,7 +5,7 @@ import { Box, Container, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Head from "next/head";
 import { getQuizById } from "@/dataProvider/quizApi";
 import Topic from "../topic";
-import ListStudentInQuiz from "../listStudentInQuiz";
+import ListStudentInQuiz from "@/sections/@dashboard/list/quiz/detail/student";
 import ListRankStudentInQuiz from "../listRankByCourse";
 
 const QuizDetail = (props) => {
