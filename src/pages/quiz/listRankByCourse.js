@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { getRanking } from '@/dataProvider/rankingApi';
 import { getCourseByUser } from '@/dataProvider/courseApi';
-import { Grid, Table, TableContainer } from '@mui/material';
+import { Grid, Table, TableCell, TableContainer, TableRow } from '@mui/material';
 import { TableHeadCustom, useTable } from '@/components/table';
 import TableBodyCustom from '@/components/table/TableBodyCustom';
 import { Scrollbar } from '@/components/scrollbar/scrollbar';
+import { formatedNullString } from '@/utils/formatter';
 
 
 //-------------------------------------------------------
