@@ -105,7 +105,7 @@ export const TopNav = () => {
               >
                 {items.map((item) => {
                   const active = item.path ? pathname === item.path : false;
-                  const isNoPermission = item.role.includes(
+                  const isNoPermission = item.banRole.includes(
                     ...[userLocal?.roles]
                   );
 
@@ -147,7 +147,7 @@ export const TopNav = () => {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {items.map((item) => {
                 const active = item.path ? pathname === item.path : false;
-                const isNoPermission = item.role.includes(
+                const isNoPermission = item.banRole.includes(
                   ...[userLocal?.roles]
                 );
 

@@ -13,9 +13,7 @@ export const items = [
         <ChartBarIcon />
       </SvgIcon>
     ),
-    role: [
-      "*"
-    ],
+    banRole: [],
     disabled: false
   },
   {
@@ -26,7 +24,7 @@ export const items = [
         <Tag />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
@@ -39,7 +37,7 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
@@ -52,7 +50,7 @@ export const items = [
         <AccountBalance />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
@@ -65,7 +63,7 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
@@ -78,7 +76,7 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
@@ -91,7 +89,7 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
-    role: [
+    banRole: [
       "student"
     ],
     disabled: false
