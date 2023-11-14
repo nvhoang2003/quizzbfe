@@ -13,6 +13,9 @@ export const items = [
         <ChartBarIcon />
       </SvgIcon>
     ),
+    role: [
+      "*"
+    ],
     disabled: false
   },
   {
@@ -23,6 +26,9 @@ export const items = [
         <Tag />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -33,6 +39,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -43,6 +52,9 @@ export const items = [
         <AccountBalance />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -53,6 +65,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -63,6 +78,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -73,6 +91,9 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
+    role: [
+      "student"
+    ],
     disabled: false
   },
 ];

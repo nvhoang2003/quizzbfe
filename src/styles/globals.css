@@ -137,3 +137,16 @@ input#base-increment:focus {
   outline: none;
   border-bottom: 1px solid;
 }
+
+@media (min-width: 900px) {
+  .nav-item-active::after {
+    background-color: #1a73e8;
+    bottom: -13px;
+    content: " ";
+    height: 2px;
+    left: 12px;
+    position: absolute;
+    width: calc(100% - 24px);
+    z-index: 840;
+  }
+}
