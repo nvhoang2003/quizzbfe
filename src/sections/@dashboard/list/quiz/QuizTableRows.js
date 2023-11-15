@@ -139,11 +139,11 @@ export default function QuizTableRows({
               alignItems: "center",
             }}
           >
-            {/* <Tooltip title="Show" placement="right">
+            <Tooltip title="Show" placement="right">
               <IconButton color="info" onClick={onShowRow}>
                 <Visibility />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <Tooltip title="Edit" placement="right">
               <IconButton color="success" onClick={onUpdateRow}>
                 <ModeEdit />

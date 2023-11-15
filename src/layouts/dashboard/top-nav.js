@@ -30,11 +30,13 @@ import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
 import { TopNavItem } from "./top-nav-item";
 import { usePathname } from "next/navigation";
+import { getLocalStorage } from "@/dataProvider/baseApi";
 
 export const TopNav = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const accountPopover = usePopover();
   const pathname = usePathname();
+  const userLocal = getLocalStorage("user");
 
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -48,10 +50,7 @@ export const TopNav = () => {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        color="inherit"
-      >
+      <AppBar position="fixed" color="inherit">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -106,17 +105,22 @@ export const TopNav = () => {
               >
                 {items.map((item) => {
                   const active = item.path ? pathname === item.path : false;
+                  const isNoPermission = item.banRole.includes(
+                    ...[userLocal?.roles]
+                  );
 
                   return (
-                    <TopNavItem
-                      active={active}
-                      disabled={item.disabled}
-                      external={item.external}
-                      icon={item.icon}
-                      key={item.title}
-                      path={item.path}
-                      title={item.title}
-                    />
+                    !isNoPermission && (
+                      <TopNavItem
+                        active={active}
+                        disabled={item.disabled}
+                        external={item.external}
+                        icon={item.icon}
+                        key={item.title}
+                        path={item.path}
+                        title={item.title}
+                      />
+                    )
                   );
                 })}
               </Menu>
@@ -142,17 +146,22 @@ export const TopNav = () => {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {items.map((item) => {
-                const active = item.path ? (pathname === item.path) : false;
+                const active = item.path ? pathname === item.path : false;
+                const isNoPermission = item.banRole.includes(
+                  ...[userLocal?.roles]
+                );
+
                 return (
-                  <TopNavItem
-                    active={active}
-                    disabled={item.disabled}
-                    external={item.external}
-                    // icon={item.icon}
-                    key={item.title}
-                    path={item.path}
-                    title={item.title}
-                  />
+                  !isNoPermission && (
+                    <TopNavItem
+                      active={active}
+                      disabled={item.disabled}
+                      external={item.external}
+                      key={item.title}
+                      path={item.path}
+                      title={item.title}
+                    />
+                  )
                 );
               })}
             </Box>

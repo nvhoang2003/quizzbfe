@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { isValidToken, setupLocalStorage } from "@/auth/utils";
 import { loginAuth } from "@/dataProvider/authApi";
 import snackbarUtils from "@/utils/snackbar-utils";
+import { getLocalStorage, setLocalStorage } from "@/dataProvider/baseApi";
 
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
@@ -79,24 +80,19 @@ export const AuthProvider = (props) => {
     initialized.current = true;
 
     let isAuthenticated = false;
-    var userId = localStorage.getItem("userId");
+    var userLocal = getLocalStorage("user");
     var access_token = localStorage.getItem("access_token");
 
     try {
-      isAuthenticated = userId && isValidToken(access_token);
+      isAuthenticated = userLocal && userLocal?.id && isValidToken(access_token);
     } catch (err) {
       console.error(err);
     }
 
     if (isAuthenticated) {
-      const user = {
-        id: userId,
-        username: "No Name",
-      };
-
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: user,
+        payload: userLocal,
       });
     } else {
       dispatch({
@@ -119,12 +115,13 @@ export const AuthProvider = (props) => {
 
       if (responseLogin.status < 400) {
         setupLocalStorage(responseLogin.data.accessToken);
-        localStorage.setItem("userId", responseLogin.data.userId);
-        snackbarUtils.success("Đăng nhập thành công");
         const user = {
-          id: responseLogin?.data?.userId,
+          id: parseInt(responseLogin?.data?.userId),
           username: username,
+          roles: responseLogin?.data?.roleName,
         };
+        setLocalStorage("user", user);
+        snackbarUtils.success("Đăng nhập thành công");
 
         dispatch({
           type: HANDLERS.SIGN_IN,

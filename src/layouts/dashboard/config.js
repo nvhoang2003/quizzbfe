@@ -13,6 +13,7 @@ export const items = [
         <ChartBarIcon />
       </SvgIcon>
     ),
+    banRole: [],
     disabled: false
   },
   {
@@ -23,6 +24,9 @@ export const items = [
         <Tag />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -33,6 +37,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -43,6 +50,9 @@ export const items = [
         <AccountBalance />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -53,6 +63,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -63,6 +76,9 @@ export const items = [
         <QuestionMark />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
   {
@@ -73,6 +89,9 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
+    banRole: [
+      "student"
+    ],
     disabled: false
   },
 ];

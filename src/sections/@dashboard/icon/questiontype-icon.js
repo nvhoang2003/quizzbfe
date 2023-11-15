@@ -5,35 +5,35 @@ import RuleIcon from "@mui/icons-material/Rule";
 import { SvgIcon, Tooltip } from "@mui/material";
 
 const QuestionTypeIcon = ({ questionType }) => {
-  const QuestionsType = [
-    {
+  const QuestionsType = {
+    MultiChoice: {
       type: "MultiChoice",
       label: "Chọn Đáp Án",
       icon: <FormatListBulletedIcon />,
     },
-    {
+    ShortAnswer: {
       type: "ShortAnswer",
       label: "Điền Đáp Án",
       icon: <Crop169Icon />,
     },
-    {
+    DragAndDropIntoText: {
       type: "DragAndDropIntoText",
       label: "Di Chuyển Đáp Án",
       icon: <OpenWithIcon />,
     },
-    {
+    Match: {
       type: "Match",
       label: "Ghép Đôi",
       icon: null,
     },
-    {
+    TrueFalse: {
       type: "TrueFalse",
       label: "Đúng Sai",
       icon: <RuleIcon />,
     },
-  ];
+  };
 
-  const questiontype = QuestionsType.find((item) => item.type == questionType);
+  const questiontype = QuestionsType[questionType];
 
   return (
     <Tooltip title={questiontype?.label}>
