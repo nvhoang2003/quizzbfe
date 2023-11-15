@@ -6,8 +6,9 @@ const quizAccessPath = "QuizAccess";
 const quizAccessApiPath = {
   quizAccessPath: quizAccessPath,
   addQuizAccess: quizAccessPath + "/CreateNewQuizzAccess",
-  updStatusQuizAccess: quizAccessPath + "/updateStausQuizzAccess"
-}
+  addToCourse: quizAccessPath + "/AddQuizzAccessToCourse",
+  updStatusQuizAccess: quizAccessPath + "/updateStausQuizzAccess",
+};
 
 function getQuizAccess(params) {
   return getApi(quizAccessPath + "/GetListQuizzAccess", params);
@@ -17,19 +18,31 @@ function addQuizAccess(params) {
   return postApi(quizAccessApiPath.addQuizAccess, params);
 }
 
+function addToCourse(params) {
+  return postApi(quizAccessApiPath.addToCourse, params);
+}
+
 function updStatusQuizAccess(id, bodyParams) {
   return putApi(quizAccessApiPath.updStatusQuizAccess + `/${id}`, bodyParams);
 }
 function getAll(params) {
-  return getApi(quizAccessApiPath.quizAccessPath + `/GetListQuizzAccess`, params);
+  return getApi(
+    quizAccessApiPath.quizAccessPath + `/GetListQuizzAccess`,
+    params
+  );
 }
 ///api/QuizAccess/deleteQuizAccess/3333
 function deleteQuizAccess(id) {
-  return deleteApi(quizAccessApiPath.quizAccessPath +`/deleteQuizAccess/${id}`);
+  return deleteApi(
+    quizAccessApiPath.quizAccessPath + `/deleteQuizAccess/${id}`
+  );
 }
 
-function getListExamForStudent(params){
-  return getApi(quizAccessApiPath.quizAccessPath + `/GetListExamForStudent`, params)
+function getListExamForStudent(params) {
+  return getApi(
+    quizAccessApiPath.quizAccessPath + `/GetListExamForStudent`,
+    params
+  );
 }
 
 export {
@@ -38,5 +51,6 @@ export {
   getQuizAccess,
   getAll,
   deleteQuizAccess,
-  getListExamForStudent
-}
+  getListExamForStudent,
+  addToCourse
+};
